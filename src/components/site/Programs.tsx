@@ -34,7 +34,7 @@ export const Programs = () => (
             </div>
             <h3 className="relative text-xl md:text-3xl font-semibold mb-3">{p.title}</h3>
             <p className="relative text-muted-foreground max-w-md mb-8">{p.desc}</p>
-            <Link to="/join" className="relative inline-flex items-center gap-2 text-accent text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
+            <Link to={`/programs#${p.id}`} className="relative inline-flex items-center gap-2 text-accent text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
               Learn more <ArrowUpRight size={16} />
             </Link>
           </article>
