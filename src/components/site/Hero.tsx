@@ -45,24 +45,24 @@ export const Hero = () => {
             </span>
           </div>
 
-          <h1 className="font-display text-[14vw] md:text-[7.5rem] lg:text-[9rem] leading-[0.88] mb-6">
+          <h1 className="font-display text-[13vw] sm:text-7xl md:text-[7.5rem] lg:text-[9rem] leading-[0.9] mb-6 break-words">
             From <span className="text-gradient-gold">Amateur</span>
             <br />
             to <span className="italic font-light tracking-tight" style={{ fontFamily: "Space Grotesk" }}>Professional.</span>
           </h1>
 
-          <p className="text-lg md:text-2xl text-foreground/75 max-w-2xl mb-10 font-light">
+          <p className="text-base sm:text-lg md:text-2xl text-foreground/75 max-w-2xl mb-8 sm:mb-10 font-light">
             Develop. Package. Place. — An elite pathway forging the next generation of
             world-class footballers through training, branding, and international placement.
           </p>
 
-          <div className="flex flex-wrap gap-4">
-            <Button asChild variant="hero" size="xl">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+            <Button asChild variant="hero" size="xl" className="w-full sm:w-auto">
               <Link to="/join">
                 Join the Program <ArrowRight className="ml-1" />
               </Link>
             </Button>
-            <Button asChild variant="outlineLight" size="xl">
+            <Button asChild variant="outlineLight" size="xl" className="w-full sm:w-auto">
               <Link to="/programs">
                 <Play className="mr-1" /> Explore Programs
               </Link>
