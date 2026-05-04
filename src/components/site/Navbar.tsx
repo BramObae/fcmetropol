@@ -26,6 +26,27 @@ export const Navbar = () => {
 
   useEffect(() => setOpen(false), [pathname]);
 
+  // Lock body scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
+  // Esc to close
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    if (open) firstLinkRef.current?.focus();
+    else triggerRef.current?.focus({ preventScroll: true });
+  }, [open]);
+
   return (
     <header
       className={cn(
@@ -35,12 +56,13 @@ export const Navbar = () => {
     >
       <div className="container-pro">
         <nav
+          aria-label="Primary"
           className={cn(
             "flex items-center justify-between rounded-2xl px-5 py-3 transition-all duration-500",
             scrolled || pathname !== "/" ? "glass shadow-elegant" : "bg-transparent"
           )}
         >
-          <Link to="/" className="flex items-center gap-2.5 group">
+          <Link to="/" className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md">
             <div className="relative h-9 w-9 rounded-lg bg-gradient-to-br from-primary to-primary-glow grid place-items-center shadow-[var(--shadow-glow)]">
               <span className="font-display text-accent text-lg leading-none">M</span>
             </div>
@@ -58,10 +80,10 @@ export const Navbar = () => {
                   end={l.to === "/"}
                   className={({ isActive }) =>
                     cn(
-                      "text-sm transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1.5 after:h-px after:bg-accent after:transition-all",
+                      "text-sm transition-colors relative rounded-md px-1 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent after:content-[''] after:absolute after:left-1 after:-bottom-1.5 after:h-px after:bg-accent after:transition-all",
                       isActive
-                        ? "text-accent after:w-full"
-                        : "text-foreground/80 hover:text-accent after:w-0 hover:after:w-full"
+                        ? "text-accent after:w-[calc(100%-0.5rem)]"
+                        : "text-foreground/80 hover:text-accent after:w-0 hover:after:w-[calc(100%-0.5rem)]"
                     )
                   }
                 >
@@ -78,32 +100,53 @@ export const Navbar = () => {
           </div>
 
           <button
-            aria-label="Menu"
-            className="lg:hidden p-2 text-foreground"
+            ref={triggerRef}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            className="lg:hidden p-2 text-foreground rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            {open ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
           </button>
         </nav>
 
-        {open && (
-          <div className="lg:hidden glass mt-2 rounded-2xl p-5 animate-fade-up">
-            <ul className="flex flex-col gap-3">
-              {links.map((l) => (
-                <li key={l.to}>
-                  <Link to={l.to} className="block py-2 text-foreground/90 hover:text-accent">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-              <li className="pt-2">
-                <Button asChild variant="hero" className="w-full">
-                  <Link to="/join">Get Scouted</Link>
-                </Button>
+        <div
+          id="mobile-nav"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
+          hidden={!open}
+          className={cn(
+            "lg:hidden glass mt-2 rounded-2xl p-5",
+            open && "animate-fade-up"
+          )}
+        >
+          <ul className="flex flex-col gap-1">
+            {links.map((l, i) => (
+              <li key={l.to}>
+                <NavLink
+                  ref={i === 0 ? firstLinkRef : undefined}
+                  to={l.to}
+                  end={l.to === "/"}
+                  className={({ isActive }) =>
+                    cn(
+                      "block py-3 px-3 rounded-lg min-h-[44px] text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                      isActive ? "text-accent bg-accent/10" : "text-foreground/90 hover:text-accent hover:bg-accent/5"
+                    )
+                  }
+                >
+                  {l.label}
+                </NavLink>
               </li>
-            </ul>
-          </div>
-        )}
+            ))}
+            <li className="pt-3">
+              <Button asChild variant="hero" className="w-full min-h-[44px]">
+                <Link to="/join">Get Scouted</Link>
+              </Button>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
   );
