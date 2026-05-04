@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { X, Loader2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { X, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useDriveImages } from "@/hooks/useDriveImages";
 
 const FOLDERS = [
@@ -7,11 +7,10 @@ const FOLDERS = [
   { id: "1DtKEq9xbPFIQ4mbnMvJXNun39aLhZy2D", label: "Match Day" },
 ];
 
-type LightboxItem = { url: string; name: string };
-
 export const DriveGallery = ({ compact = false }: { compact?: boolean }) => {
   const [active, setActive] = useState<string>("all");
-  const [open, setOpen] = useState<LightboxItem | null>(null);
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const a = useDriveImages(FOLDERS[0].id);
   const b = useDriveImages(FOLDERS[1].id);
@@ -28,17 +27,40 @@ export const DriveGallery = ({ compact = false }: { compact?: boolean }) => {
   const display = compact ? filtered.slice(0, 8) : filtered;
   const loading = a.loading || b.loading;
 
+  const close = () => setOpenIdx(null);
+  const next = () =>
+    setOpenIdx((i) => (i === null ? i : (i + 1) % display.length));
+  const prev = () =>
+    setOpenIdx((i) => (i === null ? i : (i - 1 + display.length) % display.length));
+
+  useEffect(() => {
+    if (openIdx === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [openIdx, display.length]);
+
+  const current = openIdx !== null ? display[openIdx] : null;
+
   return (
     <div>
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
         {[{ id: "all", label: "All" }, ...FOLDERS].map((c) => (
           <button
             key={c.id}
             onClick={() => setActive(c.id)}
-            className={`px-4 py-2 rounded-full text-sm transition-all ${
+            className={`min-h-[44px] px-4 py-2 rounded-full text-sm transition-all ${
               active === c.id
                 ? "bg-accent text-accent-foreground"
-                : "border border-border text-foreground/70 hover:border-accent/50"
+                : "border border-border text-foreground/70 hover:border-accent/50 active:scale-95"
             }`}
           >
             {c.label}
@@ -54,12 +76,12 @@ export const DriveGallery = ({ compact = false }: { compact?: boolean }) => {
       ) : display.length === 0 ? (
         <div className="text-muted-foreground py-20 text-center">No images yet.</div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5 [grid-auto-rows:180px] md:[grid-auto-rows:240px]">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5 [grid-auto-rows:160px] sm:[grid-auto-rows:200px] md:[grid-auto-rows:240px]">
           {display.map((it, i) => (
             <button
               key={it.id}
-              onClick={() => setOpen({ url: it.url, name: it.name })}
-              className={`group relative overflow-hidden rounded-2xl ${
+              onClick={() => setOpenIdx(i)}
+              className={`group relative overflow-hidden rounded-2xl active:scale-[0.98] transition ${
                 i % 7 === 0 ? "row-span-2" : ""
               }`}
             >
@@ -67,6 +89,7 @@ export const DriveGallery = ({ compact = false }: { compact?: boolean }) => {
                 src={it.url}
                 alt={it.name}
                 loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-70 group-hover:opacity-100 transition" />
@@ -78,19 +101,60 @@ export const DriveGallery = ({ compact = false }: { compact?: boolean }) => {
         </div>
       )}
 
-      {open && (
+      {current && (
         <div
-          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md grid place-items-center p-6 animate-fade-up"
-          onClick={() => setOpen(null)}
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md grid place-items-center p-3 sm:p-6 animate-fade-up touch-none"
+          onClick={close}
+          onTouchStart={(e) => {
+            const t = e.touches[0];
+            touchStart.current = { x: t.clientX, y: t.clientY };
+          }}
+          onTouchEnd={(e) => {
+            if (!touchStart.current) return;
+            const t = e.changedTouches[0];
+            const dx = t.clientX - touchStart.current.x;
+            const dy = t.clientY - touchStart.current.y;
+            touchStart.current = null;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+              dx < 0 ? next() : prev();
+            } else if (dy > 80) {
+              close();
+            }
+          }}
         >
           <button
-            onClick={() => setOpen(null)}
-            className="absolute top-6 right-6 h-12 w-12 rounded-full glass grid place-items-center"
+            onClick={(e) => { e.stopPropagation(); close(); }}
+            className="absolute top-4 right-4 h-12 w-12 rounded-full glass grid place-items-center z-10"
             aria-label="Close"
           >
             <X />
           </button>
-          <img src={open.url} alt={open.name} className="max-h-[85vh] max-w-full rounded-xl" />
+          <button
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full glass grid place-items-center z-10"
+            aria-label="Previous"
+          >
+            <ChevronLeft />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full glass grid place-items-center z-10"
+            aria-label="Next"
+          >
+            <ChevronRight />
+          </button>
+          <img
+            src={current.url}
+            alt={current.name}
+            onClick={(e) => e.stopPropagation()}
+            className="max-h-[85vh] max-w-full rounded-xl select-none"
+            draggable={false}
+          />
+          <div className="absolute bottom-4 left-0 right-0 text-center text-xs uppercase tracking-[0.25em] text-accent">
+            {openIdx! + 1} / {display.length} · {current.label}
+          </div>
         </div>
       )}
     </div>
