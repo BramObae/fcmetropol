@@ -7,7 +7,7 @@ const GalleryPage = () => (
       title="Gallery — FC Metropol HP Kenya"
       description="Inside the program: training sessions, match-day moments, trials and events from FC Metropol HP Kenya."
     />
-    <section className="pt-40 pb-12">
+    <section className="pt-32 md:pt-40 pb-12">
       <div className="container-pro">
         <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Gallery</div>
         <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
