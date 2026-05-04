@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 import hero1 from "@/assets/hero-1.jpg";
@@ -57,14 +58,14 @@ export const Hero = () => {
 
           <div className="flex flex-wrap gap-4">
             <Button asChild variant="hero" size="xl">
-              <a href="#join">
+              <Link to="/join">
                 Join the Program <ArrowRight className="ml-1" />
-              </a>
+              </Link>
             </Button>
             <Button asChild variant="outlineLight" size="xl">
-              <a href="#programs">
-                <Play className="mr-1" /> Get Scouted
-              </a>
+              <Link to="/programs">
+                <Play className="mr-1" /> Explore Programs
+              </Link>
             </Button>
           </div>
         </div>

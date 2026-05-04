@@ -1,4 +1,11 @@
 import { Instagram, Facebook, Twitter, Mail, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const SOCIALS = [
+  { Icon: Instagram, href: "https://www.instagram.com/fcmhpacademyke" },
+  { Icon: Facebook, href: "https://www.facebook.com/fcmhpacademyke" },
+  { Icon: Twitter, href: "https://x.com/FCMHPACADEMYKE" },
+];
 
 export const Footer = () => (
   <footer className="border-t border-border/60 bg-card/30">
@@ -23,10 +30,11 @@ export const Footer = () => (
         <div className="md:col-span-3">
           <div className="text-xs uppercase tracking-[0.25em] text-accent mb-4">Explore</div>
           <ul className="space-y-2 text-foreground/75">
-            <li><a href="#about" className="hover:text-accent">About</a></li>
-            <li><a href="#programs" className="hover:text-accent">Programs</a></li>
-            <li><a href="#gallery" className="hover:text-accent">Gallery</a></li>
-            <li><a href="#stories" className="hover:text-accent">Success Stories</a></li>
+            <li><Link to="/" className="hover:text-accent">Home</Link></li>
+            <li><Link to="/programs" className="hover:text-accent">Programs</Link></li>
+            <li><Link to="/gallery" className="hover:text-accent">Gallery</Link></li>
+            <li><Link to="/stories" className="hover:text-accent">Success Stories</Link></li>
+            <li><Link to="/join" className="hover:text-accent">Join</Link></li>
           </ul>
         </div>
 
@@ -37,8 +45,14 @@ export const Footer = () => (
             <li className="flex items-center gap-3"><Mail size={16} className="text-accent" /> hello@fcmetropolhp.com</li>
           </ul>
           <div className="flex gap-3 mt-6">
-            {[Instagram, Facebook, Twitter].map((Icon, i) => (
-              <a key={i} href="#" className="h-10 w-10 rounded-full glass grid place-items-center hover:bg-accent hover:text-accent-foreground transition">
+            {SOCIALS.map(({ Icon, href }, i) => (
+              <a
+                key={i}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-10 w-10 rounded-full glass grid place-items-center hover:bg-accent hover:text-accent-foreground transition"
+              >
                 <Icon size={16} />
               </a>
             ))}
