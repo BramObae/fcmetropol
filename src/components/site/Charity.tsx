@@ -1,4 +1,5 @@
 import { Heart, GraduationCap } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import charity from "@/assets/charity.jpg";
 
@@ -33,10 +34,10 @@ export const Charity = () => (
 
           <div className="flex flex-wrap gap-4">
             <Button asChild variant="hero" size="lg">
-              <a href="#join"><Heart size={18} /> Support a Player</a>
+              <Link to="/join"><Heart size={18} /> Support a Player</Link>
             </Button>
             <Button asChild variant="outlineLight" size="lg">
-              <a href="#join"><GraduationCap size={18} /> Apply for Scholarship</a>
+              <Link to="/join"><GraduationCap size={18} /> Apply for Scholarship</Link>
             </Button>
           </div>
         </div>
