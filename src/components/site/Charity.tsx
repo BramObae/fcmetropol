@@ -21,10 +21,10 @@ export const Charity = () => (
 
         <div className="order-1 lg:order-2">
           <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Charity & Scholarship</div>
-          <h2 className="font-display text-5xl md:text-7xl leading-[0.9] mb-8">
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.9] mb-6 md:mb-8">
             Football for <span className="text-gradient-gold">every child.</span>
           </h2>
-          <p className="text-lg text-foreground/75 leading-relaxed mb-6 font-light">
+          <p className="text-base sm:text-lg text-foreground/75 leading-relaxed mb-6 font-light">
             We believe talent is universal — opportunity is not. Our scholarship program covers
             training, gear, and travel for less-advantaged kids with the gift of football.
           </p>

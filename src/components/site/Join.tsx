@@ -23,13 +23,13 @@ export const Join = () => {
   return (
     <section id="join" className="section-pad relative">
       <div className="container-pro">
-        <div className="grid lg:grid-cols-12 gap-12">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12">
           <div className="lg:col-span-5">
             <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Join · Apply</div>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.9] mb-8">
+            <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.9] mb-6 md:mb-8">
               Your trial <span className="text-gradient-gold">starts here.</span>
             </h2>
-            <p className="text-foreground/75 text-lg font-light leading-relaxed mb-8">
+            <p className="text-foreground/75 text-base sm:text-lg font-light leading-relaxed mb-8">
               Submit your details and a short showcase. Our scouts review every application.
             </p>
             <ul className="space-y-3 text-foreground/70">
@@ -39,7 +39,7 @@ export const Join = () => {
             </ul>
           </div>
 
-          <form onSubmit={onSubmit} className="lg:col-span-7 glass-card rounded-3xl p-8 md:p-10 space-y-5">
+          <form onSubmit={onSubmit} className="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-8 md:p-10 space-y-5">
             <div className="grid md:grid-cols-2 gap-5">
               <div>
                 <Label htmlFor="name">Full name</Label>

@@ -11,10 +11,10 @@ const ProgramsPage = () => (
       title="Programs — FC Metropol HP Kenya"
       description="Training & development, player branding, scouting trials and international placement pathways for serious footballers."
     />
-    <section className="pt-40 pb-10">
+    <section className="pt-32 md:pt-40 pb-10">
       <div className="container-pro">
         <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Programs</div>
-        <h1 className="font-display text-6xl md:text-8xl leading-[0.9] max-w-4xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
           Four pillars. <span className="text-gradient-gold">One pathway to pro.</span>
         </h1>
         <p className="mt-6 text-lg text-foreground/75 max-w-2xl">

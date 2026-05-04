@@ -8,10 +8,10 @@ const StoriesPage = () => (
       title="Success Stories — FC Metropol HP Kenya"
       description="Real players, real placements. Meet footballers whose careers we've helped launch — and follow our latest social updates."
     />
-    <section className="pt-40 pb-10">
+    <section className="pt-32 md:pt-40 pb-10">
       <div className="container-pro">
         <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Success Stories</div>
-        <h1 className="font-display text-6xl md:text-8xl leading-[0.9] max-w-4xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
           Lives we've <span className="text-gradient-gold">transformed.</span>
         </h1>
       </div>

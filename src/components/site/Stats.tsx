@@ -32,7 +32,7 @@ const Counter = ({ to, suffix }: { to: number; suffix: string }) => {
     return () => obs.disconnect();
   }, [to]);
   return (
-    <span ref={ref} className="font-display text-5xl md:text-7xl text-gradient-gold">
+    <span ref={ref} className="font-display text-4xl sm:text-5xl md:text-7xl text-gradient-gold">
       {n.toLocaleString()}
       {suffix}
     </span>
@@ -40,8 +40,8 @@ const Counter = ({ to, suffix }: { to: number; suffix: string }) => {
 };
 
 export const Stats = () => (
-  <section className="relative py-20 border-y border-border/50">
-    <div className="container-pro grid grid-cols-2 md:grid-cols-4 gap-10">
+  <section className="relative py-14 md:py-20 border-y border-border/50">
+    <div className="container-pro grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
       {stats.map((s) => (
         <div key={s.label} className="text-center">
           <Counter to={s.value} suffix={s.suffix} />
