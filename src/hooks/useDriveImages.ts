@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+
 
 export type DriveImage = { id: string; name: string; url: string; thumb: string };
 
@@ -18,11 +18,6 @@ export function useDriveImages(folderId: string) {
       return;
     }
     setLoading(true);
-    supabase.functions
-      .invoke("drive-images", { body: null, method: "GET" as never })
-      .then(async () => {
-        // supabase-js .invoke doesn't support query strings cleanly; use fetch instead
-      });
 
     const url = `https://mjnijxotbcovosbeofsz.supabase.co/functions/v1/drive-images?folderId=${folderId}&size=s1600`;
     fetch(url)
