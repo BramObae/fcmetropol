@@ -10,7 +10,7 @@ const JoinPage = () => (
     <section className="pt-40 pb-4">
       <div className="container-pro">
         <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Join</div>
-        <h1 className="font-display text-6xl md:text-8xl leading-[0.9] max-w-4xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
           Your trial <span className="text-gradient-gold">starts here.</span>
         </h1>
       </div>

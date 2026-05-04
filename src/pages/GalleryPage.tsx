@@ -10,7 +10,7 @@ const GalleryPage = () => (
     <section className="pt-40 pb-12">
       <div className="container-pro">
         <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Gallery</div>
-        <h1 className="font-display text-6xl md:text-8xl leading-[0.9] max-w-4xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
           Inside the <span className="text-gradient-gold">program.</span>
         </h1>
         <p className="mt-6 text-lg text-foreground/75 max-w-2xl">
