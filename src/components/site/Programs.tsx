@@ -1,12 +1,8 @@
-import { Dumbbell, Sparkles, Search, Plane, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { PROGRAMS } from "./programs-data";
 
-const programs = [
-  { icon: Dumbbell, title: "Training & Development", desc: "Position-specific coaching, S&C, and tactical mastery from elite coaches.", tag: "01" },
-  { icon: Sparkles, title: "Player Branding & Profiling", desc: "Highlight reels, media kits, and social presence built for scouts.", tag: "02" },
-  { icon: Search, title: "Trials & Scouting", desc: "Curated trial events with verified club scouts and federation reps.", tag: "03" },
-  { icon: Plane, title: "Placement Opportunities", desc: "Direct contracts and academy placements across global leagues.", tag: "04" },
-];
+const programs = PROGRAMS.map((p) => ({ icon: p.icon, title: p.title, desc: p.short, tag: p.tag, id: p.id }));
 
 export const Programs = () => (
   <section id="programs" className="section-pad relative">
