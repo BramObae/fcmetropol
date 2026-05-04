@@ -1,4 +1,5 @@
 import { Dumbbell, Sparkles, Search, Plane, ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const programs = [
   { icon: Dumbbell, title: "Training & Development", desc: "Position-specific coaching, S&C, and tactical mastery from elite coaches.", tag: "01" },
@@ -37,9 +38,9 @@ export const Programs = () => (
             </div>
             <h3 className="relative text-2xl md:text-3xl font-semibold mb-3">{p.title}</h3>
             <p className="relative text-muted-foreground max-w-md mb-8">{p.desc}</p>
-            <a href="#join" className="relative inline-flex items-center gap-2 text-accent text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
+            <Link to="/join" className="relative inline-flex items-center gap-2 text-accent text-sm uppercase tracking-widest group-hover:gap-3 transition-all">
               Learn more <ArrowUpRight size={16} />
-            </a>
+            </Link>
           </article>
         ))}
       </div>
