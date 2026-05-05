@@ -6,46 +6,47 @@
 
 @layer base {
   :root {
-    /* Brand: deep green, black, white, gold */
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    /* Brand: pitch green, gold, warm ivory accents on a deep navy-green base */
+    --background: 165 40% 8%;
+    --foreground: 40 30% 96%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 165 30% 12%;
+    --card-foreground: 40 30% 96%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 165 30% 12%;
+    --popover-foreground: 40 30% 96%;
 
-    --primary: 145 75% 22%;
+    --primary: 152 70% 32%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 145 80% 38%;
+    --primary-glow: 145 75% 48%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 165 25% 16%;
+    --secondary-foreground: 40 30% 96%;
 
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 165 20% 18%;
+    --muted-foreground: 40 15% 75%;
 
-    --accent: 42 88% 55%;
-    --accent-foreground: 0 0% 8%;
+    --accent: 42 92% 58%;
+    --accent-foreground: 165 50% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 14%;
-    --ring: 145 75% 35%;
+    --border: 165 20% 22%;
+    --input: 165 20% 18%;
+    --ring: 145 75% 45%;
 
     --radius: 0.75rem;
 
-    --gradient-hero: linear-gradient(135deg, hsl(145 80% 12% / 0.85), hsl(0 0% 0% / 0.7));
+    --gradient-hero: linear-gradient(135deg, hsl(165 60% 10% / 0.85), hsl(200 50% 6% / 0.7));
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-gold: linear-gradient(135deg, hsl(42 88% 55%), hsl(38 95% 45%));
-    --gradient-radial: radial-gradient(ellipse at top, hsl(145 80% 18% / 0.4), transparent 60%);
+    --gradient-gold: linear-gradient(135deg, hsl(42 95% 62%), hsl(36 95% 50%));
+    --gradient-radial: radial-gradient(ellipse at top, hsl(152 70% 22% / 0.55), transparent 60%),
+                       radial-gradient(ellipse at bottom right, hsl(42 92% 50% / 0.10), transparent 50%);
 
-    --shadow-glow: 0 0 60px hsl(var(--primary-glow) / 0.35);
-    --shadow-gold: 0 10px 40px -10px hsl(var(--accent) / 0.4);
-    --shadow-elegant: 0 20px 60px -20px hsl(0 0% 0% / 0.6);
+    --shadow-glow: 0 0 60px hsl(var(--primary-glow) / 0.45);
+    --shadow-gold: 0 10px 40px -10px hsl(var(--accent) / 0.5);
+    --shadow-elegant: 0 20px 60px -20px hsl(165 60% 4% / 0.7);
 
     --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
   }
