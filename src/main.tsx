@@ -25,8 +25,5 @@ if (isPreviewHost || isInIframe) {
   navigator.serviceWorker?.getRegistrations().then((regs) => {
     regs.forEach((r) => r.unregister());
   });
-} else if ("serviceWorker" in navigator) {
-  import("virtual:pwa-register").then(({ registerSW }) => {
-    registerSW({ immediate: true });
-  });
 }
+// SW registration on production happens inside <PWAUpdateBanner /> so we can show an update prompt.

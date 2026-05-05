@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/logo.jpg";
 
 const links = [
   { to: "/", label: "Home" },
@@ -63,12 +64,16 @@ export const Navbar = () => {
           )}
         >
           <Link to="/" className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md">
-            <div className="relative h-9 w-9 rounded-lg bg-gradient-to-br from-primary to-primary-glow grid place-items-center shadow-[var(--shadow-glow)]">
-              <span className="font-display text-accent text-lg leading-none">M</span>
-            </div>
+            <img
+              src={logo}
+              alt="FC Metropol HP Kenya crest"
+              className="h-10 w-10 rounded-md object-contain drop-shadow"
+              width={40}
+              height={40}
+            />
             <div className="leading-tight">
-              <div className="font-display text-base tracking-wide">FC METROPOL</div>
-              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">HP · Kenya</div>
+              <div className="font-display text-base tracking-wide">FC METROPOL HP</div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Kenya · Est. 2021</div>
             </div>
           </Link>
 
