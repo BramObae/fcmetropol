@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 
-export type DriveImage = { id: string; name: string; url: string; thumb: string };
+export type DriveImage = { id: string; name: string; url: string; thumb: string; createdTime?: string | null };
 
 const cache = new Map<string, DriveImage[]>();
 

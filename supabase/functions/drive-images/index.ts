@@ -44,6 +44,7 @@ Deno.serve(async (req) => {
     const files = (data.files ?? []).map((f: any) => ({
       id: f.id,
       name: f.name,
+      createdTime: f.createdTime ?? null,
       // upscale the thumbnail by replacing the trailing =sNNN size token
       url: f.thumbnailLink ? f.thumbnailLink.replace(/=s\d+(-c)?$/, `=${size}`) : null,
       thumb: f.thumbnailLink,
