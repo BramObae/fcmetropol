@@ -41,7 +41,7 @@ export const Hero = () => {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 glass rounded-full mb-8">
             <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
             <span className="text-xs uppercase tracking-[0.25em] text-foreground/80">
-              Global Football Development · Kenya
+              FC Metropol HP · Kenya's Pathway to Pro Football
             </span>
           </div>
 
@@ -52,8 +52,9 @@ export const Hero = () => {
           </h1>
 
           <p className="text-base sm:text-lg md:text-2xl text-foreground/75 max-w-2xl mb-8 sm:mb-10 font-light">
-            Develop. Package. Place. — An elite pathway forging the next generation of
-            world-class footballers through training, branding, and international placement.
+            We <span className="text-foreground font-medium">develop</span>, <span className="text-foreground font-medium">package</span> and <span className="text-foreground font-medium">place</span> Africa's
+            most ambitious footballers — pairing world-class coaching with personal branding and direct
+            pathways to clubs across Europe, the Gulf and beyond.
           </p>
 
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
