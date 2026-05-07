@@ -12,6 +12,8 @@ const ProgramsPage = lazy(() => import("./pages/ProgramsPage"));
 const GalleryPage = lazy(() => import("./pages/GalleryPage"));
 const StoriesPage = lazy(() => import("./pages/StoriesPage"));
 const JoinPage = lazy(() => import("./pages/JoinPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const PartnersPage = lazy(() => import("./pages/PartnersPage"));
 
 const queryClient = new QueryClient();
 
@@ -31,7 +33,9 @@ const App = () => (
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="/programs" element={<ProgramsPage />} />
+              <Route path="/partners" element={<PartnersPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/stories" element={<StoriesPage />} />
               <Route path="/join" element={<JoinPage />} />
