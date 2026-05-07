@@ -1,0 +1,42 @@
+{
+  "name": "FC Metropol",
+  "short_name": "FC Metropol",
+  "description": "FC Metropol HP Kenya is a modern football development program dedicated to turning talented amateurs into professional players.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0b0b0d",
+  "background_color": "#0b0b0d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://storage.googleapis.com/gpt-engineer-file-uploads/v3bMCcUtRvQxqaVjrq2ZnElH9z43/social-images/social-1777921117288-IMG-20260501-WA0032.webp",
+      "sizes": "540x720",
+      "type": "image/webp",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["sports"],
+  "shortcuts": [
+    {
+      "name": "FC Metropol",
+      "short_name": "Metropol",
+      "description": "Football development program",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "any"
+        }
+      ]
+    }
+  ]
+}
