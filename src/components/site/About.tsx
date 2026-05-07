@@ -11,21 +11,30 @@ export const About = () => (
     <div className="container-pro">
       <div className="grid lg:grid-cols-12 gap-16 items-start">
         <div className="lg:col-span-5">
-          <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">About</div>
+          <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">About Us</div>
           <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.9]">
-            Where talent meets <span className="text-gradient-gold">opportunity.</span>
+            From amateur to <span className="text-gradient-gold">professional.</span>
           </h2>
+          <p className="mt-6 text-sm uppercase tracking-[0.25em] text-foreground/60">
+            Africa · Europe · America · Asia · Middle East
+          </p>
         </div>
-        <div className="lg:col-span-7 space-y-5 text-base sm:text-lg text-foreground/75 font-light leading-relaxed">
+        <div className="lg:col-span-7 space-y-5 text-base sm:text-lg text-foreground/80 font-light leading-relaxed">
           <p>
-            FC Metropol HP Kenya is a global football development program built to bridge the gap
-            between raw talent and professional football. We identify, mold, and present players
-            to the world stage.
+            Have you ever heard of <span className="text-foreground font-medium">FC Metropol HP Kenya</span>?
+            We are a football programme that transforms amateur players into professionals — not only
+            by sharpening their skills, but by <span className="text-foreground font-medium">packaging</span> their
+            profiles and <span className="text-foreground font-medium">placing</span> them where they belong.
           </p>
           <p>
-            Our mission is simple: transform amateur players into world-class professionals
-            through structured training, modern branding, and an unmatched international
-            placement network.
+            We help players refine their game, produce scout-ready materials, and connect them to
+            the right opportunities — whether that's a <span className="text-accent">club</span>, an
+            <span className="text-accent"> academy</span>, or a <span className="text-accent">college</span>.
+          </p>
+          <p>
+            Our network spans five continents — Africa, Europe, America, Asia and the Middle East —
+            and through our charity arm we extend full scholarships to less-advantaged children with
+            real footballing potential.
           </p>
         </div>
       </div>
