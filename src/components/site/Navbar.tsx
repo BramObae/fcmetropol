@@ -79,7 +79,7 @@ export const Navbar = () => {
             </div>
           </Link>
 
-          <ul className="hidden lg:flex items-center gap-8">
+          <ul className="hidden lg:flex items-center gap-6 xl:gap-8">
             {links.map((l) => (
               <li key={l.to}>
                 <NavLink
