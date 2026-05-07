@@ -24,12 +24,14 @@ export const Charity = () => (
           <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.9] mb-6 md:mb-8">
             Football for <span className="text-gradient-gold">every child.</span>
           </h2>
-          <p className="text-base sm:text-lg text-foreground/75 leading-relaxed mb-6 font-light">
-            We believe talent is universal — opportunity is not. Our scholarship program covers
-            training, gear, and travel for less-advantaged kids with the gift of football.
+          <p className="text-base sm:text-lg text-foreground/80 leading-relaxed mb-6 font-light">
+            Talent is universal — opportunity is not. Through our charity programme we offer
+            full scholarships to less-advantaged children, covering elite training, kit, travel
+            and welfare so the gift of football is never lost to circumstance.
           </p>
           <p className="text-foreground/70 mb-10">
-            Every scholarship granted is a future rewritten — and a community uplifted.
+            Every scholarship granted is a future rewritten — a player developed, packaged and
+            placed on a real pathway to the professional game.
           </p>
 
           <div className="flex flex-wrap gap-4">
