@@ -4,12 +4,11 @@ import { Hero } from "@/components/site/Hero";
 import { Stats } from "@/components/site/Stats";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 
 const About = lazy(() => import("@/components/site/About").then((m) => ({ default: m.About })));
 const Programs = lazy(() => import("@/components/site/Programs").then((m) => ({ default: m.Programs })));
 const GlobalReach = lazy(() => import("@/components/site/GlobalReach").then((m) => ({ default: m.GlobalReach })));
-const Partners = lazy(() => import("@/components/site/Partners").then((m) => ({ default: m.Partners })));
 const Charity = lazy(() => import("@/components/site/Charity").then((m) => ({ default: m.Charity })));
 const DriveGallery = lazy(() => import("@/components/site/DriveGallery").then((m) => ({ default: m.DriveGallery })));
 
@@ -31,13 +30,23 @@ const Home = () => (
       description="Global football development program. Develop, package and place elite players worldwide through training, branding and international placements."
     />
     <Hero />
-    <Stats />
+    <div className="reveal"><Stats /></div>
     <Suspense fallback={<SectionSkeleton />}>
-      <About />
-      <Programs />
-      <GlobalReach />
+      <div className="reveal"><About /></div>
 
-      <section className="section-pad">
+      {/* About teaser CTA */}
+      <section className="pb-4">
+        <div className="container-pro flex justify-center reveal">
+          <Button asChild variant="outlineLight" size="lg">
+            <Link to="/about">Read our full story <ArrowRight size={18} /></Link>
+          </Button>
+        </div>
+      </section>
+
+      <div className="reveal"><Programs /></div>
+      <div className="reveal"><GlobalReach /></div>
+
+      <section className="section-pad reveal">
         <div className="container-pro">
           <div className="flex items-end justify-between gap-6 mb-10 flex-wrap">
             <div>
@@ -52,8 +61,7 @@ const Home = () => (
         </div>
       </section>
 
-      <Partners />
-      <Charity />
+      <div className="reveal"><Charity /></div>
     </Suspense>
   </>
 );

@@ -22,7 +22,9 @@ export const Footer = () => (
 
         <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground/75">
           <Link to="/" className="hover:text-accent">Home</Link>
+          <Link to="/about" className="hover:text-accent">About</Link>
           <Link to="/programs" className="hover:text-accent">Programs</Link>
+          <Link to="/partners" className="hover:text-accent">Partners</Link>
           <Link to="/gallery" className="hover:text-accent">Gallery</Link>
           <Link to="/stories" className="hover:text-accent">Stories</Link>
           <Link to="/join" className="hover:text-accent">Join</Link>
