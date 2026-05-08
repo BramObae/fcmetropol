@@ -99,11 +99,8 @@ export const Navbar = () => {
             ))}
           </ul>
 
-          <div className="hidden lg:block">
-            <Button asChild variant="hero" size="sm">
-              <Link to="/join">Get Scouted</Link>
-            </Button>
-          </div>
+          <div className="hidden lg:block" />
+
 
           <button
             ref={triggerRef}
