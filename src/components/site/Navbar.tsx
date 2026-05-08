@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.jpg";
 
@@ -9,7 +8,6 @@ const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/programs", label: "Programs" },
-  { to: "/partners", label: "Partners" },
   { to: "/gallery", label: "Gallery" },
   { to: "/stories", label: "Stories" },
   { to: "/join", label: "Join" },
@@ -100,11 +98,8 @@ export const Navbar = () => {
             ))}
           </ul>
 
-          <div className="hidden lg:block">
-            <Button asChild variant="hero" size="sm">
-              <Link to="/join">Get Scouted</Link>
-            </Button>
-          </div>
+          <div className="hidden lg:block" />
+
 
           <button
             ref={triggerRef}
@@ -147,11 +142,6 @@ export const Navbar = () => {
                 </NavLink>
               </li>
             ))}
-            <li className="pt-3">
-              <Button asChild variant="hero" className="w-full min-h-[44px]">
-                <Link to="/join">Get Scouted</Link>
-              </Button>
-            </li>
           </ul>
         </div>
       </div>
