@@ -1,7 +1,7 @@
 {
-  "name": "FC Metropol",
+  "name": "FC Metropol HP Kenya",
   "short_name": "FC Metropol",
-  "description": "FC Metropol HP Kenya is a modern football development program dedicated to turning talented amateurs into professional players.",
+  "description": "FC Metropol HP Kenya — football development program transforming amateur players into professionals.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,52 +9,13 @@
   "background_color": "#0b0b0d",
   "orientation": "portrait-primary",
   "icons": [
-    {
-      "src": "/icon-192.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-192.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icon-512.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "maskable"
-    }
+    { "src": "/favicon-16.png", "sizes": "16x16", "type": "image/png" },
+    { "src": "/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "screenshots": [
-    {
-      "src": "https://storage.googleapis.com/gpt-engineer-file-uploads/v3bMCcUtRvQxqaVjrq2ZnElH9z43/social-images/social-1777921117288-IMG-20260501-WA0032.webp",
-      "sizes": "540x720",
-      "type": "image/webp",
-      "form_factor": "narrow"
-    }
-  ],
-  "categories": ["sports"],
-  "shortcuts": [
-    {
-      "name": "FC Metropol",
-      "short_name": "Metropol",
-      "description": "Football development program",
-      "url": "/",
-      "icons": [
-        {
-          "src": "/icon-192.jpg",
-          "sizes": "192x192"
-        }
-      ]
-    }
-  ]
+  "categories": ["sports"]
 }
