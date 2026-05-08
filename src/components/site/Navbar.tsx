@@ -143,11 +143,6 @@ export const Navbar = () => {
                 </NavLink>
               </li>
             ))}
-            <li className="pt-3">
-              <Button asChild variant="hero" className="w-full min-h-[44px]">
-                <Link to="/join">Get Scouted</Link>
-              </Button>
-            </li>
           </ul>
         </div>
       </div>
