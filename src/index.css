@@ -6,47 +6,53 @@
 
 @layer base {
   :root {
-    /* Brand: pitch green, gold, warm ivory accents on a deep navy-green base */
-    --background: 165 40% 8%;
+    /* Brand: deep royal blue + gold, with subtle purple highlights */
+    --background: 222 60% 6%;
     --foreground: 40 30% 96%;
 
-    --card: 165 30% 12%;
+    --card: 222 45% 11%;
     --card-foreground: 40 30% 96%;
 
-    --popover: 165 30% 12%;
+    --popover: 222 45% 11%;
     --popover-foreground: 40 30% 96%;
 
-    --primary: 152 70% 32%;
+    --primary: 218 90% 52%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 145 75% 48%;
+    --primary-glow: 212 95% 64%;
 
-    --secondary: 165 25% 16%;
+    --secondary: 268 55% 22%;
     --secondary-foreground: 40 30% 96%;
 
-    --muted: 165 20% 18%;
-    --muted-foreground: 40 15% 75%;
+    --muted: 222 30% 16%;
+    --muted-foreground: 220 15% 75%;
 
     --accent: 42 92% 58%;
-    --accent-foreground: 165 50% 10%;
+    --accent-foreground: 222 60% 8%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 165 20% 22%;
-    --input: 165 20% 18%;
-    --ring: 145 75% 45%;
+    --border: 222 30% 20%;
+    --input: 222 30% 16%;
+    --ring: 218 90% 55%;
+
+    --purple: 268 75% 60%;
+    --purple-glow: 278 80% 70%;
 
     --radius: 0.75rem;
 
-    --gradient-hero: linear-gradient(135deg, hsl(165 60% 10% / 0.85), hsl(200 50% 6% / 0.7));
+    --gradient-hero: linear-gradient(135deg, hsl(222 70% 8% / 0.88), hsl(240 60% 6% / 0.75));
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-gold: linear-gradient(135deg, hsl(42 95% 62%), hsl(36 95% 50%));
-    --gradient-radial: radial-gradient(ellipse at top, hsl(152 70% 22% / 0.55), transparent 60%),
+    --gradient-purple: linear-gradient(135deg, hsl(var(--purple)), hsl(var(--purple-glow)));
+    --gradient-royal: linear-gradient(135deg, hsl(218 90% 45%), hsl(268 75% 55%));
+    --gradient-radial: radial-gradient(ellipse at top, hsl(218 80% 28% / 0.55), transparent 60%),
+                       radial-gradient(ellipse at bottom left, hsl(268 70% 35% / 0.18), transparent 55%),
                        radial-gradient(ellipse at bottom right, hsl(42 92% 50% / 0.10), transparent 50%);
 
     --shadow-glow: 0 0 60px hsl(var(--primary-glow) / 0.45);
     --shadow-gold: 0 10px 40px -10px hsl(var(--accent) / 0.5);
-    --shadow-elegant: 0 20px 60px -20px hsl(165 60% 4% / 0.7);
+    --shadow-elegant: 0 20px 60px -20px hsl(222 80% 3% / 0.75);
 
     --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
   }

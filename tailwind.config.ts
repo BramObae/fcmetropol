@@ -48,6 +48,10 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         "primary-glow": "hsl(var(--primary-glow))",
+        purple: {
+          DEFAULT: "hsl(var(--purple))",
+          glow: "hsl(var(--purple-glow))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
