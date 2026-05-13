@@ -1,6 +1,6 @@
 import { Instagram, Facebook, Twitter, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo1.jpg";
+import logo1 from "@/assets/logo1.jpg";
 
 const SOCIALS = [
   { Icon: Instagram, href: "https://www.instagram.com/fcmhpacademyke", label: "Instagram" },
