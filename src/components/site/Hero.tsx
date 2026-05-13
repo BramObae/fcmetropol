@@ -7,7 +7,26 @@ import hero1 from "@/assets/hero1.jpeg";
 import hero2 from "@/assets/hero2.jpeg";
 import hero3 from "@/assets/hero3.jpeg";
 
-const slides = [hero1, hero2, hero3];
+import back1 from "@/assets/back1.jpeg";
+import back2 from "@/assets/back2.jpeg";
+import back3 from "@/assets/back3.jpeg";
+import back4 from "@/assets/back4.jpeg";
+import back5 from "@/assets/back5.jpeg";
+import back6 from "@/assets/back6.jpeg";
+import back7 from "@/assets/back7.jpeg";
+
+const slides = [
+  hero1,
+  hero2,
+  hero3,
+  back1,
+  back2,
+  back3,
+  back4,
+  back5,
+  back6,
+  back7,
+];
 
 const countries = [
   { code: "ke", name: "Kenya" },
@@ -82,11 +101,9 @@ export const Hero = () => {
           {/* FLAGS MARQUEE */}
           <div className="group relative overflow-hidden rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-xl py-3">
 
-            {/* EDGE FADES */}
             <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
 
-            {/* TRACK */}
             <div className="flex w-max marquee group-hover:[animation-play-state:paused]">
 
               {[...countries, ...countries].map((c, idx) => (
@@ -114,7 +131,6 @@ export const Hero = () => {
         {/* HERO CONTENT */}
         <div className="max-w-4xl animate-fade-up">
 
-          {/* TITLE */}
           <h1
             className="
               font-display
@@ -140,7 +156,6 @@ export const Hero = () => {
             </span>
           </h1>
 
-          {/* DESCRIPTION */}
           <p
             className="
               text-sm
@@ -159,7 +174,6 @@ export const Hero = () => {
             scholarship opportunities across Europe, the Gulf, America and beyond.
           </p>
 
-          {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
 
             <Button
