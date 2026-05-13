@@ -19,7 +19,7 @@ export const PROGRAMS: ProgramDetail[] = [
     id: "training",
     tag: "01",
     icon: Dumbbell,
-    title: "Training & Development",
+    title: "Player Training & Development",
     short: "Position-specific coaching, S&C, and tactical mastery from elite coaches.",
     long:
       "Our flagship pillar — a high-performance environment engineered to turn raw talent into career-ready athletes. Players follow a periodised 12-week cycle covering technical mastery, tactical IQ, athletic development and recovery science. Sessions are led by UEFA & CAF licensed coaches who have worked across European academies and African top flights, with daily individual feedback so progress is measurable, not just promised.",
@@ -36,7 +36,7 @@ export const PROGRAMS: ProgramDetail[] = [
       "Tactical awareness scored against pro-academy benchmarks",
       "Reduced injury risk through screened movement profiling",
     ],
-    duration: "12-week cycles · 5 sessions / week",
+    duration: "16-week cycles · 5 sessions / week",
     format: "On-site · Nairobi HQ",
     level: "U13 – U23",
   },
@@ -61,8 +61,8 @@ export const PROGRAMS: ProgramDetail[] = [
       "Distribution to 30+ agents and academies in our network",
       "Higher conversion from trial invitation to contract offer",
     ],
-    duration: "4 – 6 weeks",
-    format: "Hybrid · Nairobi + remote",
+    duration: "16 weeks",
+    format: "Nairobi",
     level: "All levels",
   },
   {
@@ -109,7 +109,7 @@ export const PROGRAMS: ProgramDetail[] = [
     outcomes: [
       "Players signed across Europe, Gulf and North America",
       "Full duty-of-care wrap for the first competitive season",
-      "Long-term career planning beyond the first contract",
+      "Long term career planning beyond the first contract",
     ],
     duration: "Per opportunity",
     format: "Global · 5 continents",
