@@ -12,19 +12,13 @@ const partners = [
   { name: "Metropol Global Division", logo: mbg2 },
 ];
 
-// 🌍 FULL GLOBAL FOOTBALL NETWORK
+// 🌍 Global football footprint
 const countries = [
-  // Europe
   { code: "gb", name: "United Kingdom" },
   { code: "ee", name: "Estonia" },
-
-  // North America
   { code: "us", name: "United States" },
-
-  // South America
   { code: "br", name: "Brazil" },
 
-  // Africa
   { code: "ke", name: "Kenya" },
   { code: "tz", name: "Tanzania" },
   { code: "rw", name: "Rwanda" },
@@ -34,50 +28,50 @@ const countries = [
   { code: "eg", name: "Egypt" },
   { code: "tn", name: "Tunisia" },
   { code: "ma", name: "Morocco" },
-
-  // Asia / Middle East (placeholder expansion ready)
 ];
 
 const loopPartners = [...partners, ...partners, ...partners];
 const loopCountries = [...countries, ...countries, ...countries];
 
 export const Partners = () => (
-  <section className="relative py-24 border-y border-border/40 overflow-hidden">
+  <section className="relative py-28 border-y border-border/40 overflow-hidden">
 
-    {/* BACKGROUND IMAGE */}
+    {/* BACKGROUND (MORE VISIBLE, LESS DULL) */}
     <img
       src={bg}
       alt=""
-      className="absolute inset-0 w-full h-full object-cover opacity-35"
+      className="absolute inset-0 w-full h-full object-cover opacity-45"
     />
-
-    {/* SOFT CINEMATIC OVERLAY */}
-    <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/40 to-background/85" />
+    <div className="absolute inset-0 bg-gradient-to-b from-background/65 via-background/35 to-background/85" />
 
     <div className="relative z-10 container-pro">
 
       {/* HEADER */}
-      <div className="max-w-3xl mb-14">
+      <div className="max-w-3xl mb-16">
 
-        <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-          Global Scouting & Development Network
+        <div className="text-xs uppercase tracking-[0.35em] text-accent mb-4">
+          Global Football Ecosystem
         </div>
 
-        <h2 className="font-display text-3xl sm:text-5xl md:text-6xl leading-tight">
-          A worldwide ecosystem of clubs,<br />
-          academies & performance partners.
+        <h2 className="font-display text-4xl sm:text-5xl md:text-6xl leading-[1.05]">
+          Clubs, academies & partners<br />
+          across a worldwide network.
         </h2>
 
-        <p className="mt-4 text-foreground/75 text-sm sm:text-base leading-relaxed">
-          FC Metropol HP operates as part of an international football ecosystem,
-          connecting elite development pathways across{" "}
-          <span className="text-foreground font-medium">Europe, Africa, North America, and South America</span>.
-          Our network includes sister clubs, federations, academies, and talent development partners.
-        </p>
+        <p className="mt-5 text-foreground/75 text-sm sm:text-base leading-relaxed">
+          FC Metropol HP operates within a structured international football pathway,
+          connected to <span className="text-foreground font-medium">FC Metropol Estonia</span>,
+          a club competing in <span className="text-accent font-semibold">Estonia Division 2</span>,
+          and an affiliate of the Metropol Baltic Group.
 
+          <br /><br />
+
+          This network spans development partners across Europe, Africa, North America,
+          South America, Asia, and the Middle East.
+        </p>
       </div>
 
-      {/* PARTNERS MARQUEE */}
+      {/* PARTNERS */}
       <div className="relative overflow-hidden mb-16">
 
         <div className="pointer-events-none absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-background to-transparent z-10" />
@@ -88,8 +82,9 @@ export const Partners = () => (
           {loopPartners.map((p, i) => (
             <div
               key={i}
-              className="glass-card rounded-3xl px-6 py-5 flex items-center gap-5 min-w-[300px] md:min-w-[360px] border border-white/10"
+              className="glass-card rounded-3xl px-6 py-5 flex items-center gap-5 min-w-[320px] md:min-w-[380px] border border-white/10 hover:border-accent/30 transition"
             >
+
               <div className="h-16 w-16 md:h-20 md:w-20 grid place-items-center rounded-2xl bg-white/5 p-2">
                 <img
                   src={p.logo}
@@ -99,38 +94,39 @@ export const Partners = () => (
               </div>
 
               <div>
-                <div className="text-[10px] uppercase tracking-[0.3em] text-accent mb-1">
+                <div className="text-[10px] uppercase tracking-[0.35em] text-accent mb-1">
                   Strategic Partner
                 </div>
                 <div className="font-display text-base md:text-lg leading-tight">
                   {p.name}
                 </div>
               </div>
+
             </div>
           ))}
 
         </div>
       </div>
 
-      {/* COUNTRIES TITLE */}
-      <div className="mb-4">
-        <div className="text-xs uppercase tracking-[0.3em] text-accent">
-          Active & Emerging Football Markets
+      {/* NETWORK TITLE */}
+      <div className="mb-5">
+        <div className="text-xs uppercase tracking-[0.35em] text-accent">
+          Active Football Markets & Development Regions
         </div>
       </div>
 
-      {/* COUNTRIES MARQUEE */}
+      {/* COUNTRIES */}
       <div className="relative overflow-hidden">
 
         <div className="pointer-events-none absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-background to-transparent z-10" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-background to-transparent z-10" />
 
-        <div className="flex w-max marquee group hover:[animation-play-state:paused] gap-6">
+        <div className="flex w-max marquee group hover:[animation-play-state:paused] gap-5">
 
           {loopCountries.map((c, i) => (
             <div
               key={i}
-              className="flex items-center gap-2 glass px-5 py-3 rounded-full whitespace-nowrap border border-white/10"
+              className="flex items-center gap-2 glass px-5 py-3 rounded-full border border-white/10 whitespace-nowrap"
             >
               <img
                 src={`https://flagcdn.com/w40/${c.code}.png`}
