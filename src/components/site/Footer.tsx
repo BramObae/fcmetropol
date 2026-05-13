@@ -27,6 +27,7 @@ export const Footer = () => (
           
           <Link to="/gallery" className="hover:text-accent">Gallery</Link>
           <Link to="/stories" className="hover:text-accent">Stories</Link>
+           <Link to="/partners" className="hover:text-accent">Partners</Link>
           <Link to="/join" className="hover:text-accent">Join</Link>
         </nav>
 
