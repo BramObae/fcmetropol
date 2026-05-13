@@ -53,13 +53,14 @@ export const Hero = () => {
         </div>
       ))}
 
-      {/* OVERLAYS */}
-      <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+      {/* ✅ LIGHTER OVERLAY (FIXED VISIBILITY) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/10 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/20 via-transparent to-background/20" />
 
+      {/* CONTENT */}
       <div className="relative z-10 container-pro min-h-screen flex flex-col justify-center pt-32 pb-20">
 
-        {/* FLAGS MARQUEE (FIXED USING YOUR CSS .marquee) */}
+        {/* FLAGS MARQUEE */}
         <div className="mb-8">
           <div className="group relative overflow-hidden rounded-full glass py-2">
 
@@ -67,10 +68,9 @@ export const Hero = () => {
             <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-background to-transparent z-10" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-background to-transparent z-10" />
 
-            {/* MARQUEE TRACK */}
+            {/* marquee track */}
             <div className="flex w-max marquee group-hover:[animation-play-state:paused]">
-
-              {[...countries, [...countries], [...countries]].flat().map((c, idx) => (
+              {[...countries, ...countries].map((c, idx) => (
                 <div
                   key={idx}
                   className="mx-6 flex items-center gap-2 text-xs whitespace-nowrap"
@@ -86,8 +86,8 @@ export const Hero = () => {
                   </span>
                 </div>
               ))}
-
             </div>
+
           </div>
         </div>
 
