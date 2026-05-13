@@ -9,7 +9,7 @@ const logos = [
   { name: "FISA Pro Club", src: "/partners/fisa.jpg" },
   { name: "ISMFF — Inter-School Mega Football Festival", src: "/partners/ismff.jpg" },
   { name: "Metropol Baltic Group", src: "/partners/mbg.jpg" },
-  { name: "Metropol Baltic Group", src: "/partners/mbg-2.jpg" },
+  { name: "Metropol Baltic Group", src: "//mbg-2.jpg" },
 ];
 
 const affiliates = [
