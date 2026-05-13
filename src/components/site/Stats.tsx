@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 const stats = [
-  { value: 240, suffix: "+", label: "Players Placed" },
+  { value: 500, suffix: "+", label: "Players Placed" },
   { value: 32, suffix: "", label: "Countries Reached" },
-  { value: 1500, suffix: "+", label: "Trials Completed" },
-  { value: 18, suffix: "", label: "Partner Clubs" },
+  { value: 3000, suffix: "+", label: "Trials Completed" },
+  { value: 20, suffix: "", label: "Partner Clubs" },
 ];
 
 const Counter = ({ to, suffix }: { to: number; suffix: string }) => {
