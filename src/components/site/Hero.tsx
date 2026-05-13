@@ -170,7 +170,7 @@ export const Hero = () => {
           >
             FC Metropol HP identifies, develops and places ambitious African
             footballers through elite coaching, international scouting exposure,
-            tournament tours and direct pathways into clubs, academies and
+            tournament tours and direct pathways into clubs, academics and
             scholarship opportunities across Europe, the Gulf, America and beyond.
           </p>
 
