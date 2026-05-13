@@ -59,7 +59,7 @@ export const Hero = () => {
 
       <div className="relative z-10 container-pro min-h-screen flex flex-col justify-center pt-32 pb-20">
 
-        {/* FLAGS CAROUSEL */}
+        {/* FLAGS MARQUEE (FIXED USING YOUR CSS .marquee) */}
         <div className="mb-8">
           <div className="group relative overflow-hidden rounded-full glass py-2">
 
@@ -67,9 +67,10 @@ export const Hero = () => {
             <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-background to-transparent z-10" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-background to-transparent z-10" />
 
-            {/* moving track */}
-            <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
-              {[...countries, ...countries].map((c, idx) => (
+            {/* MARQUEE TRACK */}
+            <div className="flex w-max marquee group-hover:[animation-play-state:paused]">
+
+              {[...countries, [...countries], [...countries]].flat().map((c, idx) => (
                 <div
                   key={idx}
                   className="mx-6 flex items-center gap-2 text-xs whitespace-nowrap"
@@ -80,11 +81,13 @@ export const Hero = () => {
                     className="h-4 w-6 rounded-sm object-cover"
                     loading="lazy"
                   />
-                  <span className="uppercase tracking-wider">{c.name}</span>
+                  <span className="uppercase tracking-wider">
+                    {c.name}
+                  </span>
                 </div>
               ))}
-            </div>
 
+            </div>
           </div>
         </div>
 
