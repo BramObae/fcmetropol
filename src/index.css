@@ -6,50 +6,51 @@
 
 @layer base {
   :root {
-    /* PREMIUM ROYAL BLUE + GOLD */
 
-    --background: 210 55% 14%;
-    --foreground: 210 40% 98%;
+    /* LIGHTER PREMIUM BLUE + GOLD */
 
-    --card: 210 48% 18%;
-    --card-foreground: 210 40% 98%;
+    --background: 205 75% 94%;
+    --foreground: 220 35% 16%;
 
-    --popover: 210 48% 18%;
-    --popover-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 35% 16%;
 
-    --primary: 205 100% 60%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 35% 16%;
+
+    --primary: 205 100% 56%;
     --primary-foreground: 0 0% 100%;
 
-    --primary-glow: 200 100% 72%;
+    --primary-glow: 198 100% 72%;
 
-    --secondary: 210 42% 24%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 205 70% 88%;
+    --secondary-foreground: 220 30% 20%;
 
-    --muted: 210 35% 22%;
-    --muted-foreground: 210 18% 78%;
+    --muted: 205 45% 90%;
+    --muted-foreground: 220 18% 42%;
 
-    --accent: 42 96% 58%;
-    --accent-foreground: 220 45% 10%;
+    --accent: 42 96% 56%;
+    --accent-foreground: 220 35% 12%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 210 30% 28%;
-    --input: 210 32% 22%;
-    --ring: 205 100% 60%;
+    --border: 205 45% 82%;
+    --input: 205 55% 92%;
+    --ring: 205 100% 56%;
 
-    --purple: 260 75% 68%;
-    --purple-glow: 270 85% 78%;
+    --purple: 258 78% 70%;
+    --purple-glow: 270 90% 80%;
 
     --radius: 0.9rem;
 
-    /* GRADIENTS */
+    /* MAIN GRADIENTS */
 
     --gradient-hero:
       linear-gradient(
         135deg,
-        hsl(210 60% 18% / 0.96),
-        hsl(205 75% 26% / 0.93)
+        hsl(205 100% 95%),
+        hsl(202 100% 88%)
       );
 
     --gradient-primary:
@@ -62,7 +63,7 @@
     --gradient-gold:
       linear-gradient(
         135deg,
-        hsl(42 96% 62%),
+        hsl(42 96% 60%),
         hsl(35 92% 52%)
       );
 
@@ -76,53 +77,53 @@
     --gradient-royal:
       linear-gradient(
         135deg,
-        hsl(205 100% 56%),
-        hsl(42 96% 56%)
+        hsl(205 100% 58%),
+        hsl(42 96% 58%)
       );
 
-    /* MAIN BACKGROUND */
+    /* BEAUTIFUL LIGHT BLUE BACKGROUND */
 
     --gradient-radial:
       radial-gradient(
-        ellipse 75% 60% at 15% 0%,
-        hsl(205 100% 45% / 0.30),
+        ellipse 80% 60% at 15% 0%,
+        hsl(205 100% 75% / 0.55),
         transparent 60%
       ),
 
       radial-gradient(
         ellipse 60% 45% at 85% 10%,
-        hsl(42 96% 55% / 0.12),
+        hsl(42 96% 62% / 0.18),
         transparent 60%
       ),
 
       radial-gradient(
-        ellipse 75% 55% at 50% 100%,
-        hsl(210 100% 38% / 0.28),
+        ellipse 70% 50% at 50% 100%,
+        hsl(198 100% 82% / 0.45),
         transparent 65%
       ),
 
       radial-gradient(
         ellipse 40% 30% at 90% 90%,
-        hsl(260 70% 60% / 0.10),
+        hsl(258 70% 75% / 0.18),
         transparent 70%
       ),
 
       linear-gradient(
         180deg,
-        hsl(210 58% 15%),
-        hsl(208 60% 18%)
+        hsl(205 90% 96%),
+        hsl(202 85% 92%)
       );
 
     /* SHADOWS */
 
     --shadow-glow:
-      0 0 50px hsl(var(--primary-glow) / 0.30);
+      0 0 45px hsl(var(--primary-glow) / 0.28);
 
     --shadow-gold:
-      0 10px 40px -10px hsl(var(--accent) / 0.35);
+      0 10px 40px -10px hsl(var(--accent) / 0.25);
 
     --shadow-elegant:
-      0 20px 60px -20px rgba(0, 0, 0, 0.45);
+      0 20px 60px -20px rgba(0, 70, 140, 0.16);
 
     --transition-smooth:
       cubic-bezier(0.22, 1, 0.36, 1);
@@ -162,12 +163,18 @@
 }
 
 @layer components {
+
   .glass {
-    @apply bg-white/[0.08] backdrop-blur-xl border border-white/10;
+    background: rgba(255, 255, 255, 0.42);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
   }
 
   .glass-card {
-    @apply bg-white/[0.06] backdrop-blur-md border border-white/10;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: var(--shadow-elegant);
   }
 
   .text-gradient-gold {
@@ -212,11 +219,12 @@
   }
 
   .hero-overlay {
-    background: linear-gradient(
-      to bottom,
-      rgba(5, 15, 30, 0.45),
-      rgba(5, 15, 30, 0.75)
-    );
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.08),
+        rgba(190,220,255,0.28)
+      );
   }
 
   .marquee {
@@ -233,7 +241,7 @@
   }
 }
 
-/* MARQUEE */
+/* ANIMATIONS */
 
 @keyframes marquee {
   from {
@@ -244,8 +252,6 @@
     transform: translateX(-50%);
   }
 }
-
-/* FADE UP */
 
 @keyframes fade-up {
   from {
@@ -263,8 +269,6 @@
   animation: fade-up 0.8s var(--transition-smooth) both;
 }
 
-/* FLOAT */
-
 @keyframes float {
   0%,100% {
     transform: translateY(0);
@@ -278,8 +282,6 @@
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
-
-/* KEN BURNS */
 
 @keyframes ken-burns {
   0% {
@@ -295,7 +297,7 @@
   animation: ken-burns 12s ease-in-out infinite alternate;
 }
 
-/* REVEAL ANIMATIONS */
+/* REVEAL */
 
 .reveal {
   opacity: 0;
@@ -358,7 +360,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(210 50% 14%);
+  background: hsl(205 80% 92%);
 }
 
 ::-webkit-scrollbar-thumb {
