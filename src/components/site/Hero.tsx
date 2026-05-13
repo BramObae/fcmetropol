@@ -8,8 +8,23 @@ import hero3 from "@/assets/hero-3.jpg";
 
 const slides = [hero1, hero2, hero3];
 
+const countries = [
+  { code: "ke", name: "Kenya" },
+  { code: "tz", name: "Tanzania" },
+  { code: "rw", name: "Rwanda" },
+  { code: "za", name: "South Africa" },
+  { code: "zm", name: "Zambia" },
+  { code: "zw", name: "Zimbabwe" },
+  { code: "eg", name: "Egypt" },
+  { code: "tn", name: "Tunisia" },
+  { code: "ma", name: "Morocco" },
+  { code: "ee", name: "Estonia" },
+  { code: "br", name: "Brazil" },
+];
+
 export const Hero = () => {
   const [i, setI] = useState(0);
+
   useEffect(() => {
     const t = setInterval(() => setI((p) => (p + 1) % slides.length), 6000);
     return () => clearInterval(t);
@@ -17,6 +32,7 @@ export const Hero = () => {
 
   return (
     <section id="top" className="relative min-h-screen w-full overflow-hidden">
+      {/* Background slides */}
       {slides.map((src, idx) => (
         <div
           key={idx}
@@ -37,7 +53,35 @@ export const Hero = () => {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
       <div className="relative z-10 container-pro min-h-screen flex flex-col justify-center pt-32 pb-20">
+
+        {/* FLAGS MARQUEE (NEW ADDITION) */}
+        <div className="mb-8">
+          <div className="group relative overflow-hidden rounded-full glass py-2">
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background to-transparent z-10" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background to-transparent z-10" />
+
+            <div className="flex w-max marquee-fast group-hover:[animation-play-state:paused]">
+              {[...countries, ...countries, ...countries].map((c, idx) => (
+                <div
+                  key={idx}
+                  className="mx-4 flex items-center gap-2 text-xs whitespace-nowrap"
+                >
+                  <img
+                    src={`https://flagcdn.com/w40/${c.code}.png`}
+                    alt={c.name}
+                    loading="lazy"
+                    className="h-4 w-6 rounded-sm object-cover"
+                  />
+                  <span className="uppercase tracking-wider">{c.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* HERO CONTENT */}
         <div className="max-w-4xl animate-fade-up">
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 glass rounded-full mb-8">
             <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
             <span className="text-xs uppercase tracking-[0.25em] text-foreground/80">
@@ -48,13 +92,21 @@ export const Hero = () => {
           <h1 className="font-display text-[13vw] sm:text-7xl md:text-[7.5rem] lg:text-[9rem] leading-[0.9] mb-6 break-words">
             From <span className="text-gradient-gold">Amateur</span>
             <br />
-            to <span className="italic font-light tracking-tight" style={{ fontFamily: "Space Grotesk" }}>Professional.</span>
+            to{" "}
+            <span
+              className="italic font-light tracking-tight"
+              style={{ fontFamily: "Space Grotesk" }}
+            >
+              Professional.
+            </span>
           </h1>
 
           <p className="text-base sm:text-lg md:text-2xl text-foreground/75 max-w-2xl mb-8 sm:mb-10 font-light">
-            We <span className="text-foreground font-medium">develop</span>, <span className="text-foreground font-medium">package</span> and <span className="text-foreground font-medium">place</span> Africa's
-            most ambitious footballers — pairing world-class coaching with personal branding and direct
-            pathways to clubs across Europe, the Gulf and beyond.
+            We <span className="text-foreground font-medium">develop</span>,{" "}
+            <span className="text-foreground font-medium">package</span> and{" "}
+            <span className="text-foreground font-medium">place</span> Africa's most
+            ambitious footballers pairing world-class coaching with personal branding
+            and direct pathways to clubs across Europe, the Gulf and beyond.
           </p>
 
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
@@ -63,6 +115,7 @@ export const Hero = () => {
                 Join the Program <ArrowRight className="ml-1" />
               </Link>
             </Button>
+
             <Button asChild variant="outlineLight" size="xl" className="w-full sm:w-auto">
               <Link to="/programs">
                 <Play className="mr-1" /> Explore Programs
