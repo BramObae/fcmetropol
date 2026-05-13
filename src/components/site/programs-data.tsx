@@ -15,109 +15,118 @@ export type ProgramDetail = {
 };
 
 export const PROGRAMS: ProgramDetail[] = [
-  {
-    id: "training",
-    tag: "01",
-    icon: Dumbbell,
-    title: "Player Training & Development",
-    short: "Position-specific coaching, S&C, and tactical mastery from elite coaches.",
-    long:
-      "Our flagship pillar — a high-performance environment engineered to turn raw talent into career-ready athletes. Players follow a periodised 12-week cycle covering technical mastery, tactical IQ, athletic development and recovery science. Sessions are led by UEFA & CAF licensed coaches who have worked across European academies and African top flights, with daily individual feedback so progress is measurable, not just promised.",
-    features: [
-      "Daily position-specific technical drills",
-      "Strength, conditioning & speed work by certified S&C staff",
-      "Weekly video analysis and individual development plans",
-      "Performance nutrition & sleep / recovery protocols",
-      "Game-realistic small-sided games and tactical periodization",
-      "Mental performance coaching and mindset workshops",
-    ],
-    outcomes: [
-      "Measurable gains in sprint, agility & endurance metrics",
-      "Tactical awareness scored against pro-academy benchmarks",
-      "Reduced injury risk through screened movement profiling",
-    ],
-    duration: "16-week cycles · 5 sessions / week",
-    format: "On-site · Nairobi HQ",
-    level: "U13 – U23",
-  },
-  {
-    id: "branding",
-    tag: "02",
-    icon: Sparkles,
-    title: "Player Branding & Profiling",
-    short: "Highlight reels, media kits, and social presence built for scouts.",
-    long:
-      "Talent gets noticed when it is packaged like a professional. Our in-house production team builds a complete scout-ready identity for every player — cinematic 4K highlight reels, statistical dossiers, photo libraries and an active social presence — and pushes that identity through our verified agent and club network across Europe, the Gulf and the Americas.",
-    features: [
-      "Cinematic 4K highlight reel with multi-cam coverage",
-      "Scout-grade player profile, biometric & stats sheet",
-      "Editorial photoshoot and brand portrait library",
-      "Social media content strategy and posting calendar",
-      "Verified player profile distributed to partner agents",
-      "Personal portfolio site with download-ready media kit",
-    ],
-    outcomes: [
-      "A professional digital footprint scouts can verify in seconds",
-      "Distribution to 30+ agents and academies in our network",
-      "Higher conversion from trial invitation to contract offer",
-    ],
-    duration: "16 weeks",
-    format: "Nairobi",
-    level: "All levels",
-  },
+  /* 01 — SCOUTING */
   {
     id: "scouting",
-    tag: "03",
+    tag: "01",
     icon: Search,
-    title: "Trials & Scouting",
-    short: "Curated trial events with verified club scouts and federation reps.",
+    title: "Scouting & Talent Identification",
+    short: "We identify raw talent across Africa through structured scouting networks.",
     long:
-      "Live exposure where it actually matters. We host closed-door showcases, invitational tournaments and combine-style ID camps attended by scouts from European, Middle-Eastern and African clubs, plus federation representatives. Every player leaves with a written performance report — strengths, gaps and a recommended next step — so progress never stalls.",
+      "We actively search for promising players across schools, academies, and grassroots competitions. Our scouting system is structured, data-informed, and focused on long-term potential — not just current performance.",
     features: [
-      "Quarterly invitational showcase tournaments",
-      "Combine-style ID events with biometric testing",
-      "Direct, named introductions to scouts and agents",
-      "Detailed written performance report after every trial",
-      "Pathway to representation by FIFA-licensed agents",
-      "Travel logistics handled for out-of-town invitations",
+      "Regional scouting across Africa and partner countries",
+      "Talent ID camps and open trials",
+      "Performance observation and match analysis",
+      "Direct scout feedback reports",
+      "Early pathway selection for promising players",
     ],
     outcomes: [
-      "Average of 8 scout touchpoints per player per cycle",
-      "Documented trial history attached to every profile",
-      "Clear, honest feedback to guide the next 90 days",
+      "Clear identification of high-potential players",
+      "Early exposure to structured football pathways",
+      "Shortlisted talent for development programs",
     ],
-    duration: "Year-round · quarterly major events",
-    format: "On-site · International tours",
-    level: "Selected players",
+    duration: "Year-round",
+    format: "On-site & regional events",
+    level: "Open entry",
   },
+
+  /* 02 — DEVELOPMENT */
+  {
+    id: "development",
+    tag: "02",
+    icon: Dumbbell,
+    title: "Player Development & Training",
+    short: "Elite coaching to transform raw talent into structured, competitive athletes.",
+    long:
+      "Selected players enter a structured training environment focused on technical growth, tactical awareness, physical conditioning, and mental strength. Every session is measured, tracked, and adjusted for improvement.",
+    features: [
+      "Position-specific technical training",
+      "Strength, speed & conditioning programs",
+      "Tactical team systems & game intelligence",
+      "Video analysis & performance tracking",
+      "Recovery, nutrition & injury prevention",
+    ],
+    outcomes: [
+      "Improved physical performance metrics",
+      "Better tactical decision-making",
+      "Increased match consistency and discipline",
+    ],
+    duration: "16-week cycles",
+    format: "On-site (Nairobi HQ)",
+    level: "U13 – U23",
+  },
+
+  /* 03 — PACKAGING */
+  {
+    id: "branding",
+    tag: "03",
+    icon: Sparkles,
+    title: "Player Packaging & Branding",
+    short: "We turn players into scout-ready professionals with full digital profiles.",
+    long:
+      "We build complete player identities that are ready for clubs, scouts, and agents. This includes highlight reels, performance data, scouting profiles, and digital presence designed to attract opportunities.",
+    features: [
+      "Professional highlight reels (multi-angle)",
+      "Scouting profile & performance CV",
+      "Player photography & branding kit",
+      "Social media profile setup & strategy",
+      "Distribution to agents & club networks",
+    ],
+    outcomes: [
+      "Professional scout-ready player identity",
+      "Increased visibility to clubs & agents",
+      "Stronger chances of trial invitations",
+    ],
+    duration: "16 weeks",
+    format: "Hybrid (Nairobi + remote)",
+    level: "All levels",
+  },
+
+  /* 04 — PLACEMENT */
   {
     id: "placement",
     tag: "04",
     icon: Plane,
-    title: "Placement Opportunities",
-    short: "Direct contracts and academy placements across global leagues.",
+    title: "Placement & Career Opportunities",
+    short: "We connect players to clubs, academies, and scholarships worldwide.",
     long:
-      "We close the loop. Through partner clubs across five continents we negotiate trials, professional contracts and full academy enrollments — handling visas, flights, accommodation, schooling and family support end to end. Players are never alone abroad: a dedicated welfare officer checks in weekly for the first season.",
+      "We secure trials, contracts, academy placements, and scholarship opportunities across Europe, Africa, the Gulf, and the Americas. We also handle logistics including visas, travel, and accommodation support.",
     features: [
-      "Contract & trial negotiation with partner clubs",
-      "Visa, flights and travel logistics fully managed",
-      "Academy enrollment from U15 through U23",
-      "Schooling and accommodation arrangements",
-      "Family liaison, welfare and 24/7 emergency support",
-      "Post-placement performance check-ins for 12 months",
+      "Club trials and contract negotiations",
+      "University & academy scholarships",
+      "Visa, travel & relocation support",
+      "Schooling & accommodation coordination",
+      "Career guidance & long-term placement tracking",
     ],
     outcomes: [
-      "Players signed across Europe, Gulf and North America",
-      "Full duty-of-care wrap for the first competitive season",
-      "Long term career planning beyond the first contract",
+      "Professional contracts and academy placements",
+      "Scholarship opportunities for student-athletes",
+      "Global career pathway access",
     ],
     duration: "Per opportunity",
-    format: "Global · 5 continents",
+    format: "Global",
     level: "Career-ready players",
   },
 ];
 
-export const ProgramFeatureBullet = ({ children }: { children: React.ReactNode }) => (
+/* ---------------- UI COMPONENTS ---------------- */
+
+export const ProgramFeatureBullet = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => (
   <li className="flex items-start gap-3 text-foreground/80">
     <span className="mt-0.5 h-5 w-5 shrink-0 rounded-md bg-accent/15 grid place-items-center">
       <Check size={12} className="text-accent" />
@@ -126,7 +135,11 @@ export const ProgramFeatureBullet = ({ children }: { children: React.ReactNode }
   </li>
 );
 
-export const ProgramOutcomeBullet = ({ children }: { children: React.ReactNode }) => (
+export const ProgramOutcomeBullet = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => (
   <li className="flex items-start gap-3 text-foreground/85">
     <Trophy size={14} className="text-accent mt-1 shrink-0" />
     <span className="leading-relaxed">{children}</span>
