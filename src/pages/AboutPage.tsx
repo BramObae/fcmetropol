@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 
 import rene from "/rene.jpeg";
-import elisha from "/elisha.jpeg";
 import elisha1 from "/elisha1.jpeg";
 
 import gabriel from "/Gabriel Kariuki.jpeg";
