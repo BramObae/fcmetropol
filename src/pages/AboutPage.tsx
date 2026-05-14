@@ -23,6 +23,10 @@ import rene from "/rene.jpeg";
 import elisha from "/elisha.jpeg";
 import elisha1 from "/elisha1.jpeg";
 
+import gabriel from "/Gabriel Kariuki.jpeg";
+import edwin from "/Edwin Mwaura.jpeg";
+import eduardo from "/Eduardo Raupp.jpeg";
+
 /* -------------------------------- */
 /* DATA */
 /* -------------------------------- */
@@ -43,7 +47,7 @@ const countries = [
   { name: "United States", flag: "🇺🇸" },
 ];
 
-const flagLoop = [...countries, ...countries, ...countries];
+const flagLoop = [...countries, ...countries];
 
 const programs = [
   {
@@ -59,12 +63,12 @@ const programs = [
   {
     icon: Star,
     title: "Packaging",
-    desc: "Professional player branding including highlights, media kits and player profiling.",
+    desc: "Professional player branding, highlights, media kits and profiling.",
   },
   {
     icon: Plane,
     title: "Placement",
-    desc: "Creating pathways into clubs, academies, scholarships and professional football opportunities.",
+    desc: "Pathways into clubs, academies, scholarships and professional football opportunities.",
   },
 ];
 
@@ -91,43 +95,29 @@ const values = [
   },
 ];
 
-const leadership = [
-  {
-    name: "Rene Merilo",
-    role: "President · FC Metropol Estonia",
-    images: [rene],
-    description:
-      "Leading the wider FC Metropol football ecosystem and helping create international football pathways connecting African talent to global opportunities.",
-  },
-  {
-    name: "Elisha Ruoth Winga",
-    role: "President · FC Metropol HP Kenya",
-    images: [elisha, elisha1],
-    description:
-      "Focused on scouting, developing and placing talented African footballers through structured football pathways, education opportunities and international partnerships.",
-  },
-];
-
 const technicalTeam = [
+  {
+    name: "Gabriel Kariuki",
+    role: "Data Scientist",
+    image: gabriel,
+  },
+  {
+    name: "Edwin Mwaura",
+    role: "Assistant Coach",
+    image: edwin,
+  },
+  {
+    name: "Eduardo Raupp Guimairreas",
+    role: "International Football Advisor",
+    image: eduardo,
+  },
   {
     name: "Technical Director",
     role: "International Football Operations",
   },
   {
-    name: "Head Coach",
-    role: "Elite Player Development",
-  },
-  {
     name: "Performance Analyst",
     role: "Match & Tactical Analysis",
-  },
-  {
-    name: "Sports Physio",
-    role: "Recovery & Conditioning",
-  },
-  {
-    name: "Scouting Director",
-    role: "African Talent Identification",
   },
   {
     name: "Player Welfare",
@@ -149,15 +139,12 @@ const AboutPage = () => {
 
       {/* HERO */}
       <section className="relative overflow-hidden pt-36 pb-24 md:pt-44 md:pb-32">
-
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.20),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(251,191,36,0.15),transparent_35%)]" />
 
         <div className="absolute inset-0 opacity-[0.03] bg-[url('/grid.svg')]" />
 
         <div className="container-pro relative z-10">
-
           <div className="max-w-5xl">
-
             <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
 
@@ -182,7 +169,6 @@ const AboutPage = () => {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
-
               <Button asChild variant="hero" size="lg">
                 <Link to="/join">
                   Join The Program <ArrowRight className="ml-1" />
@@ -190,15 +176,10 @@ const AboutPage = () => {
               </Button>
 
               <Button asChild variant="outlineLight" size="lg">
-                <Link to="/programs">
-                  Explore Programs
-                </Link>
+                <Link to="/programs">Explore Programs</Link>
               </Button>
-
             </div>
-
           </div>
-
         </div>
       </section>
 
@@ -206,11 +187,8 @@ const AboutPage = () => {
 
       {/* GLOBAL NETWORK */}
       <section className="py-20 border-y border-border/50 bg-card/20 overflow-hidden">
-
         <div className="container-pro">
-
           <div className="max-w-3xl mb-12">
-
             <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
               Global Football Network
             </div>
@@ -224,133 +202,119 @@ const AboutPage = () => {
               FC Metropol HP Kenya is connected to FC Metropol Estonia and an
               expanding international football structure focused on player
               development, scouting, exposure and long-term football growth.
-
               <br />
               <br />
-
               Through this ecosystem, players gain access to opportunities
               across Europe, Africa, North America and emerging football
               markets.
             </p>
-
           </div>
-
         </div>
 
         {/* FLAGS */}
         <div className="relative overflow-hidden mt-10">
-
           <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
 
           <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
 
           <div className="flex gap-5 w-max marquee">
-
             {flagLoop.map((c, i) => (
               <div
                 key={i}
                 className="glass rounded-full px-5 py-3 flex items-center gap-3 whitespace-nowrap border border-white/10"
               >
-
                 <span className="text-xl">{c.flag}</span>
 
                 <span className="uppercase tracking-[0.2em] text-xs text-foreground/75">
                   {c.name}
                 </span>
-
               </div>
             ))}
-
           </div>
-
         </div>
-
       </section>
 
       {/* LEADERSHIP */}
       <section className="py-24">
         <div className="container-pro">
-
           <div className="max-w-3xl mb-14">
-
             <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
               Leadership
             </div>
 
             <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
-              The people behind
-              <span className="text-gradient-gold"> FC Metropol HP.</span>
+              The people driving
+              <span className="text-gradient-gold"> the vision.</span>
             </h2>
-
-            <p className="mt-5 text-lg text-foreground/75 leading-relaxed">
-              Building a professional football structure focused on development,
-              exposure and global opportunities for African players.
-            </p>
-
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
+            {/* RENE */}
+            <div className="glass-card rounded-[2rem] overflow-hidden border border-white/10">
+              <img
+                src={rene}
+                alt="Rene Merilo"
+                className="w-full h-[500px] object-cover object-top"
+              />
 
-            {leadership.map((leader, index) => (
-              <div
-                key={index}
-                className="glass-card rounded-[2rem] overflow-hidden border border-white/10"
-              >
+              <div className="p-8">
+                <h3 className="text-3xl font-semibold">
+                  Rene Merilo
+                </h3>
 
-                <div
-                  className={`grid ${
-                    leader.images.length > 1
-                      ? "grid-cols-2"
-                      : "grid-cols-1"
-                  } gap-1`}
-                >
+                <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
+                  President · FC Metropol Estonia
+                </p>
 
-                  {leader.images.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img}
-                      alt={leader.name}
-                      className="w-full h-[420px] object-cover object-top"
-                    />
-                  ))}
-
-                </div>
-
-                <div className="p-8">
-
-                  <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-                    FC Metropol Leadership
-                  </div>
-
-                  <h3 className="text-3xl font-semibold">
-                    {leader.name}
-                  </h3>
-
-                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-foreground/60">
-                    {leader.role}
-                  </p>
-
-                  <p className="mt-6 text-foreground/75 leading-relaxed">
-                    {leader.description}
-                  </p>
-
-                </div>
-
+                <p className="mt-5 text-foreground/75 leading-relaxed">
+                  Rene Merilo leads the wider FC Metropol football ecosystem,
+                  helping create international pathways connecting African
+                  talent to clubs, academies and development opportunities.
+                </p>
               </div>
-            ))}
+            </div>
 
+            {/* ELISHA */}
+            <div className="glass-card rounded-[2rem] overflow-hidden border border-white/10">
+              <div className="grid grid-cols-2 gap-1">
+                <img
+                  src={elisha}
+                  alt="Elisha Ruoth Winga"
+                  className="w-full h-[420px] object-cover object-top"
+                />
+
+                <img
+                  src={elisha1}
+                  alt="Elisha Ruoth Winga"
+                  className="w-full h-[420px] object-cover object-top"
+                />
+              </div>
+
+              <div className="p-8">
+                <h3 className="text-3xl font-semibold">
+                  Elisha Ruoth Winga
+                </h3>
+
+                <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
+                  President · FC Metropol HP Kenya
+                </p>
+
+                <p className="mt-5 text-foreground/75 leading-relaxed">
+                  Elisha Ruoth Winga leads FC Metropol HP Kenya with a vision
+                  focused on identifying, developing and exposing African
+                  football talent through structured football pathways,
+                  education opportunities and international partnerships.
+                </p>
+              </div>
+            </div>
           </div>
-
         </div>
       </section>
 
       {/* MISSION & VISION */}
       <section className="py-24 bg-card/20 border-y border-border/50">
-
         <div className="container-pro">
-
           <div className="grid lg:grid-cols-2 gap-8">
-
             <div
               className="relative overflow-hidden rounded-[2rem] p-10 border border-white/10"
               style={{
@@ -358,7 +322,6 @@ const AboutPage = () => {
                   "linear-gradient(135deg, rgba(37,99,235,0.22), rgba(15,23,42,0.95))",
               }}
             >
-
               <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur grid place-items-center mb-6">
                 <Flag className="text-accent" size={26} />
               </div>
@@ -380,7 +343,6 @@ const AboutPage = () => {
                 talented African players through elite development,
                 international exposure and professional opportunities.
               </p>
-
             </div>
 
             <div
@@ -390,7 +352,6 @@ const AboutPage = () => {
                   "linear-gradient(135deg, rgba(251,191,36,0.15), rgba(15,23,42,0.95))",
               }}
             >
-
               <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur grid place-items-center mb-6">
                 <Compass className="text-accent" size={26} />
               </div>
@@ -408,25 +369,19 @@ const AboutPage = () => {
               </h3>
 
               <p className="text-lg text-white/80 leading-relaxed">
-                We envision an Africa where football talent is no longer
-                limited by geography or exposure but connected directly to
-                global opportunities.
+                We envision an Africa where football talent is no longer limited
+                by geography or exposure but connected directly to global
+                opportunities.
               </p>
-
             </div>
-
           </div>
-
         </div>
       </section>
 
       {/* PROGRAMS */}
       <section className="py-24">
-
         <div className="container-pro">
-
           <div className="max-w-3xl mb-14">
-
             <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
               Development Structure
             </div>
@@ -435,17 +390,14 @@ const AboutPage = () => {
               A complete football
               <span className="text-gradient-gold"> pathway.</span>
             </h2>
-
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-
             {programs.map((p, i) => (
               <div
                 key={i}
                 className="glass-card rounded-[2rem] p-8 border border-white/10 hover:border-accent/40 transition"
               >
-
                 <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary/40 to-accent/20 grid place-items-center mb-6">
                   <p.icon className="text-accent" size={24} />
                 </div>
@@ -457,23 +409,16 @@ const AboutPage = () => {
                 <p className="text-foreground/75 leading-relaxed">
                   {p.desc}
                 </p>
-
               </div>
             ))}
-
           </div>
-
         </div>
-
       </section>
 
       {/* TECHNICAL TEAM */}
       <section className="py-24 bg-card/20 border-y border-border/50">
-
         <div className="container-pro">
-
           <div className="max-w-3xl mb-14">
-
             <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
               Technical Structure
             </div>
@@ -482,23 +427,27 @@ const AboutPage = () => {
               Football minds
               <span className="text-gradient-gold"> behind the vision.</span>
             </h2>
-
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
             {technicalTeam.map((m, i) => (
               <div
                 key={i}
                 className="glass-card rounded-[2rem] overflow-hidden border border-white/10"
               >
-
-                <div className="h-72 bg-gradient-to-br from-primary/20 via-background to-accent/10 grid place-items-center">
-                  <ShieldCheck className="text-accent" size={44} />
-                </div>
+                {m.image ? (
+                  <img
+                    src={m.image}
+                    alt={m.name}
+                    className="w-full h-80 object-cover object-top"
+                  />
+                ) : (
+                  <div className="h-80 bg-gradient-to-br from-primary/20 via-background to-accent/10 grid place-items-center">
+                    <ShieldCheck className="text-accent" size={44} />
+                  </div>
+                )}
 
                 <div className="p-6">
-
                   <h3 className="text-2xl font-semibold">
                     {m.name}
                   </h3>
@@ -506,20 +455,51 @@ const AboutPage = () => {
                   <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
                     {m.role}
                   </p>
-
                 </div>
-
               </div>
             ))}
+          </div>
+        </div>
+      </section>
 
+      {/* VALUES */}
+      <section className="py-24">
+        <div className="container-pro">
+          <div className="max-w-3xl mb-14">
+            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+              Core Values
+            </div>
+
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+              What drives
+              <span className="text-gradient-gold"> FC Metropol HP.</span>
+            </h2>
           </div>
 
-        </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map((v, i) => (
+              <div
+                key={i}
+                className="glass-card rounded-[2rem] p-7 border border-white/10"
+              >
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/40 to-accent/20 grid place-items-center mb-5">
+                  <v.icon className="text-accent" size={22} />
+                </div>
 
+                <h3 className="text-xl font-semibold mb-3">
+                  {v.title}
+                </h3>
+
+                <p className="text-foreground/70 leading-relaxed">
+                  {v.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       <Charity />
-
     </>
   );
 };
