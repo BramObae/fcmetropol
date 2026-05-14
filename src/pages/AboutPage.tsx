@@ -147,98 +147,79 @@ const AboutPage = () => {
         title="About FC Metropol HP Kenya"
         description="Elite football development platform creating global pathways for African footballers."
       />
-
       {/* HERO */}
-      <section className="relative overflow-hidden pt-36 pb-24 md:pt-44 md:pb-32">
+<section className="relative overflow-hidden pt-36 pb-24 md:pt-44 md:pb-32">
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.20),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(251,191,36,0.15),transparent_35%)]" />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.20),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(251,191,36,0.15),transparent_35%)]" />
+  <div className="absolute inset-0 opacity-[0.03] bg-[url('/grid.svg')]" />
 
-        <div className="absolute inset-0 opacity-[0.03] bg-[url('/grid.svg')]" />
+  <div className="container-pro relative z-10">
+    <div className="max-w-5xl">
 
-        <div className="container-pro relative z-10">
+      {/* MOVING FLAGS */}
+      <div className="relative overflow-hidden mb-10">
+        <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-background to-transparent z-10" />
 
-          <div className="max-w-6xl">
+        <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-background to-transparent z-10" />
 
-            {/* FLAGS */}
-            <div className="flex flex-wrap gap-3 mb-10">
-
-              {countries.map((country, index) => (
-                <div
-                  key={index}
-                  className="glass rounded-full px-4 py-2 flex items-center gap-2 border border-white/10"
-                >
-
-                  <span className="text-lg">
-                    {country.flag}
-                  </span>
-
-                  <span className="text-xs uppercase tracking-[0.2em] text-foreground/75">
-                    {country.name}
-                  </span>
-
-                </div>
-              ))}
-
-            </div>
-
-            {/* BADGE */}
-            <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
-
-              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-
-              <span className="text-xs uppercase tracking-[0.3em] text-foreground/75">
-                FC Metropol HP Kenya
+        <div className="flex w-max animate-[marquee_28s_linear_infinite] gap-5">
+          {countries.concat(countries).map((c, i) => (
+            <div
+              key={i}
+              className="glass rounded-full px-5 py-3 flex items-center gap-3 border border-white/10 whitespace-nowrap"
+            >
+              <span className="text-2xl">
+                {c.flag}
               </span>
 
-            </div>
-
-            {/* TITLE */}
-            <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] leading-[0.9]">
-
-              Building Africa's
-              <br />
-
-              <span className="text-gradient-gold">
-                global football pathway.
+              <span className="uppercase tracking-[0.2em] text-xs text-foreground/80">
+                {c.name}
               </span>
-
-            </h1>
-
-            {/* DESCRIPTION */}
-            <p className="mt-8 max-w-3xl text-lg md:text-2xl text-foreground/75 leading-relaxed font-light">
-
-              FC Metropol HP Kenya is a high-performance football development
-              platform focused on scouting, developing, packaging and placing
-              talented African footballers into global football opportunities.
-
-            </p>
-
-            {/* BUTTONS */}
-            <div className="mt-10 flex flex-wrap gap-4">
-
-              <Button asChild variant="hero" size="lg">
-                <Link to="/join">
-                  Join The Program
-                  <ArrowRight className="ml-1" />
-                </Link>
-              </Button>
-
-              <Button asChild variant="outlineLight" size="lg">
-                <Link to="/programs">
-                  Explore Programs
-                </Link>
-              </Button>
-
             </div>
-
-          </div>
-
+          ))}
         </div>
+      </div>
 
-      </section>
+      {/* TITLE */}
+      <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
+        <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
 
-      <Stats />
+        <span className="text-xs uppercase tracking-[0.3em] text-foreground/75">
+          FC Metropol HP Kenya
+        </span>
+      </div>
 
+      <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] leading-[0.9]">
+        Building Africa's
+        <br />
+
+        <span className="text-gradient-gold">
+          global football pathway.
+        </span>
+      </h1>
+
+      <p className="mt-8 max-w-3xl text-lg md:text-2xl text-foreground/75 leading-relaxed font-light">
+        FC Metropol HP Kenya is a high-performance football development
+        platform focused on scouting, developing, packaging and placing
+        talented African footballers into global football opportunities.
+      </p>
+
+      <div className="mt-10 flex flex-wrap gap-4">
+        <Button asChild variant="hero" size="lg">
+          <Link to="/join">
+            Join The Program <ArrowRight className="ml-1" />
+          </Link>
+        </Button>
+
+        <Button asChild variant="outlineLight" size="lg">
+          <Link to="/programs">Explore Programs</Link>
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+     
       {/* LEADERSHIP */}
       <section className="py-24">
 
