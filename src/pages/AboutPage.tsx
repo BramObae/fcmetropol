@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Trophy,
-  Globe2,
   ShieldCheck,
-  GraduationCap,
   Heart,
   Target,
   Users,
@@ -17,16 +15,13 @@ import {
   Plane,
   Search,
   Calendar,
-  BookOpen,
   Flag,
   Compass,
-  MapPinned,
-  Award,
 } from "lucide-react";
 
-import rene from "/public/rene.jpeg";
-import elisha from "/public/elisha.jpeg";
-import elisha1 from "/public/elisha1.jpeg";
+import rene from "/rene.jpeg";
+import elisha from "/elisha.jpeg";
+import elisha1 from "/elisha1.jpeg";
 
 /* -------------------------------- */
 /* DATA */
@@ -59,7 +54,7 @@ const programs = [
   {
     icon: Calendar,
     title: "Development",
-    desc: "Elite football development programs focused on tactical growth, conditioning and performance.",
+    desc: "Elite football development focused on tactical growth, conditioning and performance.",
   },
   {
     icon: Star,
@@ -100,17 +95,16 @@ const leadership = [
   {
     name: "Rene Merilo",
     role: "President · FC Metropol Estonia",
-    image: rene,
+    images: [rene],
     description:
-      "Rene Merilo leads the wider FC Metropol football ecosystem, helping create international pathways connecting African talent to clubs, academies and development opportunities across Europe and beyond.",
+      "Leading the wider FC Metropol football ecosystem and helping create international football pathways connecting African talent to global opportunities.",
   },
   {
     name: "Elisha Ruoth Winga",
     role: "President · FC Metropol HP Kenya",
-    image: elisha,
-    image2: elisha2,
+    images: [elisha, elisha1],
     description:
-      "Elisha Ruoth Winga leads FC Metropol HP Kenya with a vision focused on identifying, developing and exposing African football talent through structured football pathways, education opportunities and international partnerships.",
+      "Focused on scouting, developing and placing talented African footballers through structured football pathways, education opportunities and international partnerships.",
   },
 ];
 
@@ -275,75 +269,68 @@ const AboutPage = () => {
 
       {/* LEADERSHIP */}
       <section className="py-24">
-
         <div className="container-pro">
 
-          <div className="max-w-3xl mb-16">
+          <div className="max-w-3xl mb-14">
 
             <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
               Leadership
             </div>
 
             <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
-              The people driving
-              <span className="text-gradient-gold"> the vision.</span>
+              The people behind
+              <span className="text-gradient-gold"> FC Metropol HP.</span>
             </h2>
 
-            <p className="mt-6 text-lg text-foreground/75 leading-relaxed">
-              FC Metropol HP Kenya operates through an expanding football
-              structure focused on elite player development, international
-              exposure and long-term athlete growth.
+            <p className="mt-5 text-lg text-foreground/75 leading-relaxed">
+              Building a professional football structure focused on development,
+              exposure and global opportunities for African players.
             </p>
 
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
 
-            {leadership.map((leader, i) => (
+            {leadership.map((leader, index) => (
               <div
-                key={i}
-                className="relative overflow-hidden rounded-[2rem] border border-white/10 glass-card"
+                key={index}
+                className="glass-card rounded-[2rem] overflow-hidden border border-white/10"
               >
 
-                <div className="grid grid-cols-2 gap-1 bg-background/40">
+                <div
+                  className={`grid ${
+                    leader.images.length > 1
+                      ? "grid-cols-2"
+                      : "grid-cols-1"
+                  } gap-1`}
+                >
 
-                  <img
-                    src={leader.image}
-                    alt={leader.name}
-                    className={`w-full ${
-                      leader.image2 ? "h-[420px]" : "h-[500px]"
-                    } object-cover object-top`}
-                  />
-
-                  {leader.image2 && (
+                  {leader.images.map((img, i) => (
                     <img
-                      src={leader.image2}
+                      key={i}
+                      src={img}
                       alt={leader.name}
                       className="w-full h-[420px] object-cover object-top"
                     />
-                  )}
+                  ))}
 
                 </div>
 
                 <div className="p-8">
 
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-5">
-                    <span className="h-2 w-2 rounded-full bg-accent" />
-
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-foreground/70">
-                      FC Metropol Leadership
-                    </span>
+                  <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+                    FC Metropol Leadership
                   </div>
 
-                  <h3 className="text-3xl md:text-4xl font-semibold">
+                  <h3 className="text-3xl font-semibold">
                     {leader.name}
                   </h3>
 
-                  <div className="mt-3 text-sm uppercase tracking-[0.25em] text-accent">
+                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-foreground/60">
                     {leader.role}
-                  </div>
+                  </p>
 
-                  <p className="mt-6 text-foreground/75 leading-relaxed text-lg">
+                  <p className="mt-6 text-foreground/75 leading-relaxed">
                     {leader.description}
                   </p>
 
@@ -355,7 +342,6 @@ const AboutPage = () => {
           </div>
 
         </div>
-
       </section>
 
       {/* MISSION & VISION */}
@@ -373,31 +359,27 @@ const AboutPage = () => {
               }}
             >
 
-              <div className="relative">
-
-                <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur grid place-items-center mb-6">
-                  <Flag className="text-accent" size={26} />
-                </div>
-
-                <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-                  Mission
-                </div>
-
-                <h3 className="font-display text-4xl leading-[0.95] mb-5">
-                  Scout.
-                  <br />
-                  Develop.
-                  <br />
-                  Place.
-                </h3>
-
-                <p className="text-lg text-white/80 leading-relaxed">
-                  To create structured football and education pathways for
-                  talented African players through elite development,
-                  international exposure and professional opportunities.
-                </p>
-
+              <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur grid place-items-center mb-6">
+                <Flag className="text-accent" size={26} />
               </div>
+
+              <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+                Mission
+              </div>
+
+              <h3 className="font-display text-4xl leading-[0.95] mb-5">
+                Scout.
+                <br />
+                Develop.
+                <br />
+                Place.
+              </h3>
+
+              <p className="text-lg text-white/80 leading-relaxed">
+                To create structured football and education pathways for
+                talented African players through elite development,
+                international exposure and professional opportunities.
+              </p>
 
             </div>
 
@@ -409,38 +391,33 @@ const AboutPage = () => {
               }}
             >
 
-              <div className="relative">
-
-                <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur grid place-items-center mb-6">
-                  <Compass className="text-accent" size={26} />
-                </div>
-
-                <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-                  Vision
-                </div>
-
-                <h3 className="font-display text-4xl leading-[0.95] mb-5">
-                  A global pathway
-                  <br />
-                  for every gifted
-                  <br />
-                  African player.
-                </h3>
-
-                <p className="text-lg text-white/80 leading-relaxed">
-                  We envision an Africa where football talent is no longer
-                  limited by geography or exposure but connected directly to
-                  global opportunities.
-                </p>
-
+              <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur grid place-items-center mb-6">
+                <Compass className="text-accent" size={26} />
               </div>
+
+              <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+                Vision
+              </div>
+
+              <h3 className="font-display text-4xl leading-[0.95] mb-5">
+                A global pathway
+                <br />
+                for every gifted
+                <br />
+                African player.
+              </h3>
+
+              <p className="text-lg text-white/80 leading-relaxed">
+                We envision an Africa where football talent is no longer
+                limited by geography or exposure but connected directly to
+                global opportunities.
+              </p>
 
             </div>
 
           </div>
 
         </div>
-
       </section>
 
       {/* PROGRAMS */}
