@@ -25,8 +25,8 @@ import {
 } from "lucide-react";
 
 import rene from "/public/rene.jpeg";
-import elisha from "@/assets/elisha.jpeg";
-import elisha2 from "@/assets/elisha1.jpeg";
+import elisha from "/public/elisha.jpeg";
+import elisha1 from "/public/elisha1.jpeg";
 
 /* -------------------------------- */
 /* DATA */
