@@ -27,6 +27,11 @@ import gabriel from "/Gabriel Kariuki.jpeg";
 import edwin from "/Edwin Mwaura.jpeg";
 import eduardo from "/Eduardo Raupp.jpeg";
 
+import alexander from "/Alexander Otoo.jpeg";
+import sambi from "/Sambi Shaban.jpeg";
+import brian from "/Brian Odhiambo.jpeg";
+import vincent from "/Vincent Ngesa.jpeg";
+
 /* -------------------------------- */
 /* DATA */
 /* -------------------------------- */
@@ -112,17 +117,26 @@ const technicalTeam = [
     image: eduardo,
   },
   {
-    name: "Technical Director",
-    role: "International Football Operations",
+    name: "Alexander Otoo",
+    role: "Media",
+    image: alexander,
   },
   {
-    name: "Performance Analyst",
-    role: "Match & Tactical Analysis",
+    name: "Sambi Shaban",
+    role: "Physiotherapist",
+    image: sambi,
   },
   {
-    name: "Player Welfare",
-    role: "Athlete Support & Mentorship",
+    name: "Brian Odhiambo",
+    role: "Assistant Coach",
+    image: brian,
   },
+  {
+    name: "Vincent Ngesa",
+    role: "Strength & Conditioning Coach",
+    image: vincent,
+  },
+
 ];
 
 /* -------------------------------- */
