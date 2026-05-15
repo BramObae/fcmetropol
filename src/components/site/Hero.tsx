@@ -94,7 +94,7 @@ export const Hero = () => {
             <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
 
             <span className="text-[10px] sm:text-xs uppercase tracking-[0.22em] text-foreground/75 font-medium">
-              FC Metropol HP · International Football Development Network
+              FC Metropol HP · International Football Pathways:Pure Football & Football with Academics  Opportunities
             </span>
           </div>
 
