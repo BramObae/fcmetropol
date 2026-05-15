@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Trophy,
-  ShieldCheck,
   Heart,
   Target,
   Users,
@@ -15,8 +14,6 @@ import {
   Plane,
   Search,
   Calendar,
-  Flag,
-  Compass,
 } from "lucide-react";
 
 import rene from "/rene.jpeg";
@@ -26,15 +23,14 @@ import elisha1 from "/elisha1.jpeg";
 import gabriel from "/Gabriel Kariuki.jpeg";
 import edwin from "/Edwin Mwaura.jpeg";
 import eduardo from "/Eduardo Raupp.jpeg";
-
 import alexander from "/Alexander Otoo.jpeg";
 import sambi from "/Sambi Shaban.jpeg";
 import brian from "/Brian Odhiambo.jpeg";
 import vincent from "/Vincent Ngesa.jpeg";
-import CalumShuan from "/CalumShuan.jpeg";
+import calum from "/CalumShuan.jpeg";
 
 /* -------------------------------- */
-/* DATA */
+/* FLAGS */
 /* -------------------------------- */
 
 const countries = [
@@ -54,6 +50,10 @@ const countries = [
 ];
 
 const flagLoop = [...countries, ...countries];
+
+/* -------------------------------- */
+/* PROGRAMS */
+/* -------------------------------- */
 
 const programs = [
   {
@@ -78,6 +78,10 @@ const programs = [
   },
 ];
 
+/* -------------------------------- */
+/* VALUES */
+/* -------------------------------- */
+
 const values = [
   {
     icon: Target,
@@ -101,15 +105,51 @@ const values = [
   },
 ];
 
+/* -------------------------------- */
+/* TEAM */
+/* -------------------------------- */
+
 const technicalTeam = [
-  { name: "Gabriel Kariuki", role: "Data Scientist", image: gabriel },
-  { name: "Edwin Mwaura", role: "Assistant Coach", image: edwin },
-  { name: "Eduardo Raupp Guimairreas", role: "International Football Advisor", image: eduardo },
-  { name: "Alexander Otoo", role: "Media", image: alexander },
-  { name: "Sambi Shaban", role: "Physiotherapist", image: sambi },
-  { name: "Brian Odhiambo", role: "Assistant Coach", image: brian },
-  { name: "Vincent Ngesa", role: "Strength & Conditioning Coach", image: vincent },
-  { name: "Calum Shuan Selby", role: "Head of Football Curriculum Development", image: CalumShuan },
+  {
+    name: "Gabriel Kariuki",
+    role: "Data Scientist",
+    image: gabriel,
+  },
+  {
+    name: "Edwin Mwaura",
+    role: "Assistant Coach",
+    image: edwin,
+  },
+  {
+    name: "Eduardo Raupp Guimairreas",
+    role: "International Football Advisor",
+    image: eduardo,
+  },
+  {
+    name: "Alexander Otoo",
+    role: "Media",
+    image: alexander,
+  },
+  {
+    name: "Sambi Shaban",
+    role: "Physiotherapist",
+    image: sambi,
+  },
+  {
+    name: "Brian Odhiambo",
+    role: "Assistant Coach",
+    image: brian,
+  },
+  {
+    name: "Vincent Ngesa",
+    role: "Strength & Conditioning Coach",
+    image: vincent,
+  },
+  {
+    name: "Calum Shuan Selby",
+    role: "Head of Football Curriculum Development",
+    image: calum,
+  },
 ];
 
 /* -------------------------------- */
@@ -124,10 +164,11 @@ const AboutPage = () => {
         description="Elite football development platform creating global pathways for African footballers."
       />
 
-      {/* FLAGS (NOW AT TOP BEFORE HERO TEXT) */}
-      <section className="pt-28 overflow-hidden bg-card/20 border-b border-border/50">
+      {/* FLAGS */}
+      <section className="pt-28 overflow-hidden border-b border-border/50 bg-card/20">
         <div className="relative overflow-hidden">
           <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
+
           <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
 
           <div className="flex gap-5 w-max marquee py-4">
@@ -137,6 +178,7 @@ const AboutPage = () => {
                 className="glass rounded-full px-5 py-3 flex items-center gap-3 whitespace-nowrap border border-white/10"
               >
                 <span className="text-xl">{c.flag}</span>
+
                 <span className="uppercase tracking-[0.2em] text-xs text-foreground/75">
                   {c.name}
                 </span>
@@ -156,6 +198,7 @@ const AboutPage = () => {
           <div className="max-w-5xl">
             <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+
               <span className="text-xs uppercase tracking-[0.3em] text-foreground/75">
                 FC Metropol HP Kenya
               </span>
@@ -164,6 +207,7 @@ const AboutPage = () => {
             <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] leading-[0.9]">
               Building Africa's
               <br />
+
               <span className="text-gradient-gold">
                 global football pathway.
               </span>
@@ -192,41 +236,97 @@ const AboutPage = () => {
 
       <Stats />
 
-      {/* GLOBAL NETWORK */}
-      <section className="py-20 border-y border-border/50 bg-card/20">
+      {/* PROGRAMS */}
+      <section className="py-24">
         <div className="container-pro">
-          <h2 className="font-display text-4xl md:text-6xl">
-            Connected across <span className="text-gradient-gold">continents.</span>
-          </h2>
+          <div className="max-w-3xl mb-14">
+            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+              Development Structure
+            </div>
+
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+              A complete football
+              <span className="text-gradient-gold"> pathway.</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {programs.map((p, i) => (
+              <div
+                key={i}
+                className="glass-card rounded-[2rem] p-8 border border-white/10"
+              >
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary/40 to-accent/20 grid place-items-center mb-6">
+                  <p.icon className="text-accent" size={24} />
+                </div>
+
+                <h3 className="text-2xl font-semibold mb-4">
+                  {p.title}
+                </h3>
+
+                <p className="text-foreground/75 leading-relaxed">
+                  {p.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* LEADERSHIP */}
-      <section className="py-24">
+      <section className="py-24 bg-card/20">
         <div className="container-pro">
-          <h2 className="font-display text-4xl md:text-6xl mb-10">
-            Leadership
-          </h2>
+          <div className="max-w-3xl mb-14">
+            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+              Leadership
+            </div>
+
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+              The people driving
+              <span className="text-gradient-gold"> the vision.</span>
+            </h2>
+          </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* RENE */}
-            <div className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={rene} className="w-full h-[500px] object-cover" />
+            <div className="glass-card rounded-[2rem] overflow-hidden border border-white/10">
+              <img
+                src={rene}
+                alt="Rene Merilo"
+                className="w-full h-[500px] object-cover object-top"
+              />
+
               <div className="p-8">
-                <h3 className="text-3xl font-semibold">Rene Merilo</h3>
-                <p className="text-accent text-sm mt-2">President</p>
+                <h3 className="text-3xl font-semibold">
+                  Rene Merilo
+                </h3>
+
+                <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
+                  President · FC Metropol Estonia
+                </p>
               </div>
             </div>
 
-            {/* ELISHA */}
-            <div className="glass-card rounded-[2rem] overflow-hidden">
+            <div className="glass-card rounded-[2rem] overflow-hidden border border-white/10">
               <div className="grid grid-cols-2 gap-1">
-                <img src={elisha} className="h-[420px] object-cover" />
-                <img src={elisha1} className="h-[420px] object-cover" />
+                <img
+                  src={elisha}
+                  alt="Elisha Winga"
+                  className="w-full h-[420px] object-cover object-top"
+                />
+
+                <img
+                  src={elisha1}
+                  alt="Elisha Winga"
+                  className="w-full h-[420px] object-cover object-top"
+                />
               </div>
+
               <div className="p-8">
-                <h3 className="text-3xl font-semibold">Elisha Winga</h3>
-                <p className="text-accent text-sm mt-2">
+                <h3 className="text-3xl font-semibold">
+                  Elisha Winga
+                </h3>
+
+                <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
                   President · FC Metropol HP Kenya
                 </p>
               </div>
@@ -236,20 +336,77 @@ const AboutPage = () => {
       </section>
 
       {/* TECHNICAL TEAM */}
-      <section className="py-24 bg-card/20">
+      <section className="py-24">
         <div className="container-pro">
-          <h2 className="font-display text-4xl md:text-6xl mb-10">
-            Technical Team
-          </h2>
+          <div className="max-w-3xl mb-14">
+            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+              Technical Team
+            </div>
+
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+              Football minds
+              <span className="text-gradient-gold"> behind the vision.</span>
+            </h2>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {technicalTeam.map((m, i) => (
-              <div key={i} className="glass-card rounded-[2rem] overflow-hidden">
-                <img src={m.image} className="h-80 w-full object-cover" />
+              <div
+                key={i}
+                className="glass-card rounded-[2rem] overflow-hidden border border-white/10"
+              >
+                <img
+                  src={m.image}
+                  alt={m.name}
+                  className="h-80 w-full object-cover object-top"
+                />
+
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold">{m.name}</h3>
-                  <p className="text-accent text-sm">{m.role}</p>
+                  <h3 className="text-2xl font-semibold">
+                    {m.name}
+                  </h3>
+
+                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
+                    {m.role}
+                  </p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VALUES */}
+      <section className="py-24 bg-card/20">
+        <div className="container-pro">
+          <div className="max-w-3xl mb-14">
+            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
+              Core Values
+            </div>
+
+            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
+              What drives
+              <span className="text-gradient-gold"> FC Metropol HP.</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map((v, i) => (
+              <div
+                key={i}
+                className="glass-card rounded-[2rem] p-7 border border-white/10"
+              >
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/40 to-accent/20 grid place-items-center mb-5">
+                  <v.icon className="text-accent" size={22} />
+                </div>
+
+                <h3 className="text-xl font-semibold mb-3">
+                  {v.title}
+                </h3>
+
+                <p className="text-foreground/70 leading-relaxed">
+                  {v.desc}
+                </p>
               </div>
             ))}
           </div>
