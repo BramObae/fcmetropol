@@ -31,6 +31,7 @@ import alexander from "/Alexander Otoo.jpeg";
 import sambi from "/Sambi Shaban.jpeg";
 import brian from "/Brian Odhiambo.jpeg";
 import vincent from "/Vincent Ngesa.jpeg";
+import CalumShuan from "/CalumShuan.jpeg";
 
 /* -------------------------------- */
 /* DATA */
@@ -108,6 +109,7 @@ const technicalTeam = [
   { name: "Sambi Shaban", role: "Physiotherapist", image: sambi },
   { name: "Brian Odhiambo", role: "Assistant Coach", image: brian },
   { name: "Vincent Ngesa", role: "Strength & Conditioning Coach", image: vincent },
+  { name: "Calum Shuan Selby", role: "Head of Football Curriculum Development", image: CalumShuan },
 ];
 
 /* -------------------------------- */
