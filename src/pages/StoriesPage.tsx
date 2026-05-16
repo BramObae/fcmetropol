@@ -74,9 +74,7 @@ const StoriesPage = () => (
 
       {/* TEXT CONTENT */}
       <div className="container-pro relative z-10">
-        <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
-          Success Stories
-        </div>
+
 
         <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
           Lives we've <span className="text-gradient-gold">transformed.</span>
