@@ -2,17 +2,17 @@ import { Heart, GraduationCap, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-/* IMAGES */
-const images = Array.from({ length: 15 }, (_, i) => `/charity${i + 1}.jpg`);
+/* IMAGES (PUBLIC FOLDER - ORDERED) */
+const images = Array.from(
+  { length: 15 },
+  (_, i) => `/charity${i + 1}.jpg`
+);
 
 export const Charity = () => {
   return (
-    <section id="charity" className="section-pad relative overflow-hidden">
+    <section id="charity" className="section-pad">
 
-      {/* BACKGROUND DEPTH */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
-
-      <div className="container-pro relative z-10">
+      <div className="container-pro">
 
         {/* HEADER */}
         <div className="text-center max-w-3xl mx-auto mb-14">
@@ -21,21 +21,21 @@ export const Charity = () => {
           </div>
 
           <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.95]">
-            Football, <span className="text-gradient-gold">hope & opportunity.</span>
+            Football that creates <span className="text-gradient-gold">opportunity.</span>
           </h2>
 
           <p className="mt-6 text-foreground/75 text-base md:text-lg">
-            Each December, we bring together U15 players from underserved communities
-            for a structured scouting event that combines football, mentorship,
-            and a celebration that stays with them for life.
+            Every December, we host a U15 scouting tournament for young players
+            from underserved communities — combining competition, mentorship,
+            and a structured pathway into elite football environments.
           </p>
         </div>
 
-        {/* HERO IMAGE (MAIN STORY MOMENT) */}
+        {/* FEATURE IMAGE (CLEAR STORY MOMENT) */}
         <div className="rounded-3xl overflow-hidden glass-card mb-10">
           <img
             src={images[0]}
-            alt="Charity main moment"
+            alt="Charity opening moment"
             className="w-full h-[420px] md:h-[520px] object-cover"
           />
 
@@ -43,22 +43,22 @@ export const Charity = () => {
             <div className="flex items-center gap-2 text-accent mb-2">
               <Trophy size={16} />
               <span className="text-xs uppercase tracking-[0.25em]">
-                Opening Match & Scout Showcase
+                Tournament Opening & Talent Scouting
               </span>
             </div>
 
-            <p className="text-foreground/75">
-              The tournament opens with structured matches where talent is observed
-              in real conditions — discipline, teamwork, and potential under pressure.
+            <p className="text-foreground/75 text-sm md:text-base">
+              Matches are structured to evaluate real football intelligence —
+              decision making, discipline, teamwork, and resilience under pressure.
             </p>
           </div>
         </div>
 
-        {/* STORY GRID (CONTROLLED FLOW, NOT RANDOM) */}
-        <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+        {/* STORY FLOW GRID (CONTROLLED, NOT RANDOM) */}
+        <div className="grid md:grid-cols-3 gap-5">
 
-          {/* SECTION A */}
-          <div className="space-y-4">
+          {/* LEFT COLUMN */}
+          <div className="space-y-5">
             <img src={images[1]} className="rounded-2xl w-full h-56 object-cover glass-card" />
             <img src={images[2]} className="rounded-2xl w-full h-56 object-cover glass-card" />
             <img src={images[3]} className="rounded-2xl w-full h-56 object-cover glass-card" />
@@ -66,8 +66,9 @@ export const Charity = () => {
             <img src={images[5]} className="rounded-2xl w-full h-56 object-cover glass-card" />
           </div>
 
-          {/* SECTION B (FOCUS COLUMN) */}
-          <div className="space-y-4">
+          {/* CENTER STORY BLOCK */}
+          <div className="space-y-5">
+
             <div className="glass-card rounded-3xl p-6">
               <div className="flex items-center gap-2 text-accent mb-3">
                 <Heart size={16} />
@@ -77,23 +78,24 @@ export const Charity = () => {
               </div>
 
               <h3 className="font-display text-2xl mb-3">
-                More than football
+                Beyond the game
               </h3>
 
               <p className="text-foreground/75 text-sm leading-relaxed">
-                Beyond the pitch, players experience mentorship, teamwork,
-                discipline, and a structured environment designed to build character
-                as much as skill.
+                The experience goes beyond football — players are guided through
+                discipline, teamwork, mentorship, and exposure to structured
+                development environments that prepare them for higher levels.
               </p>
             </div>
 
             <img src={images[6]} className="rounded-2xl w-full h-72 object-cover glass-card" />
             <img src={images[7]} className="rounded-2xl w-full h-72 object-cover glass-card" />
             <img src={images[8]} className="rounded-2xl w-full h-72 object-cover glass-card" />
+
           </div>
 
-          {/* SECTION C */}
-          <div className="space-y-4">
+          {/* RIGHT COLUMN */}
+          <div className="space-y-5">
             <img src={images[9]} className="rounded-2xl w-full h-56 object-cover glass-card" />
             <img src={images[10]} className="rounded-2xl w-full h-56 object-cover glass-card" />
             <img src={images[11]} className="rounded-2xl w-full h-56 object-cover glass-card" />
@@ -105,27 +107,30 @@ export const Charity = () => {
         </div>
 
         {/* FINAL MESSAGE */}
-        <div className="text-center mt-14 max-w-2xl mx-auto">
+        <div className="text-center mt-16 max-w-2xl mx-auto">
 
           <p className="text-foreground/75">
-            The Christmas Charity Cup is not just an event — it is a structured pathway
-            where talent is identified, nurtured, and given a real chance to grow.
+            The Christmas Charity Cup is not just an event — it is a structured
+            scouting environment where talent is identified, developed, and
+            given a real pathway forward.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
+
             <Button asChild variant="hero">
               <Link to="/join">
                 <Heart className="mr-2" size={16} />
-                Support a Player
+                Support Initiative
               </Link>
             </Button>
 
             <Button asChild variant="outlineLight">
               <Link to="/programs">
                 <GraduationCap className="mr-2" size={16} />
-                Explore Development Pathway
+                Development Pathway
               </Link>
             </Button>
+
           </div>
 
         </div>
