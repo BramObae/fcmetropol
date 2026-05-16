@@ -51,23 +51,39 @@ const stories = [
 ];
 
 export const Stories = () => (
-  <section id="stories" className="section-pad">
-    <div className="container-pro">
+  <section id="stories" className="relative section-pad overflow-hidden">
+    {/* ================= BACKGROUND (sucess1) ================= */}
+    <div className="absolute inset-0">
+      <img
+        src={s1}
+        alt="background"
+        className="w-full h-full object-cover scale-105"
+      />
+
+      {/* soften image but KEEP it visible */}
+      <div className="absolute inset-0 bg-background/70" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90" />
+    </div>
+
+    {/* ================= CONTENT ================= */}
+    <div className="relative z-10 container-pro">
       {/* HEADER */}
-      <div className="mb-12 md:mb-16">
+      <div className="max-w-3xl mb-14">
         <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
           Success Stories
         </div>
 
-        <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.9] max-w-4xl">
+        <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.9]">
           Journeys shaped through{" "}
-          <span className="text-gradient-gold">structure and opportunity.</span>
+          <span className="text-gradient-gold">
+            structure and opportunity.
+          </span>
         </h2>
 
-        <p className="mt-6 text-foreground/75 max-w-2xl text-base md:text-lg leading-relaxed">
-          These moments represent collective development progress — built
-          through structured training, exposure systems, and pathways designed
-          to prepare players for competitive football environments.
+        <p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed">
+          These stories reflect collective development — built through
+          structured training, exposure systems, and pathways designed to
+          prepare players for competitive football environments.
         </p>
       </div>
 
@@ -76,24 +92,20 @@ export const Stories = () => (
         {stories.map((s, i) => (
           <article
             key={i}
-            className="group overflow-hidden rounded-3xl bg-card border border-border/60 hover-lift"
+            className="overflow-hidden rounded-3xl bg-card/70 backdrop-blur border border-border/60 hover-lift"
           >
-            {/* IMAGE (CLEAN — NO TEXT OVERLAY) */}
+            {/* IMAGE (NO CROPPING) */}
             <div className="aspect-[4/5] bg-background">
               <img
                 src={s.image}
-                alt={`success story ${i + 1}`}
-                className="w-full h-full object-contain bg-background transition-transform duration-700 group-hover:scale-[1.02]"
+                alt={`success ${i + 1}`}
+                className="w-full h-full object-contain"
               />
             </div>
 
-            {/* TEXT BELOW IMAGE */}
+            {/* TEXT */}
             <div className="p-5 md:p-6">
-              <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-3">
-                Development Journey
-              </div>
-
-              <p className="text-sm md:text-base text-foreground/75 leading-relaxed">
+              <p className="text-sm md:text-base text-foreground/80 leading-relaxed">
                 “{s.quote}”
               </p>
             </div>
