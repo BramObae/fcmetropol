@@ -11,42 +11,42 @@ const stories = [
   {
     image: s1,
     quote:
-      "Through structured development and consistent exposure, we have seen players transition from local environments into competitive international pathways built on discipline and performance.",
+      "A structured pathway built on discipline, consistency, and guided development has allowed talent to grow into competitive readiness.",
   },
   {
     image: s2,
     quote:
-      "Every step of the journey is intentional — from training environments to visibility — ensuring players are prepared for opportunities beyond their home surroundings.",
+      "Progress is driven by clear systems that connect training, exposure, and opportunity into one continuous development journey.",
   },
   {
     image: s3,
     quote:
-      "We focus on building complete athletes, combining technical growth, mindset development, and professional readiness for global football standards.",
+      "We focus on building complete athletes prepared for modern football demands through structured preparation and performance support.",
   },
   {
     image: s4,
     quote:
-      "The pathway is designed to bridge the gap between raw talent and professional opportunity through structured scouting and development systems.",
+      "Every stage is designed to transform raw potential into measurable progress through professional football environments.",
   },
   {
     image: s5,
     quote:
-      "Consistency, discipline, and exposure remain the foundation of every progression we support within our football ecosystem.",
+      "Consistency and structured development remain at the core of every advancement within the pathway.",
   },
   {
     image: s6,
     quote:
-      "We believe in creating environments where talent is not just identified, but fully developed and positioned for the right opportunities.",
+      "Talent grows best in environments where guidance, exposure, and opportunity are intentionally aligned.",
   },
   {
     image: s7,
     quote:
-      "From early-stage development to advanced competitive exposure, every phase is aligned to long-term football success.",
+      "From foundational development to advanced exposure, every step is aligned with long-term football progression.",
   },
   {
     image: s8,
     quote:
-      "Our system is built to ensure that potential is transformed into performance through structured guidance and global visibility.",
+      "The system is designed to ensure readiness, visibility, and opportunity are achieved through structured development.",
   },
 ];
 
@@ -65,39 +65,35 @@ export const Stories = () => (
         </h2>
 
         <p className="mt-6 text-foreground/75 max-w-2xl text-base md:text-lg leading-relaxed">
-          These moments represent collective progress — players developing
-          through structured training, exposure, and international pathways
-          designed to elevate potential into professional readiness.
+          These moments represent collective development progress — built
+          through structured training, exposure systems, and pathways designed
+          to prepare players for competitive football environments.
         </p>
       </div>
 
       {/* GRID */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {stories.map((s, i) => (
           <article
             key={i}
-            className="group relative overflow-hidden rounded-3xl bg-card border border-border/60 hover-lift"
+            className="group overflow-hidden rounded-3xl bg-card border border-border/60 hover-lift"
           >
-            {/* IMAGE */}
-            <div className="aspect-[4/5] bg-background relative overflow-hidden">
+            {/* IMAGE (CLEAN — NO TEXT OVERLAY) */}
+            <div className="aspect-[4/5] bg-background">
               <img
                 src={s.image}
                 alt={`success story ${i + 1}`}
-                loading="lazy"
-                className="w-full h-full object-contain bg-background transition-transform duration-700 group-hover:scale-[1.03]"
+                className="w-full h-full object-contain bg-background transition-transform duration-700 group-hover:scale-[1.02]"
               />
-
-              {/* overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
             </div>
 
-            {/* TEXT */}
-            <div className="absolute bottom-0 inset-x-0 p-5 md:p-6">
+            {/* TEXT BELOW IMAGE */}
+            <div className="p-5 md:p-6">
               <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-3">
                 Development Journey
               </div>
 
-              <p className="text-sm md:text-base text-foreground/80 italic leading-relaxed">
+              <p className="text-sm md:text-base text-foreground/75 leading-relaxed">
                 “{s.quote}”
               </p>
             </div>
