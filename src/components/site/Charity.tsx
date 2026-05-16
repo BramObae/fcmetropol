@@ -2,11 +2,28 @@ import { Heart, GraduationCap, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-/* IMAGES (PUBLIC FOLDER - ORDERED) */
-const images = Array.from(
-  { length: 15 },
-  (_, i) => `/charity${i + 1}.jpg`
-);
+/* IMPORTANT:
+   Use EXACT filenames as they exist in /public
+   You said they are .jpeg → so we use .jpeg everywhere
+*/
+
+const images = [
+  "/charity1.jpeg",
+  "/charity2.jpeg",
+  "/charity3.jpeg",
+  "/charity4.jpeg",
+  "/charity5.jpeg",
+  "/charity6.jpeg",
+  "/charity7.jpeg",
+  "/charity8.jpeg",
+  "/charity9.jpeg",
+  "/charity10.jpeg",
+  "/charity11.jpeg",
+  "/charity12.jpeg",
+  "/charity13.jpeg",
+  "/charity14.jpeg",
+  "/charity15.jpeg",
+];
 
 export const Charity = () => {
   return (
@@ -20,56 +37,57 @@ export const Charity = () => {
             Metropol Christmas Charity Cup
           </div>
 
-          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.95]">
-            Football that creates <span className="text-gradient-gold">opportunity.</span>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl">
+            Football creating real <span className="text-gradient-gold">opportunity</span>
           </h2>
 
-          <p className="mt-6 text-foreground/75 text-base md:text-lg">
-            Every December, we host a U15 scouting tournament for young players
-            from underserved communities — combining competition, mentorship,
-            and a structured pathway into elite football environments.
+          <p className="mt-6 text-foreground/75">
+            A structured U15 scouting event giving young players from underserved communities
+            a chance to play, be seen, and experience professional football standards.
           </p>
         </div>
 
-        {/* FEATURE IMAGE (CLEAR STORY MOMENT) */}
-        <div className="rounded-3xl overflow-hidden glass-card mb-10">
+        {/* MAIN IMAGE */}
+        <div className="rounded-3xl overflow-hidden mb-10">
           <img
             src={images[0]}
-            alt="Charity opening moment"
+            alt="Charity main event"
             className="w-full h-[420px] md:h-[520px] object-cover"
+            onError={(e) => {
+              console.log("Image failed:", images[0]);
+            }}
           />
 
           <div className="p-6">
             <div className="flex items-center gap-2 text-accent mb-2">
               <Trophy size={16} />
               <span className="text-xs uppercase tracking-[0.25em]">
-                Tournament Opening & Talent Scouting
+                Opening Matches & Scouting
               </span>
             </div>
 
-            <p className="text-foreground/75 text-sm md:text-base">
-              Matches are structured to evaluate real football intelligence —
-              decision making, discipline, teamwork, and resilience under pressure.
+            <p className="text-foreground/75 text-sm">
+              Players are assessed in real match conditions — not trials, but structured football environments.
             </p>
           </div>
         </div>
 
-        {/* STORY FLOW GRID (CONTROLLED, NOT RANDOM) */}
+        {/* GRID */}
         <div className="grid md:grid-cols-3 gap-5">
 
-          {/* LEFT COLUMN */}
           <div className="space-y-5">
-            <img src={images[1]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[2]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[3]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[4]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[5]} className="rounded-2xl w-full h-56 object-cover glass-card" />
+            {images.slice(1, 6).map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                className="w-full h-56 object-cover rounded-2xl"
+              />
+            ))}
           </div>
 
-          {/* CENTER STORY BLOCK */}
           <div className="space-y-5">
 
-            <div className="glass-card rounded-3xl p-6">
+            <div className="rounded-2xl p-6 border border-white/10 bg-white/5">
               <div className="flex items-center gap-2 text-accent mb-3">
                 <Heart size={16} />
                 <span className="text-xs uppercase tracking-[0.25em]">
@@ -77,45 +95,40 @@ export const Charity = () => {
                 </span>
               </div>
 
-              <h3 className="font-display text-2xl mb-3">
-                Beyond the game
-              </h3>
-
-              <p className="text-foreground/75 text-sm leading-relaxed">
-                The experience goes beyond football — players are guided through
-                discipline, teamwork, mentorship, and exposure to structured
-                development environments that prepare them for higher levels.
+              <p className="text-foreground/75 text-sm">
+                Beyond football — discipline, mentorship, structure, and exposure define the experience.
               </p>
             </div>
 
-            <img src={images[6]} className="rounded-2xl w-full h-72 object-cover glass-card" />
-            <img src={images[7]} className="rounded-2xl w-full h-72 object-cover glass-card" />
-            <img src={images[8]} className="rounded-2xl w-full h-72 object-cover glass-card" />
-
+            {images.slice(6, 10).map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                className="w-full h-60 object-cover rounded-2xl"
+              />
+            ))}
           </div>
 
-          {/* RIGHT COLUMN */}
           <div className="space-y-5">
-            <img src={images[9]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[10]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[11]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[12]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[13]} className="rounded-2xl w-full h-56 object-cover glass-card" />
-            <img src={images[14]} className="rounded-2xl w-full h-56 object-cover glass-card" />
+            {images.slice(10, 15).map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                className="w-full h-56 object-cover rounded-2xl"
+              />
+            ))}
           </div>
 
         </div>
 
-        {/* FINAL MESSAGE */}
-        <div className="text-center mt-16 max-w-2xl mx-auto">
+        {/* CTA */}
+        <div className="text-center mt-14">
 
-          <p className="text-foreground/75">
-            The Christmas Charity Cup is not just an event — it is a structured
-            scouting environment where talent is identified, developed, and
-            given a real pathway forward.
+          <p className="text-foreground/75 max-w-xl mx-auto">
+            The Christmas Charity Cup is a structured pathway — identifying and developing talent through real football environments.
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <div className="mt-8 flex justify-center gap-4 flex-wrap">
 
             <Button asChild variant="hero">
               <Link to="/join">
