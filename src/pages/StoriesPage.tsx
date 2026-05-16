@@ -40,19 +40,20 @@ const StoriesPage = () => (
       description="Real players, real placements. Meet footballers whose careers we've helped launch — and follow our latest social updates."
     />
 
-    {/* HERO WITH BACKGROUND IMAGE */}
-    <section className="relative pt-28 md:pt-36 pb-10 overflow-hidden">
+    {/* HERO */}
+    <section className="relative min-h-[70vh] pt-28 md:pt-36 pb-10 overflow-hidden">
 
       {/* BACKGROUND IMAGE */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <img
           src="/success1.jpeg"
           alt="success background"
           className="w-full h-full object-cover"
         />
-        {/* DARK OVERLAY FOR READABILITY */}
-        <div className="absolute inset-0 bg-background/70" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+
+        {/* LIGHTER OVERLAY (SO IMAGE IS VISIBLE) */}
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-background/80" />
       </div>
 
       {/* FLAGS */}
@@ -72,15 +73,13 @@ const StoriesPage = () => (
         </div>
       </div>
 
-      {/* TEXT CONTENT */}
+      {/* TEXT */}
       <div className="container-pro relative z-10">
-
-
-        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl text-white">
           Lives we've <span className="text-gradient-gold">transformed.</span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-foreground/75 text-base md:text-lg">
+        <p className="mt-6 max-w-2xl text-white/80 text-base md:text-lg">
           Journeys built through structure, discipline, and opportunity —
           shaping footballers for the next level of the game.
         </p>
