@@ -40,14 +40,23 @@ const StoriesPage = () => (
       description="Real players, real placements. Meet footballers whose careers we've helped launch — and follow our latest social updates."
     />
 
-    {/* FLAGS CAROUSEL (TOP) */}
-    <section className="pt-28 pb-6 overflow-hidden border-b border-border/50 bg-card/20">
-      <div className="relative">
-        {/* fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
+    {/* HERO WITH BACKGROUND IMAGE */}
+    <section className="relative pt-28 md:pt-36 pb-10 overflow-hidden">
 
-        {/* moving flags */}
+      {/* BACKGROUND IMAGE */}
+      <div className="absolute inset-0">
+        <img
+          src="/success1.jpeg"
+          alt="success background"
+          className="w-full h-full object-cover"
+        />
+        {/* DARK OVERLAY FOR READABILITY */}
+        <div className="absolute inset-0 bg-background/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+      </div>
+
+      {/* FLAGS */}
+      <div className="relative z-10 mb-8 overflow-hidden border-y border-white/10 bg-black/20">
         <div className="flex gap-5 w-max marquee py-3">
           {flagLoop.map((c, i) => (
             <div
@@ -62,11 +71,9 @@ const StoriesPage = () => (
           ))}
         </div>
       </div>
-    </section>
 
-    {/* HERO TEXT */}
-    <section className="pt-10 md:pt-14 pb-10">
-      <div className="container-pro">
+      {/* TEXT CONTENT */}
+      <div className="container-pro relative z-10">
         <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
           Success Stories
         </div>
@@ -74,6 +81,11 @@ const StoriesPage = () => (
         <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
           Lives we've <span className="text-gradient-gold">transformed.</span>
         </h1>
+
+        <p className="mt-6 max-w-2xl text-foreground/75 text-base md:text-lg">
+          Journeys built through structure, discipline, and opportunity —
+          shaping footballers for the next level of the game.
+        </p>
       </div>
     </section>
 
