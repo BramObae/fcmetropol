@@ -2,7 +2,6 @@ import { SEO } from "@/components/SEO";
 import { Stories } from "@/components/site/Stories";
 import { SocialFeed } from "@/components/site/SocialFeed";
 
-/* FLAGS */
 const countries = [
   { name: "Kenya", flag: "🇰🇪" },
   { name: "Tanzania", flag: "🇹🇿" },
@@ -44,20 +43,20 @@ const StoriesPage = () => {
       {/* HERO */}
       <section className="relative overflow-hidden pt-28 md:pt-36 pb-16">
 
-        {/* BACKGROUND IMAGE (FIXED VISIBILITY) */}
+        {/* BACKGROUND IMAGE (FIXED) */}
         <div className="absolute inset-0">
           <img
-            src="/success1.jpeg"
+            src="/sucess1.jpeg"
             alt="success background"
-            className="w-full h-full object-cover scale-105"
+            className="w-full h-full object-cover object-center scale-105"
           />
 
-          {/* LIGHT OVERLAY (so image is visible but readable) */}
-          <div className="absolute inset-0 bg-background/55" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/80" />
+          {/* LIGHT OVERLAY (keeps image visible) */}
+          <div className="absolute inset-0 bg-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/80" />
         </div>
 
-        {/* FLAGS MARQUEE */}
+        {/* FLAGS CAROUSEL */}
         <div className="relative z-10 overflow-hidden border-y border-white/10 bg-white/5 backdrop-blur-md">
           <div className="flex gap-5 w-max marquee py-3">
             {flagLoop.map((c, i) => (
@@ -66,7 +65,7 @@ const StoriesPage = () => {
                 className="glass rounded-full px-5 py-3 flex items-center gap-3 whitespace-nowrap border border-white/10"
               >
                 <span className="text-xl">{c.flag}</span>
-                <span className="uppercase tracking-[0.2em] text-xs text-foreground/80">
+                <span className="uppercase tracking-[0.2em] text-xs text-white/80">
                   {c.name}
                 </span>
               </div>
@@ -74,18 +73,17 @@ const StoriesPage = () => {
           </div>
         </div>
 
-        {/* HERO TEXT */}
-        <div className="relative z-10 container-pro pt-10">
+        {/* HERO CONTENT */}
+        <div className="relative z-10 container-pro pt-12">
           <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
             Success Stories
           </div>
 
-          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
-            Lives we've{" "}
-            <span className="text-gradient-gold">transformed.</span>
+          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl text-white">
+            Lives we've <span className="text-gradient-gold">transformed.</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-foreground/80 text-base md:text-lg">
+          <p className="mt-6 max-w-2xl text-white/80 text-base md:text-lg">
             Journeys built through structure, discipline, and opportunity —
             shaping footballers for the next level of the game.
           </p>
