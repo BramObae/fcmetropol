@@ -16,100 +16,110 @@ import {
   Calendar,
 } from "lucide-react";
 
+/* IMAGES */
 import rene from "/rene.jpeg";
-import elisha from "/elisha.jpeg";
 import elisha1 from "/elisha1.jpeg";
+
+import eduardo from "/Eduardo Raupp.jpeg";
+import tom from "/TomOgweno.jpeg";
+import nicholas from "/NicholasMuyoti.jpeg";
 
 import gabriel from "/Gabriel Kariuki.jpeg";
 import edwin from "/Edwin Mwaura.jpeg";
-import eduardo from "/Eduardo Raupp.jpeg";
 import alexander from "/Alexander Otoo.jpeg";
 import sambi from "/Sambi Shaban.jpeg";
 import brian from "/Brian Odhiambo.jpeg";
 import vincent from "/Vincent Ngesa.jpeg";
 import calum from "/CalumShuan.jpeg";
 
-/* -------------------------------- */
-/* FLAGS */
-/* -------------------------------- */
-
+/* FLAGS (FULL RESTORED SET) */
 const countries = [
   { name: "Kenya", flag: "🇰🇪" },
   { name: "Tanzania", flag: "🇹🇿" },
   { name: "Rwanda", flag: "🇷🇼" },
+  { name: "Uganda", flag: "🇺🇬" },
+  { name: "Burundi", flag: "🇧🇮" },
   { name: "South Africa", flag: "🇿🇦" },
   { name: "Zambia", flag: "🇿🇲" },
   { name: "Zimbabwe", flag: "🇿🇼" },
+  { name: "Nigeria", flag: "🇳🇬" },
+  { name: "Ghana", flag: "🇬🇭" },
   { name: "Egypt", flag: "🇪🇬" },
-  { name: "Tunisia", flag: "🇹🇳" },
   { name: "Morocco", flag: "🇲🇦" },
+  { name: "Tunisia", flag: "🇹🇳" },
+  { name: "Algeria", flag: "🇩🇿" },
+  { name: "Senegal", flag: "🇸🇳" },
+  { name: "Cameroon", flag: "🇨🇲" },
+  { name: "Ivory Coast", flag: "🇨🇮" },
+  { name: "DR Congo", flag: "🇨🇩" },
   { name: "Estonia", flag: "🇪🇪" },
-  { name: "Brazil", flag: "🇧🇷" },
   { name: "United Kingdom", flag: "🇬🇧" },
   { name: "United States", flag: "🇺🇸" },
+  { name: "Brazil", flag: "🇧🇷" },
 ];
 
 const flagLoop = [...countries, ...countries];
 
-/* -------------------------------- */
 /* PROGRAMS */
-/* -------------------------------- */
-
 const programs = [
   {
     icon: Search,
     title: "Scouting",
-    desc: "Identifying talented African footballers through showcases, tournaments and scouting networks.",
+    desc: "Identifying talented African footballers through showcases and scouting networks.",
   },
   {
     icon: Calendar,
     title: "Development",
-    desc: "Elite football development focused on tactical growth, conditioning and performance.",
+    desc: "Elite football development focused on tactical growth and performance.",
   },
   {
     icon: Star,
     title: "Packaging",
-    desc: "Professional player branding, highlights, media kits and profiling.",
+    desc: "Professional player branding, highlights and profiling.",
   },
   {
     icon: Plane,
     title: "Placement",
-    desc: "Pathways into clubs, academies, scholarships and professional football opportunities.",
+    desc: "Pathways into clubs, academies and scholarships worldwide.",
   },
 ];
 
-/* -------------------------------- */
 /* VALUES */
-/* -------------------------------- */
-
 const values = [
   {
     icon: Target,
     title: "Discipline",
-    desc: "Professional standards in training, education and performance.",
+    desc: "Professional standards in training and performance.",
   },
   {
     icon: Heart,
     title: "Integrity",
-    desc: "Transparent player development with honest guidance and structure.",
+    desc: "Transparent player development structure.",
   },
   {
     icon: Trophy,
     title: "Excellence",
-    desc: "Building elite football environments inspired by global standards.",
+    desc: "Elite football environments inspired by global standards.",
   },
   {
     icon: Users,
     title: "Community",
-    desc: "Using football to uplift and inspire future generations.",
+    desc: "Using football to uplift future generations.",
   },
 ];
 
-/* -------------------------------- */
-/* TEAM */
-/* -------------------------------- */
-
+/* TECHNICAL TEAM */
 const technicalTeam = [
+  {
+    name: "Nicholas Muyoti",
+    role: "Head Coach · FC Metropol HP",
+    image: nicholas,
+  },
+  {
+    name: "Tom Ogweno",
+    role: "Technical Director · FC Metropol HP",
+    image: tom,
+  },
   {
     name: "Gabriel Kariuki",
     role: "Data Scientist",
@@ -119,11 +129,6 @@ const technicalTeam = [
     name: "Edwin Mwaura",
     role: "Assistant Coach",
     image: edwin,
-  },
-  {
-    name: "Eduardo Raupp Guimairreas",
-    role: "International Football Advisor",
-    image: eduardo,
   },
   {
     name: "Alexander Otoo",
@@ -152,10 +157,6 @@ const technicalTeam = [
   },
 ];
 
-/* -------------------------------- */
-/* PAGE */
-/* -------------------------------- */
-
 const AboutPage = () => {
   return (
     <>
@@ -166,71 +167,56 @@ const AboutPage = () => {
 
       {/* FLAGS */}
       <section className="pt-28 overflow-hidden border-b border-border/50 bg-card/20">
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
-
-          <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
-
-          <div className="flex gap-5 w-max marquee py-4">
-            {flagLoop.map((c, i) => (
-              <div
-                key={i}
-                className="glass rounded-full px-5 py-3 flex items-center gap-3 whitespace-nowrap border border-white/10"
-              >
-                <span className="text-xl">{c.flag}</span>
-
-                <span className="uppercase tracking-[0.2em] text-xs text-foreground/75">
-                  {c.name}
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="flex gap-5 w-max marquee py-4">
+          {flagLoop.map((c, i) => (
+            <div
+              key={i}
+              className="glass rounded-full px-5 py-3 flex items-center gap-3 whitespace-nowrap"
+            >
+              <span className="text-xl">{c.flag}</span>
+              <span className="uppercase text-xs tracking-[0.2em]">
+                {c.name}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* HERO */}
-      <section className="relative overflow-hidden pt-24 pb-24 md:pt-28 md:pb-32">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.20),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(251,191,36,0.15),transparent_35%)]" />
+      <section className="relative overflow-hidden pt-24 pb-24">
+        <div className="container-pro relative z-10 max-w-5xl">
 
-        <div className="absolute inset-0 opacity-[0.03] bg-[url('/grid.svg')]" />
-
-        <div className="container-pro relative z-10">
-          <div className="max-w-5xl">
-            <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
-              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-
-              <span className="text-xs uppercase tracking-[0.3em] text-foreground/75">
-                FC Metropol HP Kenya
-              </span>
-            </div>
-
-            <h1 className="font-display text-5xl sm:text-7xl md:text-[7rem] leading-[0.9]">
-              Building Africa's
-              <br />
-
-              <span className="text-gradient-gold">
-                global football pathway.
-              </span>
-            </h1>
-
-            <p className="mt-8 max-w-3xl text-lg md:text-2xl text-foreground/75 leading-relaxed font-light">
-              FC Metropol HP Kenya is a high-performance football development
-              platform focused on scouting, developing, packaging and placing
-              talented African footballers into global football opportunities.
-            </p>
-
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Button asChild variant="hero" size="lg">
-                <Link to="/join">
-                  Join The Program <ArrowRight className="ml-1" />
-                </Link>
-              </Button>
-
-              <Button asChild variant="outlineLight" size="lg">
-                <Link to="/programs">Explore Programs</Link>
-              </Button>
-            </div>
+          <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8">
+            <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+            <span className="text-xs uppercase tracking-[0.3em]">
+              FC Metropol HP Kenya
+            </span>
           </div>
+
+          <h1 className="font-display text-5xl md:text-[7rem] leading-[0.9]">
+            Building Africa's <br />
+            <span className="text-gradient-gold">
+              global football pathway.
+            </span>
+          </h1>
+
+          <p className="mt-8 max-w-3xl text-lg text-foreground/75">
+            FC Metropol HP develops African footballers into global professionals
+            through scouting, development, packaging and placement.
+          </p>
+
+          <div className="mt-10 flex gap-4">
+            <Button asChild variant="hero">
+              <Link to="/join">
+                Join Program <ArrowRight className="ml-1" />
+              </Link>
+            </Button>
+
+            <Button asChild variant="outlineLight">
+              <Link to="/programs">Explore Programs</Link>
+            </Button>
+          </div>
+
         </div>
       </section>
 
@@ -239,34 +225,16 @@ const AboutPage = () => {
       {/* PROGRAMS */}
       <section className="py-24">
         <div className="container-pro">
-          <div className="max-w-3xl mb-14">
-            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-              Development Structure
-            </div>
-
-            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
-              A complete football
-              <span className="text-gradient-gold"> pathway.</span>
-            </h2>
-          </div>
+          <h2 className="text-4xl font-display mb-10">
+            A complete football pathway
+          </h2>
 
           <div className="grid md:grid-cols-2 gap-6">
             {programs.map((p, i) => (
-              <div
-                key={i}
-                className="glass-card rounded-[2rem] p-8 border border-white/10"
-              >
-                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary/40 to-accent/20 grid place-items-center mb-6">
-                  <p.icon className="text-accent" size={24} />
-                </div>
-
-                <h3 className="text-2xl font-semibold mb-4">
-                  {p.title}
-                </h3>
-
-                <p className="text-foreground/75 leading-relaxed">
-                  {p.desc}
-                </p>
+              <div key={i} className="glass-card p-8 rounded-2xl">
+                <p.icon className="text-accent mb-4" size={24} />
+                <h3 className="text-2xl font-semibold">{p.title}</h3>
+                <p className="text-foreground/70 mt-2">{p.desc}</p>
               </div>
             ))}
           </div>
@@ -276,61 +244,30 @@ const AboutPage = () => {
       {/* LEADERSHIP */}
       <section className="py-24 bg-card/20">
         <div className="container-pro">
-          <div className="max-w-3xl mb-14">
-            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-              Leadership
+          <h2 className="text-4xl font-display mb-10">Leadership</h2>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+
+            <div className="glass-card p-6">
+              <img src={rene} className="rounded-2xl mb-4" />
+              <h3 className="text-xl">Rene Merilo</h3>
+              <p className="text-accent text-sm">President · Estonia</p>
             </div>
 
-            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
-              The people driving
-              <span className="text-gradient-gold"> the vision.</span>
-            </h2>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="glass-card rounded-[2rem] overflow-hidden border border-white/10">
-              <img
-                src={rene}
-                alt="Rene Merilo"
-                className="w-full h-[500px] object-cover object-top"
-              />
-
-              <div className="p-8">
-                <h3 className="text-3xl font-semibold">
-                  Rene Merilo
-                </h3>
-
-                <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
-                  President · FC Metropol Estonia
-                </p>
-              </div>
+            <div className="glass-card p-6">
+              <img src={elisha1} className="rounded-2xl mb-4" />
+              <h3 className="text-xl">Elisha Winga</h3>
+              <p className="text-accent text-sm">President · Kenya</p>
             </div>
 
-            <div className="glass-card rounded-[2rem] overflow-hidden border border-white/10">
-              <div className="grid grid-cols-2 gap-1">
-                <img
-                  src={elisha}
-                  alt="Elisha Winga"
-                  className="w-full h-[420px] object-cover object-top"
-                />
-
-                <img
-                  src={elisha1}
-                  alt="Elisha Winga"
-                  className="w-full h-[420px] object-cover object-top"
-                />
-              </div>
-
-              <div className="p-8">
-                <h3 className="text-3xl font-semibold">
-                  Elisha Winga
-                </h3>
-
-                <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
-                  President · FC Metropol HP Kenya
-                </p>
-              </div>
+            <div className="glass-card p-6">
+              <img src={eduardo} className="rounded-2xl mb-4" />
+              <h3 className="text-xl">Eduardo Raupp Guimairreas</h3>
+              <p className="text-accent text-sm">
+                International Football Advisor · Brazil
+              </p>
             </div>
+
           </div>
         </div>
       </section>
@@ -338,38 +275,14 @@ const AboutPage = () => {
       {/* TECHNICAL TEAM */}
       <section className="py-24">
         <div className="container-pro">
-          <div className="max-w-3xl mb-14">
-            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-              Technical Team
-            </div>
+          <h2 className="text-4xl font-display mb-10">Technical Team</h2>
 
-            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
-              Football minds
-              <span className="text-gradient-gold"> behind the vision.</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             {technicalTeam.map((m, i) => (
-              <div
-                key={i}
-                className="glass-card rounded-[2rem] overflow-hidden border border-white/10"
-              >
-                <img
-                  src={m.image}
-                  alt={m.name}
-                  className="h-80 w-full object-cover object-top"
-                />
-
-                <div className="p-6">
-                  <h3 className="text-2xl font-semibold">
-                    {m.name}
-                  </h3>
-
-                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
-                    {m.role}
-                  </p>
-                </div>
+              <div key={i} className="glass-card p-6">
+                <img src={m.image} className="rounded-2xl mb-4" />
+                <h3 className="text-xl">{m.name}</h3>
+                <p className="text-accent text-sm">{m.role}</p>
               </div>
             ))}
           </div>
@@ -379,34 +292,14 @@ const AboutPage = () => {
       {/* VALUES */}
       <section className="py-24 bg-card/20">
         <div className="container-pro">
-          <div className="max-w-3xl mb-14">
-            <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-              Core Values
-            </div>
+          <h2 className="text-4xl font-display mb-10">Core Values</h2>
 
-            <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
-              What drives
-              <span className="text-gradient-gold"> FC Metropol HP.</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
             {values.map((v, i) => (
-              <div
-                key={i}
-                className="glass-card rounded-[2rem] p-7 border border-white/10"
-              >
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/40 to-accent/20 grid place-items-center mb-5">
-                  <v.icon className="text-accent" size={22} />
-                </div>
-
-                <h3 className="text-xl font-semibold mb-3">
-                  {v.title}
-                </h3>
-
-                <p className="text-foreground/70 leading-relaxed">
-                  {v.desc}
-                </p>
+              <div key={i} className="glass-card p-6">
+                <v.icon className="text-accent mb-3" />
+                <h3>{v.title}</h3>
+                <p className="text-foreground/70">{v.desc}</p>
               </div>
             ))}
           </div>
