@@ -2,11 +2,7 @@ import { Heart, GraduationCap, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-/* IMPORTANT:
-   Use EXACT filenames as they exist in /public
-   You said they are .jpeg → so we use .jpeg everywhere
-*/
-
+/* IMAGES (must exist in /public exactly as named) */
 const images = [
   "/charity1.jpeg",
   "/charity2.jpeg",
@@ -31,73 +27,91 @@ export const Charity = () => {
 
       <div className="container-pro">
 
-        {/* HEADER */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        {/* HEADER STORY */}
+        <div className="text-center max-w-4xl mx-auto mb-14">
+
           <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
             Metropol Christmas Charity Cup
           </div>
 
-          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl">
-            Football creating real <span className="text-gradient-gold">opportunity</span>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.95]">
+            Football that creates{" "}
+            <span className="text-gradient-gold">real opportunity.</span>
           </h2>
 
-          <p className="mt-6 text-foreground/75">
-            A structured U15 scouting event giving young players from underserved communities
-            a chance to play, be seen, and experience professional football standards.
+          <p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed">
+            The Metropol Christmas Charity Cup is an annual U15 football initiative
+            that brings together young players from underserved communities and informal
+            settlements for a structured football experience.
           </p>
+
+          <p className="mt-4 text-foreground/70 text-sm md:text-base leading-relaxed">
+            It is not just a tournament — it is a scouting platform, a mentorship space,
+            and a Christmas experience. Players are given the opportunity to showcase their
+            talent in professional conditions while also enjoying a memorable festive
+            celebration built around football, dignity, and hope.
+          </p>
+
         </div>
 
-        {/* MAIN IMAGE */}
-        <div className="rounded-3xl overflow-hidden mb-10">
+        {/* MAIN STORY IMAGE */}
+        <div className="rounded-3xl overflow-hidden mb-10 glass-card">
+
           <img
             src={images[0]}
-            alt="Charity main event"
+            alt="Charity Cup Opening Match"
             className="w-full h-[420px] md:h-[520px] object-cover"
-            onError={(e) => {
-              console.log("Image failed:", images[0]);
-            }}
           />
 
           <div className="p-6">
+
             <div className="flex items-center gap-2 text-accent mb-2">
               <Trophy size={16} />
               <span className="text-xs uppercase tracking-[0.25em]">
-                Opening Matches & Scouting
+                Opening Matches · Talent Identification Stage
               </span>
             </div>
 
-            <p className="text-foreground/75 text-sm">
-              Players are assessed in real match conditions — not trials, but structured football environments.
+            <p className="text-foreground/75 text-sm leading-relaxed">
+              Matches are structured and professionally observed, allowing scouts and coaches
+              to assess decision-making, discipline, teamwork, and raw potential under real game pressure.
             </p>
+
           </div>
         </div>
 
-        {/* GRID */}
+        {/* STORY GRID */}
         <div className="grid md:grid-cols-3 gap-5">
 
+          {/* LEFT */}
           <div className="space-y-5">
             {images.slice(1, 6).map((img, i) => (
               <img
                 key={i}
                 src={img}
                 className="w-full h-56 object-cover rounded-2xl"
+                loading="lazy"
               />
             ))}
           </div>
 
+          {/* CENTER */}
           <div className="space-y-5">
 
             <div className="rounded-2xl p-6 border border-white/10 bg-white/5">
+
               <div className="flex items-center gap-2 text-accent mb-3">
                 <Heart size={16} />
                 <span className="text-xs uppercase tracking-[0.25em]">
-                  Community Impact
+                  Community · Development · Mentorship
                 </span>
               </div>
 
-              <p className="text-foreground/75 text-sm">
-                Beyond football — discipline, mentorship, structure, and exposure define the experience.
+              <p className="text-foreground/75 text-sm leading-relaxed">
+                Every player is guided beyond football — receiving mentorship, discipline,
+                and exposure to structured training environments that build both character and ability.
               </p>
+
             </div>
 
             {images.slice(6, 10).map((img, i) => (
@@ -105,27 +119,31 @@ export const Charity = () => {
                 key={i}
                 src={img}
                 className="w-full h-60 object-cover rounded-2xl"
+                loading="lazy"
               />
             ))}
           </div>
 
+          {/* RIGHT */}
           <div className="space-y-5">
             {images.slice(10, 15).map((img, i) => (
               <img
                 key={i}
                 src={img}
                 className="w-full h-56 object-cover rounded-2xl"
+                loading="lazy"
               />
             ))}
           </div>
 
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-14">
+        {/* FINAL CTA */}
+        <div className="text-center mt-14 max-w-2xl mx-auto">
 
-          <p className="text-foreground/75 max-w-xl mx-auto">
-            The Christmas Charity Cup is a structured pathway — identifying and developing talent through real football environments.
+          <p className="text-foreground/75 leading-relaxed">
+            The Metropol Christmas Charity Cup is part of our long-term pathway system —
+            identifying talent early, developing it properly, and connecting players to real football opportunities.
           </p>
 
           <div className="mt-8 flex justify-center gap-4 flex-wrap">
