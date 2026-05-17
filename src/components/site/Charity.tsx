@@ -30,25 +30,36 @@ export const Charity = () => {
         {/* HEADER */}
         <div className="text-center max-w-4xl mx-auto mb-14">
 
-          <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
-            Metropol Christmas Charity Cup
+          <div className="text-xs uppercase tracking-[0.35em] text-accent mb-4">
+            Annual Elite Youth Scouting Event
           </div>
 
-          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.95]">
-            Football that creates{" "}
-            <span className="text-gradient-gold">real opportunity.</span>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.92] font-bold">
+            <span className="text-white">
+              Metropol Christmas
+            </span>
+            <br />
+            <span className="text-gradient-gold">
+              Charity Cup
+            </span>
           </h2>
 
           <p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed">
-            The Metropol Christmas Charity Cup is a structured U15 football initiative
-            that brings together young players from underserved communities for a
-            professional football experience, scouting exposure, and a memorable
-            Christmas celebration.
+            The Metropol Christmas Charity Cup is a flagship U15 football scouting initiative
+            that brings together talented young players from underserved communities and informal
+            settlements for a professional football showcase combined with a life-changing Christmas experience.
+          </p>
+
+          <p className="mt-4 text-foreground/70 text-sm md:text-base leading-relaxed">
+            It is where football meets opportunity — players are scouted in structured matches,
+            mentored by coaches, and exposed to pathways into academies, scholarships, and professional
+            football environments across the world. Beyond football, it creates dignity, joy, and hope
+            during the festive season.
           </p>
 
         </div>
 
-        {/* MAIN IMAGE (FIXED CROPPING) */}
+        {/* MAIN IMAGE */}
         <div className="rounded-3xl overflow-hidden glass-card mb-10">
 
           <div className="w-full h-[420px] md:h-[520px] lg:h-[600px] bg-black/10 flex items-center justify-center">
@@ -71,8 +82,8 @@ export const Charity = () => {
             </div>
 
             <p className="text-foreground/75 text-sm leading-relaxed">
-              Players are assessed in real match conditions — structured environments
-              designed to evaluate discipline, decision-making, teamwork, and raw potential.
+              Players are evaluated in structured match environments that simulate real football pressure —
+              focusing on discipline, decision-making, teamwork, and raw potential.
             </p>
 
           </div>
@@ -101,14 +112,13 @@ export const Charity = () => {
               <div className="flex items-center gap-2 text-accent mb-3">
                 <Heart size={16} />
                 <span className="text-xs uppercase tracking-[0.25em]">
-                  Community · Mentorship · Development
+                  Community Impact · Mentorship · Growth
                 </span>
               </div>
 
               <p className="text-foreground/75 text-sm leading-relaxed">
-                Beyond football, players experience structured mentorship,
-                discipline-building environments, and guidance designed to shape both
-                talent and character.
+                The initiative goes beyond football — offering mentorship, discipline-building environments,
+                emotional support, and structured guidance that shapes both character and athletic development.
               </p>
 
             </div>
@@ -141,9 +151,8 @@ export const Charity = () => {
         <div className="text-center mt-14 max-w-2xl mx-auto">
 
           <p className="text-foreground/75 leading-relaxed">
-            The Metropol Christmas Charity Cup is part of our structured pathway system —
-            identifying talent early, developing it properly, and connecting players to
-            real football opportunities.
+            The Metropol Christmas Charity Cup is not just an event — it is a structured pathway system
+            designed to identify, develop, and connect young talent to real football opportunities.
           </p>
 
           <div className="mt-8 flex justify-center gap-4 flex-wrap">
