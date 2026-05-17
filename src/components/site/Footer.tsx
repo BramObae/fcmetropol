@@ -58,8 +58,8 @@ export const Footer = () => (
 
       </div>
 
-      {/* CONTACT + BOTTOM SECTION */}
-      <div className="mt-6 pt-5 border-t border-border/50 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
+      {/* BOTTOM ROW */}
+      <div className="mt-6 pt-5 border-t border-border/50 flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
 
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <span className="inline-flex items-center gap-1.5">
@@ -82,15 +82,10 @@ export const Footer = () => (
 
           <span>© {new Date().getFullYear()} FC Metropol HP Kenya</span>
 
-          {/* POWERED BY */}
-          <a
-            href="https://www.vertatechsolution.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] uppercase tracking-[0.2em] text-accent hover:opacity-80 transition"
-          >
-            Powered by Vertatech Solution
-          </a>
+          {/* POWERED BY (CLEAN BRAND STYLE) */}
+          <span className="text-[11px] uppercase tracking-[0.25em] text-accent/80 font-medium">
+            Powered by Vertatech Solutions
+          </span>
 
         </div>
 
