@@ -1,7 +1,12 @@
 import { SEO } from "@/components/SEO";
 import { Partners } from "@/components/site/Partners";
 
-/* FLAGS LIST (FULL - YOUR ORIGINAL + COMPLETE SET) */
+import fisa from "@/assets/fisa.jpg";
+import ismff from "@/assets/ismff.jpg";
+import mbg from "@/assets/mbg.jpg";
+import mbg2 from "@/assets/mbg-2.jpg";
+
+/* FLAGS */
 const countries = [
   { name: "Kenya", flag: "🇰🇪" },
   { name: "Tanzania", flag: "🇹🇿" },
@@ -20,14 +25,22 @@ const countries = [
 
 const flagLoop = [...countries, ...countries];
 
+/* PARTNERS */
+const partnerLogos = [
+  { name: "FISA Pro Club", logo: fisa },
+  { name: "ISMFF Football Festival", logo: ismff },
+  { name: "Metropol Baltic Group", logo: mbg },
+  { name: "FC Metropol Estonia", logo: mbg2 },
+];
+
 const PartnersPage = () => (
   <>
     <SEO
       title="Partners — FC Metropol HP Kenya"
-      description="Clubs, federations and academies across five continents partnering with FC Metropol HP Kenya."
+      description="Global football partnerships creating elite player pathways."
     />
 
-    {/* FLAGS FIRST (BEFORE ANY TEXT) */}
+    {/* FLAGS */}
     <section className="pt-28 overflow-hidden border-b border-border/50 bg-card/10">
       <div className="relative overflow-hidden">
 
@@ -51,17 +64,19 @@ const PartnersPage = () => (
       </div>
     </section>
 
-    {/* HERO SECTION */}
+    {/* HERO (BRIGHTER BACKGROUND FIX) */}
     <section className="relative pt-24 md:pt-32 pb-24 overflow-hidden">
 
-      {/* BACKGROUND IMAGE (PUBLIC FOLDER) */}
+      {/* BACKGROUND IMAGE */}
       <div className="absolute inset-0">
         <img
           src="/back6.jpeg"
-          alt="Global football partnerships"
+          alt="Global partnerships"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/70" />
+
+        {/* MUCH LIGHTER OVERLAY (FIXED) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-white/5 to-black/30" />
       </div>
 
       <div className="container-pro relative z-10">
@@ -75,16 +90,45 @@ const PartnersPage = () => (
           <span className="text-gradient-gold">global partnerships.</span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-white/75 text-lg leading-relaxed">
-          FC Metropol HP connects players to clubs, academies, and football institutions
-          across Africa, Europe, the Americas, and beyond — creating structured pathways
-          for talent identification and professional opportunities.
+        <p className="mt-6 max-w-2xl text-white/85 text-lg leading-relaxed">
+          FC Metropol HP connects players with clubs, academies, and football institutions
+          across Africa, Europe, and beyond — creating real pathways into professional football.
         </p>
 
       </div>
     </section>
 
-    {/* PARTNERS COMPONENT (UNCHANGED) */}
+    {/* PARTNER LOGO CAROUSEL (NEW UNIQUE SECTION) */}
+    <section className="py-16 overflow-hidden">
+
+      <div className="container-pro mb-8">
+        <h2 className="font-display text-3xl md:text-5xl">
+          Trusted <span className="text-gradient-gold">Partners</span>
+        </h2>
+      </div>
+
+      <div className="flex w-max gap-10 marquee group hover:[animation-play-state:paused]">
+
+        {[...partnerLogos, ...partnerLogos].map((p, i) => (
+          <div
+            key={i}
+            className="flex flex-col items-center justify-center glass rounded-2xl p-6 min-w-[180px] border border-white/10 hover:scale-105 transition"
+          >
+            <img
+              src={p.logo}
+              alt={p.name}
+              className="h-20 w-20 object-contain mb-3"
+            />
+            <span className="text-xs uppercase tracking-[0.2em] text-center text-foreground/75">
+              {p.name}
+            </span>
+          </div>
+        ))}
+
+      </div>
+    </section>
+
+    {/* ORIGINAL PARTNERS SECTION */}
     <div className="reveal">
       <Partners />
     </div>
