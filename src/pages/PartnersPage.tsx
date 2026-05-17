@@ -1,5 +1,4 @@
 import { SEO } from "@/components/SEO";
-import { Partners } from "@/components/site/Partners";
 
 /* COUNTRIES */
 const countries = [
@@ -20,10 +19,10 @@ const countries = [
 
 const loopFlags = [...countries, ...countries];
 
-/* PARTNERS (PUBLIC FOLDER) */
+/* PARTNERS (PUBLIC IMAGES) */
 const partners = [
   { name: "FISA Pro Club", logo: "/fisa.jpg" },
-  { name: "ISMFF Football Festival", logo: "/ismff.jpg" },
+  { name: "ISMFF Festival", logo: "/ismff.jpg" },
   { name: "Metropol Baltic Group", logo: "/mbg.jpg" },
   { name: "FC Metropol Estonia", logo: "/mbg-2.jpg" },
   { name: "Safer Nairobi Initiative", logo: "/safernairobi initiative.jpeg" },
@@ -34,97 +33,70 @@ const PartnersPage = () => (
   <>
     <SEO
       title="Partners — FC Metropol HP Kenya"
-      description="Clubs, federations and academies across five continents partnering with FC Metropol HP Kenya."
+      description="Global football partners supporting talent development and player pathways."
     />
 
-    {/* FLAGS SECTION (CAROUSEL) */}
-    <section className="pt-36 md:pt-44 border-b border-border/40">
+    {/* FLAGS CAROUSEL */}
+    <section className="pt-36 border-b border-border/40 overflow-hidden">
 
-      <div className="overflow-hidden bg-card/20">
+      <div className="flex w-max marquee py-4">
 
-        <div className="flex w-max marquee py-4">
-
-          {loopFlags.map((c, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 px-6 whitespace-nowrap"
-            >
-              <span className="text-xl">{c.flag}</span>
-              <span className="text-xs uppercase tracking-[0.25em] text-foreground/70">
-                {c.name}
-              </span>
-            </div>
-          ))}
-
-        </div>
+        {loopFlags.map((c, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 px-6 whitespace-nowrap"
+          >
+            <span className="text-xl">{c.flag}</span>
+            <span className="text-xs uppercase tracking-[0.25em] text-foreground/70">
+              {c.name}
+            </span>
+          </div>
+        ))}
 
       </div>
 
-      {/* HEADER TEXT */}
-      <div className="container-pro mt-10">
-
-        <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
-          Partners
-        </div>
-
-        <h1 className="font-display text-5xl md:text-7xl leading-[0.9]">
-          Built with the{" "}
-          <span className="text-gradient-gold">best in the game.</span>
-        </h1>
-
-        <p className="mt-5 max-w-2xl text-foreground/75 text-lg">
-          We collaborate with clubs, academies, federations and grassroots tournaments
-          across multiple continents to build real football pathways for players.
-        </p>
-
-      </div>
     </section>
 
-    {/* PARTNERS CAROUSEL (NEW CLEAN VERSION) */}
-    <section className="py-16">
+    {/* PARTNER LOGO CAROUSEL (DIRECTLY BELOW FLAGS) */}
+    <section className="py-10 overflow-hidden">
 
-      <div className="container-pro">
+      <div className="flex w-max marquee gap-8">
 
-        <div className="overflow-hidden">
+        {[...partners, ...partners].map((p, i) => (
+          <div
+            key={i}
+            className="min-w-[200px] flex flex-col items-center justify-center"
+          >
 
-          <div className="flex w-max marquee gap-6">
-
-            {[...partners, ...partners].map((p, i) => (
-              <div
-                key={i}
-                className="min-w-[220px] glass-card rounded-2xl p-6 border border-white/10 flex flex-col items-center justify-center"
-              >
-
-                {/* SAFE IMAGE (NO CROPPING EVER) */}
-                <div className="h-24 w-full flex items-center justify-center">
-                  <img
-                    src={p.logo}
-                    alt={p.name}
-                    className="max-h-full max-w-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-
-                <p className="mt-3 text-sm text-center text-foreground/80">
-                  {p.name}
-                </p>
-
-              </div>
-            ))}
+            <div className="h-20 flex items-center justify-center">
+              <img
+                src={p.logo}
+                alt={p.name}
+                className="max-h-16 max-w-full object-contain"
+                loading="lazy"
+              />
+            </div>
 
           </div>
-
-        </div>
+        ))}
 
       </div>
 
     </section>
 
-    {/* ORIGINAL PARTNERS COMPONENT (UNCHANGED) */}
-    <div className="reveal">
-      <Partners />
-    </div>
+    {/* SIMPLE WORDING (MINIMAL & CLEAN) */}
+    <section className="container-pro pb-20 text-center">
 
+      <h1 className="font-display text-4xl md:text-6xl leading-[1.05]">
+        Built on global <span className="text-gradient-gold">football trust</span>
+      </h1>
+
+      <p className="mt-5 text-foreground/70 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+        We work with clubs, academies, and initiatives that believe in one thing —
+        giving talent a real pathway into professional football.
+      </p>
+
+    </section>
   </>
 );
 
