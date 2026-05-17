@@ -11,12 +11,23 @@ const SOCIALS = [
 export const Footer = () => (
   <footer className="border-t border-border/60 bg-card/30">
     <div className="container-pro py-10">
+
+      {/* TOP ROW */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
         <Link to="/" className="flex items-center gap-3">
-          <img src={logo} alt="FC Metropol HP Kenya crest" className="h-10 w-10 rounded-md object-contain" width={40} height={40} />
+          <img
+            src={logo}
+            alt="FC Metropol HP Kenya crest"
+            className="h-10 w-10 rounded-md object-contain"
+          />
           <div className="leading-tight">
-            <div className="font-display text-base tracking-wide">FC METROPOL HP</div>
-            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Develop · Package · Place</div>
+            <div className="font-display text-base tracking-wide">
+              FC METROPOL HP
+            </div>
+            <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              Develop · Package · Place
+            </div>
           </div>
         </Link>
 
@@ -24,10 +35,9 @@ export const Footer = () => (
           <Link to="/" className="hover:text-accent">Home</Link>
           <Link to="/about" className="hover:text-accent">About</Link>
           <Link to="/programs" className="hover:text-accent">Programs</Link>
-          
           <Link to="/gallery" className="hover:text-accent">Gallery</Link>
           <Link to="/stories" className="hover:text-accent">Stories</Link>
-           <Link to="/partners" className="hover:text-accent">Partners</Link>
+          <Link to="/partners" className="hover:text-accent">Partners</Link>
           <Link to="/join" className="hover:text-accent">Join</Link>
         </nav>
 
@@ -45,20 +55,47 @@ export const Footer = () => (
             </a>
           ))}
         </div>
+
       </div>
 
+      {/* CONTACT + BOTTOM SECTION */}
       <div className="mt-6 pt-5 border-t border-border/50 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
+
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <span className="inline-flex items-center gap-1.5"><MapPin size={13} className="text-accent" /> Nairobi, Kenya</span>
+          <span className="inline-flex items-center gap-1.5">
+            <MapPin size={13} className="text-accent" />
+            Nairobi, Kenya
+          </span>
+
           <a href="tel:+254708666576" className="inline-flex items-center gap-1.5 hover:text-accent">
-            <Phone size={13} className="text-accent" /> +254 708 666 576
+            <Phone size={13} className="text-accent" />
+            +254 708 666 576
           </a>
+
           <a href="mailto:hello@fcmetropolhp.com" className="inline-flex items-center gap-1.5 hover:text-accent">
-            <Mail size={13} className="text-accent" /> hello@fcmetropolhp.com
+            <Mail size={13} className="text-accent" />
+            hello@fcmetropolhp.com
           </a>
         </div>
-        <div>© {new Date().getFullYear()} FC Metropol HP Kenya</div>
+
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+
+          <span>© {new Date().getFullYear()} FC Metropol HP Kenya</span>
+
+          {/* POWERED BY */}
+          <a
+            href="https://www.vertatechsolution.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] uppercase tracking-[0.2em] text-accent hover:opacity-80 transition"
+          >
+            Powered by Vertatech Solution
+          </a>
+
+        </div>
+
       </div>
+
     </div>
   </footer>
 );
