@@ -38,9 +38,7 @@ const PartnersPage = () => (
 
     {/* FLAGS CAROUSEL */}
     <section className="pt-36 border-b border-border/40 overflow-hidden">
-
       <div className="flex w-max marquee py-4">
-
         {loopFlags.map((c, i) => (
           <div
             key={i}
@@ -52,22 +50,17 @@ const PartnersPage = () => (
             </span>
           </div>
         ))}
-
       </div>
-
     </section>
 
-    {/* PARTNER LOGO CAROUSEL (DIRECTLY BELOW FLAGS) */}
+    {/* PARTNER LOGO CAROUSEL */}
     <section className="py-10 overflow-hidden">
-
       <div className="flex w-max marquee gap-8">
-
         {[...partners, ...partners].map((p, i) => (
           <div
             key={i}
             className="min-w-[200px] flex flex-col items-center justify-center"
           >
-
             <div className="h-20 flex items-center justify-center">
               <img
                 src={p.logo}
@@ -76,24 +69,28 @@ const PartnersPage = () => (
                 loading="lazy"
               />
             </div>
-
           </div>
         ))}
-
       </div>
-
     </section>
 
-    {/* SIMPLE WORDING (MINIMAL & CLEAN) */}
+    {/* MESSAGE SECTION */}
     <section className="container-pro pb-20 text-center">
-
+      
       <h1 className="font-display text-4xl md:text-6xl leading-[1.05]">
-        Built on global <span className="text-gradient-gold">football trust</span>
+        Built on global <span className="text-gradient-gold">football connections</span>
       </h1>
 
-      <p className="mt-5 text-foreground/70 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-        We work with clubs, academies, and initiatives that believe in one thing —
-        giving talent a real pathway into professional football.
+      <p className="mt-5 text-foreground/70 max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
+        We are actively partnered with clubs, academies, initiatives, and development programs
+        across multiple countries.  
+        <br /><br />
+        This growing network is designed to create real opportunities for players —
+        connecting talent from Africa to Europe, the Americas, and emerging football regions worldwide.
+      </p>
+
+      <p className="mt-6 text-foreground/60 text-sm">
+        Our mission is simple: open doors where football alone is not enough.
       </p>
 
     </section>
