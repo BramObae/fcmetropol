@@ -15,6 +15,7 @@ export const Footer = () => (
       {/* TOP ROW */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
+        {/* LOGO */}
         <Link to="/" className="flex items-center gap-3">
           <img
             src={logo}
@@ -31,7 +32,8 @@ export const Footer = () => (
           </div>
         </Link>
 
-        <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground/75">
+        {/* NAV */}
+        <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground/75 justify-center">
           <Link to="/" className="hover:text-accent">Home</Link>
           <Link to="/about" className="hover:text-accent">About</Link>
           <Link to="/programs" className="hover:text-accent">Programs</Link>
@@ -41,7 +43,8 @@ export const Footer = () => (
           <Link to="/join" className="hover:text-accent">Join</Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* SOCIALS */}
+        <div className="flex items-center justify-center gap-2">
           {SOCIALS.map(({ Icon, href, label }, i) => (
             <a
               key={i}
@@ -59,9 +62,10 @@ export const Footer = () => (
       </div>
 
       {/* BOTTOM ROW */}
-      <div className="mt-6 pt-5 border-t border-border/50 flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
+      <div className="mt-6 pt-5 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-muted-foreground">
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {/* CONTACT */}
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2">
           <span className="inline-flex items-center gap-1.5">
             <MapPin size={13} className="text-accent" />
             Nairobi, Kenya
@@ -78,14 +82,21 @@ export const Footer = () => (
           </a>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+        {/* CENTER SECTION (CLEAN + CENTERED) */}
+        <div className="flex flex-col items-center justify-center text-center gap-2">
 
-          <span>© {new Date().getFullYear()} FC Metropol HP Kenya</span>
-
-          {/* POWERED BY (CLEAN BRAND STYLE) */}
-          <span className="text-[11px] uppercase tracking-[0.25em] text-accent/80 font-medium">
-            Powered by Vertatech Solutions
+          <span className="text-center">
+            © {new Date().getFullYear()} FC Metropol HP Kenya
           </span>
+
+          <a
+            href="https://www.vertatechsolution.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] uppercase tracking-[0.25em] text-accent hover:opacity-80 transition text-center"
+          >
+            Powered by Vertatech Solutions
+          </a>
 
         </div>
 
