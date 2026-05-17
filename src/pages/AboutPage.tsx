@@ -143,7 +143,7 @@ const leadership = [
   {
     name: "Elisha Winga",
     role: "President · FC Metropol HP Kenya",
-    quote: "Developing disciplined players for global football pathways.",
+    quote: "Developing disciplined players for global pathways.",
     image: elisha,
   },
   {
@@ -253,8 +253,13 @@ const AboutPage = () => {
               <div key={i} className="glass-card rounded-[2rem] overflow-hidden">
                 <img
                   src={m.image}
-                  className="w-full h-[300px] object-cover object-top"
+                  className={
+                    m.name === "Tom Ogweno"
+                      ? "w-full h-[300px] object-contain bg-black/10 p-3"
+                      : "w-full h-[300px] object-cover object-top"
+                  }
                 />
+
                 <div className="p-5">
                   <h3 className="text-xl font-semibold">{m.name}</h3>
                   <p className="text-xs uppercase tracking-[0.2em] text-accent">
