@@ -422,7 +422,7 @@ const AboutPage = () => {
               <div className="p-8">
 
                 <h3 className="text-3xl font-semibold">
-                  Eduardo Raupp Guimairreas
+                  Eduardo Raupp Guimarães
                 </h3>
 
                 <p className="mt-2 text-sm uppercase tracking-[0.2em] text-accent">
