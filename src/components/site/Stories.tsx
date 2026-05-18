@@ -7,31 +7,32 @@ import s6 from "/sucess6.jpeg";
 import s7 from "/sucess7.jpeg";
 import s8 from "/sucess8.jpeg";
 
-/* FEATURED STORY IMAGE (FROM ABOUT CONTEXT) */
-import mwanahalima from "/Mwanahalima.jpeg";
+/* MWANAHALIMA IMAGES (2 IMAGES) */
+import mwanahalima1 from "/Mwanahalima.jpeg";
+import mwanahalima2 from "/Mwanahalima1.jpeg";
 
 const stories = [
   {
     image: s1,
     title: "Egypt Project — Parsitau Naikada & Negmat Sinai",
     quote:
-      "Our ongoing development projects in Egypt focused on structured talent development and regional football exposure.",
+      "Ongoing structured development project focused on talent identification and regional football exposure in Egypt.",
   },
   {
     image: s2,
     title: "Eze Jerry",
     quote:
-      "A player development journey built on discipline, structure, and continuous performance growth within competitive environments.",
+      "A development journey shaped through discipline, structured training, and competitive performance environments.",
   },
   {
     image: s3,
     quote:
-      "We focus on building complete athletes prepared for modern football demands through structured preparation and performance support.",
+      "We focus on building complete athletes prepared for modern football demands through structured preparation.",
   },
   {
     image: s4,
     quote:
-      "Every stage is designed to transform raw potential into measurable progress through professional football environments.",
+      "Every stage is designed to transform raw potential into measurable progress through professional systems.",
   },
   {
     image: s5,
@@ -46,12 +47,12 @@ const stories = [
   {
     image: s7,
     quote:
-      "From foundational development to advanced exposure, every step is aligned with long-term football progression.",
+      "From foundational development to elite exposure, every step is aligned with long-term football progression.",
   },
   {
     image: s8,
     quote:
-      "The system is designed to ensure readiness, visibility, and opportunity are achieved through structured development.",
+      "The system ensures readiness, visibility, and opportunity through structured development pathways.",
   },
 ];
 
@@ -73,34 +74,47 @@ export const Stories = () => (
         </h2>
 
         <p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed">
-          Real development journeys built through structured football systems,
-          international exposure, and consistent talent progression pathways.
+          Structured football pathways connecting talent development, exposure,
+          and professional readiness across international environments.
         </p>
       </div>
 
-      {/* FEATURED STORY (Mwanahalima FRONT SECTION) */}
-      <div className="mb-12">
+      {/* FEATURED MWANAHALIMA (PROFESSIONAL LAYOUT) */}
+      <div className="mb-14">
         <div className="glass-card rounded-3xl overflow-hidden border border-white/10 grid lg:grid-cols-2">
 
-          <img
-            src={mwanahalima}
-            alt="Mwanahalima Jereko"
-            className="w-full h-[420px] object-cover object-top"
-          />
+          {/* IMAGES SIDE */}
+          <div className="grid grid-cols-2 gap-1 bg-black/10">
+            <img
+              src={mwanahalima1}
+              alt="Mwanahalima Jereko"
+              className="w-full h-[420px] object-contain bg-black/5"
+            />
+            <img
+              src={mwanahalima2}
+              alt="Mwanahalima Jereko"
+              className="w-full h-[420px] object-contain bg-black/5"
+            />
+          </div>
 
+          {/* TEXT SIDE */}
           <div className="p-8 md:p-12 flex flex-col justify-center">
             <div className="text-xs uppercase tracking-[0.3em] text-accent mb-3">
               Featured Success Story
             </div>
 
-            <h3 className="text-3xl font-semibold mb-4">
+            <h3 className="text-3xl font-semibold">
               Mwanahalima Jereko
             </h3>
 
-            <p className="text-foreground/75 leading-relaxed">
-              Plays for HB Køge in the Danish Women Premier League and serves as
-              Harambee Starlets Assistant Captain. A symbol of structured development,
-              leadership, and international football progression.
+            <p className="mt-3 text-sm uppercase tracking-[0.2em] text-accent">
+              HB Køge · Danish Women Premier League
+            </p>
+
+            <p className="mt-5 text-foreground/75 leading-relaxed">
+              Harambee Starlets Assistant Captain with international experience in elite
+              European football environments. A leader shaping the next generation of
+              African women football talent through exposure and structured development.
             </p>
           </div>
 
@@ -116,7 +130,7 @@ export const Stories = () => (
             className="overflow-hidden rounded-3xl bg-card border border-border/60 hover-lift"
           >
 
-            {/* IMAGE (NO CROPPING) */}
+            {/* IMAGE */}
             <div className="aspect-[4/5] bg-background">
               <img
                 src={s.image}
