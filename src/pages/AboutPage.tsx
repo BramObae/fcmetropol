@@ -20,16 +20,14 @@ import {
 import rene from "/rene.jpeg";
 import elisha1 from "/elisha1.jpeg";
 import eduardo from "/Eduardo Raupp.jpeg";
-
-import jorge from "/Jorge Fuster Molla.jpeg";
-import maurice from "/Maurice.jpeg";
-import hany from "/Hany Hussein.jpeg";
-
-/* LIAISON */
 import mwanahalima from "/Mwanahalima.jpeg";
 import mwanahalima1 from "/Mwanahalima1.jpeg";
+import jorge from "/Jorge Fuster Molla.jpeg";
+import hany from "/Hany Hussein.jpeg";
+import maurice from "/Maurice.jpeg";
+import mourikam from "/Mourikam junior.jpeg";
 
-/* TECHNICAL TEAM */
+/* TECHNICAL TEAM IMAGES */
 import gabriel from "/Gabriel Kariuki.jpeg";
 import edwin from "/Edwin Mwaura.jpeg";
 import alexander from "/Alexander Otoo.jpeg";
@@ -71,69 +69,113 @@ const countries = [
   { name: "Argentina", flag: "🇦🇷" },
   { name: "United Kingdom", flag: "🇬🇧" },
   { name: "United States", flag: "🇺🇸" },
-  { name: "Canada", flag: "🇨🇦" },
 ];
 
 const flagLoop = [...countries, ...countries];
 
-/* TECHNICAL TEAM */
-const technicalTeam = [
+/* PROGRAMS */
+const programs = [
   {
-    name: "Tom Ogweno",
-    role: "Technical Director",
-    image: tom,
-    object: "object-[center_15%]",
+    icon: Search,
+    title: "Scouting",
+    desc: "Identifying talented African footballers through showcases, tournaments and scouting networks.",
   },
   {
-    name: "Nicholas Muyoti",
-    role: "Head Coach",
-    image: muyoti,
-    object: "object-top",
+    icon: Calendar,
+    title: "Development",
+    desc: "Elite football development focused on tactical growth, conditioning and performance.",
   },
   {
-    name: "Gabriel Kariuki",
-    role: "Data Scientist",
-    image: gabriel,
-    object: "object-top",
+    icon: Star,
+    title: "Packaging",
+    desc: "Professional player branding, highlights, media kits and profiling.",
   },
   {
-    name: "Edwin Mwaura",
-    role: "Assistant Coach",
-    image: edwin,
-    object: "object-top",
-  },
-  {
-    name: "Alexander Otoo",
-    role: "Media",
-    image: alexander,
-    object: "object-top",
-  },
-  {
-    name: "Sambi Shaban",
-    role: "Physiotherapist",
-    image: sambi,
-    object: "object-top",
-  },
-  {
-    name: "Brian Odhiambo",
-    role: "Assistant Coach",
-    image: brian,
-    object: "object-top",
-  },
-  {
-    name: "Vincent Ngesa",
-    role: "Strength & Conditioning Coach",
-    image: vincent,
-    object: "object-top",
-  },
-  {
-    name: "Calum Shuan Selby",
-    role: "Head of Curriculum Development",
-    image: calum,
-    object: "object-top",
+    icon: Plane,
+    title: "Placement",
+    desc: "Pathways into clubs, academies, scholarships and professional football opportunities.",
   },
 ];
 
+/* VALUES */
+const values = [
+  { icon: Target, title: "Discipline", desc: "Professional standards in training, education and performance." },
+  { icon: Heart, title: "Integrity", desc: "Transparent player development with honest guidance and structure." },
+  { icon: Trophy, title: "Excellence", desc: "Building elite football environments inspired by global standards." },
+  { icon: Users, title: "Community", desc: "Using football to uplift and inspire future generations." },
+];
+
+/* TECHNICAL TEAM */
+const technicalTeam = [
+  { name: "Tom Ogweno", role: "Technical Director", image: tom, object: "object-[center_15%]" },
+  { name: "Nicholas Muyoti", role: "Head Coach", image: muyoti, object: "object-top" },
+  { name: "Gabriel Kariuki", role: "Data Scientist", image: gabriel, object: "object-top" },
+  { name: "Edwin Mwaura", role: "Assistant Coach", image: edwin, object: "object-top" },
+  { name: "Alexander Otoo", role: "Media", image: alexander, object: "object-top" },
+  { name: "Sambi Shaban", role: "Physiotherapist", image: sambi, object: "object-top" },
+  { name: "Brian Odhiambo", role: "Assistant Coach", image: brian, object: "object-top" },
+  { name: "Vincent Ngesa", role: "Strength & Conditioning Coach", image: vincent, object: "object-top" },
+];
+
+/* LEADERSHIP */
+const leadership = [
+  {
+    name: "Rene Merilo",
+    role: "International President",
+    image: rene,
+    desc: "Driving global football partnerships and long-term structures."
+  },
+  {
+    name: "Elisha Winga",
+    role: "Kenya President",
+    image: elisha1,
+    desc: "Leading national talent development and scouting systems."
+  },
+  {
+    name: "Eduardo Raupp Guimarães",
+    role: "International Technical Director",
+    image: eduardo,
+    desc: "TMR SPORTS BRAZIL — technical football strategy and global networks."
+  },
+  {
+    name: "Mwanahalima Jereko",
+    role: "International Football Liaison",
+    image: mwanahalima,
+    desc: "HB Køge & Harambee Starlets Assistant Captain."
+  },
+  {
+    name: "Jorge Fuster Molla",
+    role: "International Football Advisor",
+    image: jorge,
+    desc: "Elite European & global football advisory."
+  },
+  {
+    name: "Hany Hussein",
+    role: "International Football Advisor",
+    image: hany,
+    desc: "North Africa, Gulf & Asia football relations."
+  },
+  {
+    name: "Maurice Omoya Aoko",
+    role: "Sporting Director",
+    image: maurice,
+    desc: "Sporting structure, recruitment and performance systems."
+  },
+  {
+    name: "Mourikam Vincent",
+    role: "International Football Advisor",
+    image: mourikam,
+    desc: "Fairplay Sports Management Germany 🇩🇪 global advisory."
+  },
+  {
+    name: "Calum Shuan Selby",
+    role: "Head of Football Curriculum Development",
+    image: calum,
+    desc: "Designing elite player development systems."
+  },
+];
+
+/* PAGE */
 const AboutPage = () => {
   return (
     <>
@@ -146,136 +188,82 @@ const AboutPage = () => {
       <section className="pt-28 overflow-hidden border-b border-border/50 bg-card/20">
         <div className="flex gap-5 w-max marquee py-4">
           {flagLoop.map((c, i) => (
-            <div key={i} className="flex items-center gap-3 px-6 whitespace-nowrap">
+            <div key={i} className="glass rounded-full px-5 py-3 flex items-center gap-3 whitespace-nowrap">
               <span className="text-xl">{c.flag}</span>
-              <span className="text-xs uppercase tracking-[0.25em] text-foreground/70">
-                {c.name}
-              </span>
+              <span className="uppercase text-xs tracking-[0.2em]">{c.name}</span>
             </div>
           ))}
         </div>
       </section>
 
       {/* HERO */}
-      <section className="relative overflow-hidden pt-24 pb-24 md:pt-28 md:pb-32">
-        <div className="container-pro relative z-10">
-          <h1 className="font-display text-5xl md:text-[7rem] leading-[0.9]">
-            Building Africa's
-            <br />
-            <span className="text-gradient-gold">global football pathway.</span>
+      <section className="pt-24 pb-24">
+        <div className="container-pro">
+          <h1 className="font-display text-6xl md:text-7xl">
+            Building Africa’s <span className="text-gradient-gold">global football pathway</span>
           </h1>
+          <p className="mt-6 text-foreground/70 max-w-3xl">
+            A structured development ecosystem connecting African talent to global football opportunities.
+          </p>
         </div>
       </section>
 
       <Stats />
 
-      {/* LEADERSHIP */}
-      <section className="py-24 bg-card/20">
+      {/* PROGRAMS + VALUES (kept same structure) */}
+      <section className="py-24">
         <div className="container-pro">
-
-          {/* TOP LEADERS */}
-          <div className="grid lg:grid-cols-3 gap-8">
-
-            <div className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={rene} className="w-full h-[420px] object-cover object-top" />
-              <div className="p-8">
-                <h3 className="text-3xl">Rene Merilo</h3>
-                <p className="text-accent text-sm">International President</p>
+          <div className="grid md:grid-cols-2 gap-6">
+            {programs.map((p, i) => (
+              <div key={i} className="glass-card p-8 rounded-3xl">
+                <h3 className="text-xl font-semibold">{p.title}</h3>
+                <p className="text-foreground/70 mt-2">{p.desc}</p>
               </div>
-            </div>
-
-            <div className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={elisha1} className="w-full h-[420px] object-cover object-top" />
-              <div className="p-8">
-                <h3 className="text-3xl">Elisha Winga</h3>
-                <p className="text-accent text-sm">Kenya President</p>
-              </div>
-            </div>
-
-            <div className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={eduardo} className="w-full h-[420px] object-cover object-top" />
-              <div className="p-8">
-                <h3 className="text-3xl">Eduardo Raupp Guimarães</h3>
-                <p className="text-accent text-sm">International Football Advisor</p>
-              </div>
-            </div>
-
+            ))}
           </div>
-
-          {/* MID STRATEGIC */}
-          <div className="grid lg:grid-cols-3 gap-8 mt-10">
-
-            <div className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={jorge} className="w-full h-[420px] object-cover object-top" />
-              <div className="p-8">
-                <h3>Jorge Fuster Molla</h3>
-                <p className="text-accent text-sm">International Technical Director</p>
-              </div>
-            </div>
-
-            <div className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={maurice} className="w-full h-[420px] object-cover object-top" />
-              <div className="p-8">
-                <h3>Maurice Omoya Aoko</h3>
-                <p className="text-accent text-sm">Sporting Director</p>
-              </div>
-            </div>
-
-            <div className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={hany} className="w-full h-[420px] object-cover object-top" />
-              <div className="p-8">
-                <h3>Hany Hussein</h3>
-                <p className="text-accent text-sm">International Football Advisor (North Africa, Gulf & Asia)</p>
-              </div>
-            </div>
-
-          </div>
-
         </div>
       </section>
 
-      {/* LIAISON */}
-      <section className="py-24">
+      {/* LEADERSHIP */}
+      <section className="py-24 bg-card/20">
         <div className="container-pro">
+          <h2 className="text-4xl md:text-6xl font-display mb-12">
+            Leadership Structure
+          </h2>
 
-          <div className="glass-card rounded-[2rem] overflow-hidden grid lg:grid-cols-2">
-
-            <div className="grid grid-cols-2">
-              <img src={mwanahalima} className="h-[520px] object-cover object-top" />
-              <img src={mwanahalima1} className="h-[520px] object-cover object-top" />
-            </div>
-
-            <div className="p-10 flex flex-col justify-center">
-              <h2 className="text-4xl">Mwanahalima Jereko</h2>
-              <p className="text-accent">International Football Liaison</p>
-            </div>
-
+          <div className="grid lg:grid-cols-3 gap-8">
+            {leadership.map((l, i) => (
+              <div key={i} className="glass-card rounded-2xl overflow-hidden">
+                <img src={l.image} className="h-[380px] w-full object-cover object-top" />
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold">{l.name}</h3>
+                  <p className="text-accent text-xs uppercase mt-1">{l.role}</p>
+                  <p className="text-foreground/70 mt-3 text-sm">{l.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
-
         </div>
       </section>
 
       {/* TECHNICAL TEAM */}
       <section className="py-24">
-        <div className="container-pro grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          {technicalTeam.map((m, i) => (
-            <div key={i} className="glass-card rounded-[2rem] overflow-hidden">
-              <img src={m.image} className={`h-[360px] w-full object-cover ${m.object}`} />
-              <div className="p-6">
-                <h3>{m.name}</h3>
-                <p className="text-accent text-sm">{m.role}</p>
-              </div>
-            </div>
-          ))}
-
-        </div>
-      </section>
-
-      {/* VALUES */}
-      <section className="py-24 bg-card/20">
         <div className="container-pro">
-          <Stats />
+          <h2 className="text-4xl md:text-6xl font-display mb-12">
+            Technical Team
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {technicalTeam.map((m, i) => (
+              <div key={i} className="glass-card rounded-2xl overflow-hidden">
+                <img src={m.image} className={`h-[360px] w-full object-cover ${m.object}`} />
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold">{m.name}</h3>
+                  <p className="text-accent text-xs uppercase mt-1">{m.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
