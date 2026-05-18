@@ -112,7 +112,7 @@ const leadership = [
     desc: "Global football development and international partnerships.",
   },
   {
-    name: "Elisha Winga",
+    name: "Elisha Ruoth Winga",
     role: "Kenya President",
     image: elisha1,
     desc: "National football structure and talent pathway leadership.",
