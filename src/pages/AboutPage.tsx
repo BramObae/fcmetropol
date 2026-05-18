@@ -181,7 +181,7 @@ const AboutPage = () => {
     <>
       <SEO
         title="About FC Metropol HP Kenya"
-        description="Elite football development platform creating global pathways for African footballers."
+        description="Elite football development platform creating global pathways for African footballers.."
       />
 
       {/* FLAGS */}
