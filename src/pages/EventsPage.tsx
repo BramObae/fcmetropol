@@ -47,13 +47,13 @@ const upcomingEvents = [
 const pastEvents = [
   {
     title: "Pre-Season Talent Showcase",
-    date: "July 2026",
+    date: "July 2025",
     location: "Nairobi, Kenya",
     desc: "Successful scouting event with strong player turnout.",
   },
   {
     title: "Regional Youth Trials",
-    date: "May 2026",
+    date: "May 2025",
     location: "Mombasa, Kenya",
     desc: "Identified emerging talent across coastal region.",
   },
