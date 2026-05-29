@@ -32,7 +32,7 @@ const events = [
     type: "Performance Testing",
     date: "November 2026",
     location: "Nairobi, Kenya",
-    desc: "Physical, tactical and technical player evaluation system.",
+    desc: "Physical and technical evaluation for player development.",
     icon: Users,
   },
 ];
@@ -45,7 +45,7 @@ const EventsPage = () => {
         description="Elite scouting tournaments, camps and football development events."
       />
 
-      {/* HERO SECTION */}
+      {/* HERO */}
       <section className="pt-36 pb-14">
         <div className="container-pro">
           <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-6">
@@ -62,66 +62,75 @@ const EventsPage = () => {
 
           <p className="mt-6 max-w-3xl text-foreground/70 text-lg leading-relaxed">
             Structured football events designed to identify, develop and expose
-            young players to professional scouting environments and global
-            football pathways.
+            players to professional scouting environments and global pathways.
           </p>
         </div>
       </section>
 
-      {/* FEATURED AUGUST EVENT */}
+      {/* ============================= */}
+      {/* FEATURED AUGUST EVENT (FIXED) */}
+      {/* ============================= */}
       <section className="pb-20">
         <div className="container-pro">
 
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 min-h-[520px]">
+          {/* OUTER CARD */}
+          <div className="rounded-[2.5rem] overflow-hidden border border-white/10 bg-card/20">
 
-            {/* IMAGE */}
-            <img
-              src="/event1.jpeg"
-              alt="Metropol Elite Scouting Tournament"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            {/* IMAGE SECTION (NOW FULLY VISIBLE) */}
+            <div className="relative w-full h-[420px] md:h-[520px]">
 
-            {/* DARK OVERLAY FOR READABILITY */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/30" />
+              <img
+                src="/event1.jpeg"
+                alt="August Scouting Tournament"
+                className="w-full h-full object-cover object-center"
+              />
 
-            {/* CONTENT */}
-            <div className="relative z-10 p-10 md:p-16 lg:p-20 text-white">
+              {/* soft overlay ONLY (not blocking image) */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            </div>
 
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 mb-6 backdrop-blur-md">
+            {/* TEXT BELOW IMAGE (ATTACHED PROPERLY) */}
+            <div className="p-8 md:p-12 lg:p-16">
+
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 mb-6">
                 <Trophy size={16} className="text-accent" />
-                <span className="text-xs uppercase tracking-[0.3em]">
-                  Featured Event
+                <span className="text-xs uppercase tracking-[0.3em] text-foreground/70">
+                  Featured August Event
                 </span>
               </div>
 
-              <h2 className="font-display text-4xl md:text-6xl lg:text-7xl leading-[0.95]">
+              <h2 className="font-display text-4xl md:text-6xl leading-[0.95]">
                 Metropol Elite{" "}
                 <span className="text-gradient-gold">
                   Scouting Tournament
                 </span>
               </h2>
 
-              <p className="mt-5 text-accent font-medium text-lg">
-                U15 Development & Talent Identification Showcase
+              <p className="mt-4 text-accent font-medium text-lg">
+                10th – 15th August 2026 · Nairobi, Kenya
               </p>
 
-              <p className="mt-6 max-w-3xl text-white/75 text-base md:text-lg leading-relaxed">
-                A high-level football tournament bringing together young talent,
-                coaches and scouts in a structured environment focused on exposure,
-                performance evaluation and player opportunity creation.
+              <p className="mt-6 text-foreground/70 text-base md:text-lg leading-relaxed max-w-3xl">
+                A high-level scouting event bringing together young talent,
+                coaches and international scouts. Focused on exposure,
+                performance assessment and real football opportunity creation.
               </p>
 
               {/* DETAILS */}
-              <div className="mt-8 flex flex-wrap gap-4 text-white/80">
+              <div className="mt-8 flex flex-wrap gap-4">
 
                 <div className="glass rounded-full px-5 py-3 flex items-center gap-3 border border-white/10">
                   <Calendar size={15} className="text-accent" />
-                  <span>10th – 15th August 2026</span>
+                  <span className="text-sm text-foreground/80">
+                    10–15 August 2026
+                  </span>
                 </div>
 
                 <div className="glass rounded-full px-5 py-3 flex items-center gap-3 border border-white/10">
                   <MapPin size={15} className="text-accent" />
-                  <span>Nairobi, Kenya</span>
+                  <span className="text-sm text-foreground/80">
+                    Nairobi, Kenya
+                  </span>
                 </div>
 
               </div>
@@ -130,7 +139,7 @@ const EventsPage = () => {
               <div className="mt-10 flex flex-wrap gap-4">
 
                 <Button variant="hero" size="lg">
-                  Register Interest
+                  Register Now
                   <ArrowRight className="ml-2" size={18} />
                 </Button>
 
@@ -141,7 +150,6 @@ const EventsPage = () => {
               </div>
 
             </div>
-
           </div>
 
         </div>
@@ -160,7 +168,7 @@ const EventsPage = () => {
             {events.map((e, i) => (
               <div
                 key={i}
-                className="glass-card rounded-[2rem] p-7 border border-white/10 hover:-translate-y-1 transition"
+                className="glass-card rounded-[2rem] p-7 border border-white/10"
               >
 
                 <div className="flex items-center justify-between mb-5">
@@ -172,7 +180,7 @@ const EventsPage = () => {
 
                 <h4 className="text-xl font-semibold">{e.title}</h4>
 
-                <div className="mt-3 flex flex-col gap-2 text-sm text-foreground/70">
+                <div className="mt-3 space-y-2 text-sm text-foreground/70">
 
                   <div className="flex items-center gap-2">
                     <Calendar size={13} className="text-accent" />
@@ -186,39 +194,12 @@ const EventsPage = () => {
 
                 </div>
 
-                <p className="mt-4 text-sm text-foreground/70 leading-relaxed">
+                <p className="mt-4 text-sm text-foreground/70">
                   {e.desc}
                 </p>
 
               </div>
             ))}
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* FINAL CALL TO ACTION */}
-      <section className="pb-28">
-        <div className="container-pro">
-
-          <div className="glass-card rounded-[2.5rem] p-12 text-center border border-white/10">
-
-            <h2 className="font-display text-4xl md:text-6xl">
-              Your football journey starts here
-            </h2>
-
-            <p className="mt-6 text-foreground/70 max-w-2xl mx-auto">
-              Join our scouting events and development programs designed to
-              connect talent with real football opportunities.
-            </p>
-
-            <div className="mt-8">
-              <Button variant="hero" size="lg">
-                Apply for Events
-                <ArrowRight className="ml-2" size={18} />
-              </Button>
-            </div>
 
           </div>
 
