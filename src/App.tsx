@@ -8,6 +8,7 @@ import { Layout } from "@/components/site/Layout";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound.tsx";
 
+/* PAGES */
 const ProgramsPage = lazy(() => import("./pages/ProgramsPage"));
 const GalleryPage = lazy(() => import("./pages/GalleryPage"));
 const StoriesPage = lazy(() => import("./pages/StoriesPage"));
@@ -15,10 +16,17 @@ const JoinPage = lazy(() => import("./pages/JoinPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PartnersPage = lazy(() => import("./pages/PartnersPage"));
 
+/* ✅ ADDED EVENTS PAGE */
+const EventsPage = lazy(() => import("./pages/EventsPage"));
+
 const queryClient = new QueryClient();
 
 const PageFallback = () => (
-  <div className="min-h-screen grid place-items-center" role="status" aria-label="Loading">
+  <div
+    className="min-h-screen grid place-items-center"
+    role="status"
+    aria-label="Loading"
+  >
     <div className="h-10 w-10 rounded-full border-2 border-accent border-t-transparent animate-spin" />
   </div>
 );
@@ -28,6 +36,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+
       <BrowserRouter>
         <Suspense fallback={<PageFallback />}>
           <Routes>
@@ -36,10 +45,15 @@ const App = () => (
               <Route path="/about" element={<AboutPage />} />
               <Route path="/programs" element={<ProgramsPage />} />
               <Route path="/partners" element={<PartnersPage />} />
+
+              {/* NEW ROUTE (kept in correct order) */}
+              <Route path="/events" element={<EventsPage />} />
+
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/stories" element={<StoriesPage />} />
               <Route path="/join" element={<JoinPage />} />
             </Route>
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
