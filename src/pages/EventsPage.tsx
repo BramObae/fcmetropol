@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-/* EVENTS DATA */
+/* EVENTS */
 const events = [
   {
     title: "Metropol Development Camp",
@@ -24,7 +24,7 @@ const events = [
     type: "Scouting Event",
     date: "October 2026",
     location: "Dar es Salaam, Tanzania",
-    desc: "Platform connecting players to international clubs and scouts.",
+    desc: "Connecting players to international clubs and scouting networks.",
     icon: Trophy,
   },
   {
@@ -32,7 +32,7 @@ const events = [
     type: "Performance Testing",
     date: "November 2026",
     location: "Nairobi, Kenya",
-    desc: "Physical and technical evaluation for player development.",
+    desc: "Technical and physical player evaluation in professional setup.",
     icon: Users,
   },
 ];
@@ -42,11 +42,11 @@ const EventsPage = () => {
     <>
       <SEO
         title="Events — FC Metropol HP Kenya"
-        description="Elite scouting tournaments, camps and football development events."
+        description="Elite football scouting tournaments, camps and development programs."
       />
 
       {/* HERO */}
-      <section className="pt-36 pb-14">
+      <section className="pt-36 pb-12">
         <div className="container-pro">
           <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-6">
             <Calendar size={16} className="text-accent" />
@@ -62,22 +62,19 @@ const EventsPage = () => {
 
           <p className="mt-6 max-w-3xl text-foreground/70 text-lg leading-relaxed">
             Structured football events designed to identify, develop and expose
-            players to professional scouting environments and global pathways.
+            young talent into professional football pathways.
           </p>
         </div>
       </section>
 
-      {/* ============================= */}
-      {/* FEATURED AUGUST EVENT (FIXED) */}
-      {/* ============================= */}
+      {/* FEATURED AUGUST EVENT (FIXED IMAGE PROPERLY) */}
       <section className="pb-20">
         <div className="container-pro">
 
-          {/* OUTER CARD */}
           <div className="rounded-[2.5rem] overflow-hidden border border-white/10 bg-card/20">
 
-            {/* IMAGE SECTION (NOW FULLY VISIBLE) */}
-            <div className="relative w-full h-[420px] md:h-[520px]">
+            {/* IMAGE (FULL, CLEAR, NO ZOOM OUT ISSUE) */}
+            <div className="relative w-full h-[520px] md:h-[650px]">
 
               <img
                 src="/event1.jpeg"
@@ -85,12 +82,12 @@ const EventsPage = () => {
                 className="w-full h-full object-cover object-center"
               />
 
-              {/* soft overlay ONLY (not blocking image) */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              {/* LIGHT OVERLAY ONLY FOR TEXT READABILITY */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
             </div>
 
-            {/* TEXT BELOW IMAGE (ATTACHED PROPERLY) */}
-            <div className="p-8 md:p-12 lg:p-16">
+            {/* TEXT CONTENT */}
+            <div className="p-8 md:p-14 lg:p-16">
 
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 mb-6">
                 <Trophy size={16} className="text-accent" />
@@ -111,9 +108,10 @@ const EventsPage = () => {
               </p>
 
               <p className="mt-6 text-foreground/70 text-base md:text-lg leading-relaxed max-w-3xl">
-                A high-level scouting event bringing together young talent,
-                coaches and international scouts. Focused on exposure,
-                performance assessment and real football opportunity creation.
+                A high-level football scouting event bringing together young
+                players, coaches and international scouts in a structured
+                development environment focused on exposure, performance
+                and professional opportunities.
               </p>
 
               {/* DETAILS */}
@@ -121,16 +119,12 @@ const EventsPage = () => {
 
                 <div className="glass rounded-full px-5 py-3 flex items-center gap-3 border border-white/10">
                   <Calendar size={15} className="text-accent" />
-                  <span className="text-sm text-foreground/80">
-                    10–15 August 2026
-                  </span>
+                  <span className="text-sm">10–15 August 2026</span>
                 </div>
 
                 <div className="glass rounded-full px-5 py-3 flex items-center gap-3 border border-white/10">
                   <MapPin size={15} className="text-accent" />
-                  <span className="text-sm text-foreground/80">
-                    Nairobi, Kenya
-                  </span>
+                  <span className="text-sm">Nairobi, Kenya</span>
                 </div>
 
               </div>
@@ -155,7 +149,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* UPCOMING EVENTS */}
+      {/* OTHER EVENTS */}
       <section className="pb-24">
         <div className="container-pro">
 
@@ -168,7 +162,7 @@ const EventsPage = () => {
             {events.map((e, i) => (
               <div
                 key={i}
-                className="glass-card rounded-[2rem] p-7 border border-white/10"
+                className="glass-card rounded-[2rem] p-7 border border-white/10 hover:-translate-y-1 transition"
               >
 
                 <div className="flex items-center justify-between mb-5">
@@ -194,7 +188,7 @@ const EventsPage = () => {
 
                 </div>
 
-                <p className="mt-4 text-sm text-foreground/70">
+                <p className="mt-4 text-sm text-foreground/70 leading-relaxed">
                   {e.desc}
                 </p>
 
