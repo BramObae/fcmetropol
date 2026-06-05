@@ -1,6 +1,5 @@
 import { Instagram, Facebook, Twitter, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "@/assets/logo.jpg‎";
 
 const SOCIALS = [
   { Icon: Instagram, href: "https://www.instagram.com/fcmhpacademyke", label: "Instagram" },
@@ -17,11 +16,13 @@ export const Footer = () => (
 
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-3">
+
           <img
-            src={logo}
+            src="/logo.png"
             alt="FC Metropol HP Kenya crest"
             className="h-10 w-10 rounded-md object-contain"
           />
+
           <div className="leading-tight">
             <div className="font-display text-base tracking-wide">
               FC METROPOL HP
@@ -30,10 +31,14 @@ export const Footer = () => (
               Develop · Package · Place
             </div>
           </div>
+
         </Link>
 
         {/* NAV */}
-        <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground/75 justify-center">
+        <nav
+          aria-label="Footer"
+          className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground/75 justify-center"
+        >
           <Link to="/" className="hover:text-accent">Home</Link>
           <Link to="/about" className="hover:text-accent">About</Link>
           <Link to="/programs" className="hover:text-accent">Programs</Link>
@@ -66,26 +71,34 @@ export const Footer = () => (
 
         {/* CONTACT */}
         <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2">
+
           <span className="inline-flex items-center gap-1.5">
             <MapPin size={13} className="text-accent" />
             Nairobi, Kenya
           </span>
 
-          <a href="tel:+254708666576" className="inline-flex items-center gap-1.5 hover:text-accent">
+          <a
+            href="tel:+254708666576"
+            className="inline-flex items-center gap-1.5 hover:text-accent"
+          >
             <Phone size={13} className="text-accent" />
             +254 708 666 576
           </a>
 
-          <a href="mailto:hello@fcmetropolhp.com" className="inline-flex items-center gap-1.5 hover:text-accent">
+          <a
+            href="mailto:hello@fcmetropolhp.com"
+            className="inline-flex items-center gap-1.5 hover:text-accent"
+          >
             <Mail size={13} className="text-accent" />
             hello@fcmetropolhp.com
           </a>
+
         </div>
 
-        {/* CENTER SECTION (CLEAN + CENTERED) */}
+        {/* CENTER SECTION */}
         <div className="flex flex-col items-center justify-center text-center gap-2">
 
-          <span className="text-center">
+          <span>
             © {new Date().getFullYear()} FC Metropol HP Kenya
           </span>
 
@@ -93,7 +106,7 @@ export const Footer = () => (
             href="https://www.vertatechsolution.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] uppercase tracking-[0.25em] text-accent hover:opacity-80 transition text-center"
+            className="text-[11px] uppercase tracking-[0.25em] text-accent hover:opacity-80 transition"
           >
             Powered by Vertatech Solutions
           </a>
