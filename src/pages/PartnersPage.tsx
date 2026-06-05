@@ -21,12 +21,12 @@ const loopFlags = [...countries, ...countries];
 
 /* PARTNERS (PUBLIC IMAGES) */
 const partners = [
-  { name: "FISA Pro Club", logo: "/fisa.jpg" },
-  { name: "ISMFF Festival", logo: "/ismff.jpg" },
-  { name: "Metropol Baltic Group", logo: "/mbg.jpg" },
-  { name: "FC Metropol Estonia", logo: "/mbg-2.jpg" },
-  { name: "Safer Nairobi Initiative", logo: "/safernairobi initiative.jpeg" },
-  { name: "Tennessee Tempo FC", logo: "/Tennessee Tempo FC.jpeg" },
+  { name: "FISA Pro Club", logo: "/fisa.png" },
+  { name: "ISMFF Festival", logo: "/ismff.png" },
+  { name: "Metropol Baltic Group", logo: "/mbg.png" },
+  { name: "FC Metropol Estonia", logo: "/mbg-2.png" },
+  { name: "Safer Nairobi Initiative", logo: "/safernairobi initiative.png" },
+  { name: "Tennessee Tempo FC", logo: "/Tennessee Tempo FC.png" },
 ];
 
 const PartnersPage = () => (
