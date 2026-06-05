@@ -49,7 +49,7 @@ const partners = [
   { name: "ISMFF Festival", logo: "/ismff.png" },
   { name: "Metropol Baltic Group", logo: "/mbg.png" },
   { name: "FC Metropol Estonia", logo: "/mbg-2.png" },
-  { name: "Safer Nairobi Initiative", logo: "/safernairobi initiative.png" },
+  { name: "Safer Nairobi Initiative", logo: "/safernairobi_initiative.png" },
   { name: "Tennessee Tempo FC", logo: "/Tennessee Tempo FC.png" },
 ];
 
@@ -62,11 +62,11 @@ const PartnersPage = () => (
       description="Global football partners supporting talent development and player pathways."
     />
 
-    {/* COUNTRY NETWORK */}
+    {/* COUNTRIES SECTION */}
     <section className="pt-36 border-b border-border/40 overflow-hidden">
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <div className="text-xs uppercase tracking-[0.35em] text-accent">
-          International Network
+          Global Network
         </div>
       </div>
 
@@ -77,7 +77,6 @@ const PartnersPage = () => (
             className="flex items-center gap-3 px-6 whitespace-nowrap"
           >
             <span className="text-2xl">{c.flag}</span>
-
             <span className="text-xs uppercase tracking-[0.25em] text-foreground/70">
               {c.name}
             </span>
@@ -86,7 +85,7 @@ const PartnersPage = () => (
       </div>
     </section>
 
-    {/* PARTNER LOGOS */}
+    {/* PARTNERS SECTION */}
     <section className="py-14 overflow-hidden">
       <div className="text-center mb-8">
         <div className="text-xs uppercase tracking-[0.35em] text-accent">
@@ -94,54 +93,42 @@ const PartnersPage = () => (
         </div>
       </div>
 
-      <div className="flex w-max marquee gap-10 items-center">
+      <div className="flex w-max marquee gap-6 items-center">
 
         {partnerLoop.map((p, i) => (
           <div
             key={i}
             className="
               glass-card
-              min-w-[220px]
-              sm:min-w-[260px]
-              md:min-w-[300px]
-              lg:min-w-[340px]
+              min-w-[180px]
+              sm:min-w-[200px]
+              md:min-w-[220px]
+              lg:min-w-[240px]
               rounded-3xl
               border
               border-white/10
-              p-6
+              p-5
               flex
               flex-col
               items-center
               justify-center
-              hover:border-accent/30
               transition-all
               duration-300
+              hover:border-accent/30
             "
           >
-
-            <div
-              className="
-                h-28
-                sm:h-32
-                md:h-36
-                lg:h-40
-                w-full
-                flex
-                items-center
-                justify-center
-              "
-            >
+            <div className="h-20 sm:h-24 md:h-24 lg:h-28 flex items-center justify-center w-full">
               <img
                 src={p.logo}
                 alt={p.name}
                 className="
-                  max-h-24
-                  sm:max-h-28
-                  md:max-h-32
-                  lg:max-h-36
+                  max-h-16
+                  sm:max-h-20
+                  md:max-h-20
+                  lg:max-h-24
                   max-w-full
                   object-contain
-                  transition-all
+                  transition-transform
                   duration-300
                   hover:scale-105
                 "
@@ -149,48 +136,39 @@ const PartnersPage = () => (
               />
             </div>
 
-            <p className="mt-4 text-xs md:text-sm font-medium text-center text-foreground/75">
+            <p className="mt-3 text-xs md:text-sm text-center text-foreground/75">
               {p.name}
             </p>
-
           </div>
         ))}
 
       </div>
     </section>
 
-    {/* CONTENT */}
+    {/* DESCRIPTION */}
     <section className="container-pro pb-24 text-center">
-
       <div className="max-w-4xl mx-auto">
 
-        <div className="text-xs uppercase tracking-[0.35em] text-accent mb-4">
-          Global Football Ecosystem
-        </div>
-
         <h1 className="font-display text-4xl md:text-6xl leading-[1.05]">
-          Building pathways through
-          <span className="text-gradient-gold"> international partnerships</span>
+          Built on global{" "}
+          <span className="text-gradient-gold">football connections</span>
         </h1>
 
         <p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed">
-          FC Metropol HP Kenya collaborates with football clubs, academies,
-          scouting organizations, development initiatives and industry leaders
-          across Africa, Europe, North America, South America and the Gulf region.
+          FC Metropol HP Kenya collaborates with clubs, academies, football initiatives,
+          and development programs across Africa, Europe, the Americas, and the Gulf region.
         </p>
 
-        <p className="mt-5 text-foreground/70 text-base md:text-lg leading-relaxed">
-          Through this growing network, talented players gain access to
-          international exposure, elite development opportunities, educational
-          pathways, professional club connections and global football environments.
+        <p className="mt-5 text-foreground/70 text-sm md:text-base leading-relaxed">
+          Our network is designed to create real pathways for players — from grassroots
+          football to professional environments worldwide.
         </p>
 
-        <p className="mt-8 text-sm uppercase tracking-[0.25em] text-accent">
-          Connecting talent • Creating opportunity • Expanding horizons
+        <p className="mt-8 text-xs uppercase tracking-[0.25em] text-accent">
+          Opportunity • Exposure • Development • Progress
         </p>
 
       </div>
-
     </section>
   </>
 );
