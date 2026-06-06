@@ -279,21 +279,21 @@ const AboutPage = () => {
               </span>
             </div>
             <h1 className="font-display text-5xl sm:text-7xl md:text-[6rem] leading-[0.9]">
-                 Building Africa’s
-                    <br />
-              <span className="text-gradient-gold">
-               global football pathway.
-               </span>
-                </h1>
+  Building Africa’s
+  <br />
+  <span className="text-gradient-gold">
+    global football pathway.
+  </span>
+</h1>
 
-                <p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed max-w-2xl">
-                  Discover, Develop, Deliver.
-                   </p>
+<p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed max-w-2xl">
+  Discover. Develop. Deliver.
+</p>
 
-            <p className="mt-8 max-w-3xl text-lg md:text-2xl text-foreground/75 leading-relaxed">
-              FC Metropol HP Kenya is a high-performance football development platform focused on scouting, development, exposure and global player placement opportunities.
-              We enjoy a rich global network of highly experienced technical experts and sporting strategists across the world.
-            </p>
+<p className="mt-8 max-w-2xl text-lg md:text-xl text-foreground/75 leading-relaxed">
+  We enjoy rich global networks of technical experts and sporting strategists,
+  connecting talent to elite football opportunities worldwide.
+</p>
 
             <div className="mt-10 flex flex-wrap gap-4">
 
