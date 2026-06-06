@@ -1,9 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
+
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+
 import { Layout } from "@/components/site/Layout";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound.tsx";
@@ -15,51 +17,47 @@ const StoriesPage = lazy(() => import("./pages/StoriesPage"));
 const JoinPage = lazy(() => import("./pages/JoinPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PartnersPage = lazy(() => import("./pages/PartnersPage"));
-
-/* ✅ ADDED EVENTS PAGE */
 const EventsPage = lazy(() => import("./pages/EventsPage"));
 
 const queryClient = new QueryClient();
 
+/* LOADING SCREEN */
 const PageFallback = () => (
-  <div
-    className="min-h-screen grid place-items-center"
-    role="status"
-    aria-label="Loading"
-  >
+  <div className="min-h-screen grid place-items-center">
     <div className="h-10 w-10 rounded-full border-2 border-accent border-t-transparent animate-spin" />
   </div>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
 
-      <BrowserRouter>
-        <Suspense fallback={<PageFallback />}>
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/programs" element={<ProgramsPage />} />
-              <Route path="/partners" element={<PartnersPage />} />
+        <BrowserRouter>
+          <Suspense fallback={<PageFallback />}>
+            <Routes>
+              <Route element={<Layout />}>
 
-              {/* NEW ROUTE (kept in correct order) */}
-              <Route path="/events" element={<EventsPage />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/programs" element={<ProgramsPage />} />
+                <Route path="/partners" element={<PartnersPage />} />
+                <Route path="/events" element={<EventsPage />} />
+                <Route path="/gallery" element={<GalleryPage />} />
+                <Route path="/stories" element={<StoriesPage />} />
+                <Route path="/join" element={<JoinPage />} />
 
-              <Route path="/gallery" element={<GalleryPage />} />
-              <Route path="/stories" element={<StoriesPage />} />
-              <Route path="/join" element={<JoinPage />} />
-            </Route>
+              </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
