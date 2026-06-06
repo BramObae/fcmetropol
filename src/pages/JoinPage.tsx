@@ -1,5 +1,6 @@
 import { SEO } from "@/components/SEO";
 import { Join } from "@/components/site/Join";
+import { CheckCircle } from "lucide-react";
 
 /* FLAGS DATA */
 const countries = [
@@ -20,24 +21,31 @@ const countries = [
 
 const loop = [...countries, ...countries];
 
+const categories = [
+  "Scouting / Trials",
+  "Development Program",
+  "Academy Placement",
+  "International Exposure",
+  "Goalkeeper Training",
+  "Coaching Program",
+];
+
 const JoinPage = () => (
   <>
     <SEO
       title="Join the Program — FC Metropol HP Kenya"
-      description="Apply to FC Metropol HP Kenya. Submit your details and a short showcase. Open to players age 15–25."
+      description="Apply to FC Metropol HP Kenya. Select your category and submit your application."
     />
 
-    {/* HERO SECTION */}
-    <section className="pt-28 md:pt-36 pb-4">
+    {/* HERO */}
+    <section className="pt-28 md:pt-36 pb-6">
       <div className="container-pro">
 
-        {/* FLAGS MARQUEE */}
+        {/* FLAGS */}
         <div className="relative overflow-hidden mb-10">
-          {/* fade edges */}
           <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
 
-          {/* moving flags */}
           <div className="flex gap-5 w-max marquee">
             {loop.map((c, i) => (
               <div
@@ -53,19 +61,77 @@ const JoinPage = () => (
           </div>
         </div>
 
-        {/* TEXT */}
-        <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">
-          Join
-        </div>
-
-        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] max-w-4xl">
-          Your trial <span className="text-gradient-gold">starts here.</span>
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.95] max-w-4xl">
+          Apply. Get <span className="text-gradient-gold">Scouted.</span> Go Pro.
         </h1>
+
+        <p className="mt-6 text-foreground/70 max-w-2xl">
+          Select your application category carefully. This helps us route your profile
+          to the right technical department.
+        </p>
+
       </div>
     </section>
 
-    {/* FORM / JOIN COMPONENT */}
+    {/* APPLICATION CATEGORIES (NEW PROFESSIONAL SECTION) */}
+    <section className="pb-10">
+      <div className="container-pro">
+
+        <div className="glass-card p-6 md:p-8 rounded-3xl border border-white/10">
+
+          <h2 className="font-display text-2xl md:text-4xl mb-6">
+            Application <span className="text-gradient-gold">Categories</span>
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            {categories.map((cat, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"
+              >
+                <CheckCircle size={18} className="text-accent" />
+                <span className="text-sm md:text-base">{cat}</span>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    {/* YOUR ORIGINAL FORM */}
     <Join />
+
+    {/* GOOGLE FORM */}
+    <section className="py-20">
+      <div className="container-pro">
+
+        <div className="glass-card p-6 md:p-10 rounded-3xl border border-white/10">
+
+          <h2 className="font-display text-3xl md:text-5xl">
+            Official <span className="text-gradient-gold">Application Form</span>
+          </h2>
+
+          <p className="mt-4 text-foreground/70 max-w-2xl">
+            For faster processing, use the official Google Form below. Ensure you select
+            your correct category.
+          </p>
+
+          <div className="mt-8 w-full">
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSd7F83zaiFZSLIVqBoFq4Kqz6u34VVfljEZSIn4jLQBjrtwTA/viewform?embedded=true"
+              width="100%"
+              height="1100"
+              className="rounded-2xl border border-white/10"
+            />
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
   </>
 );
 
