@@ -124,7 +124,7 @@ const values = [
 const leadership = [
   {
     name: "Rene Merilo",
-    role: "International President",
+    role: "President Estonia",
     image: rene,
     desc: "Global football development and international partnerships.",
   },
@@ -144,11 +144,11 @@ const leadership = [
     name: "Jorge Fuster Molla",
     role: "International Football Advisor",
     image: jorge,
-    desc: "European football advisory and strategic development.",
+    desc: "European football advisor and strategic development.",
   },
   {
     name: "Hany Hussein",
-    role: "International Football Advisor",
+    role: "Former Sports Agent",
     image: hany,
     desc: "North Africa, Gulf & Asia football relations.",
   },
@@ -172,7 +172,7 @@ const leadership = [
   },
   {
     name: "Chima Nwaka Oti. BSN RN.",
-    role: "International Sports Investments Advisor",
+    role: "Finance Advisor",
     image: chima,
     desc: "Georgia Football Association (USA.) international football investment and strategic development advisory.",
   },
@@ -278,20 +278,21 @@ const AboutPage = () => {
                 FC Metropol HP Kenya
               </span>
             </div>
-
             <h1 className="font-display text-5xl sm:text-7xl md:text-[6rem] leading-[0.9]">
-              Building Africa’s
-              <br />
-
+                 Building Africa’s
+                    <br />
               <span className="text-gradient-gold">
-                global football pathway.
-              </span>
-            </h1>
+               global football pathway.
+               </span>
+                </h1>
+
+                <p className="mt-6 text-foreground/75 text-base md:text-lg leading-relaxed max-w-2xl">
+                  Discover, Develop, Deliver.
+                   </p>
 
             <p className="mt-8 max-w-3xl text-lg md:text-2xl text-foreground/75 leading-relaxed">
-              FC Metropol HP Kenya is a high-performance football development
-              platform focused on scouting, development, exposure and global
-              player placement opportunities.
+              FC Metropol HP Kenya is a high-performance football development platform focused on scouting, development, exposure and global player placement opportunities.
+              We enjoy a rich global network of highly experienced technical experts and sporting strategists across the world.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
