@@ -1,70 +1,43 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 
-const WhatsAppButton = () => {
-  const [currentMessage, setCurrentMessage] = useState(0);
-  const [isTyping, setIsTyping] = useState(false);
-
-  const phoneNumber = "254708666576"; // IMPORTANT: no + or spaces
+const LiveChat = () => {
+  const phoneNumber = "254708666576"; // ✅ Kenya format (no +)
 
   const messages = [
-    "👋 Need Football Info?",
-    "⚽ Talk to FC Metropol HP",
-    "📩 Register for Events",
-    "🔥 Join Elite Training",
+    "👋 Need help with football opportunities?",
+    "⚽ Chat with FC Metropol HP",
+    "💬 Tap to WhatsApp us now",
   ];
 
+  const [index, setIndex] = useState(0);
+
   useEffect(() => {
-    let typingTimeout: NodeJS.Timeout;
-
     const interval = setInterval(() => {
-      setIsTyping(true);
+      setIndex((prev) => (prev + 1) % messages.length);
+    }, 4000);
 
-      typingTimeout = setTimeout(() => {
-        setCurrentMessage((prev) => (prev + 1) % messages.length);
-        setIsTyping(false);
-      }, 900);
-    }, 5000);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(typingTimeout);
-    };
+    return () => clearInterval(interval);
   }, []);
 
-  const handleClick = () => {
-    const url = `https://wa.me/${phoneNumber}?text=Hello%20FC%20Metropol%20HP%2C%20I%20would%20like%20more%20information.`;
-    window.open(url, "_blank");
-  };
-
   return (
-    <div className="fixed right-6 bottom-24 z-50 flex flex-col items-end group">
-
+    <a
+      href={`https://wa.me/${phoneNumber}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end gap-2"
+    >
       {/* MESSAGE BUBBLE */}
-      <div className="mb-3 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 shadow-lg">
-        {isTyping ? (
-          <div className="flex gap-1">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></span>
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-150"></span>
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-300"></span>
-          </div>
-        ) : (
-          <p className="text-xs text-white font-medium">
-            {messages[currentMessage]}
-          </p>
-        )}
+      <div className="bg-black/80 text-white text-xs px-4 py-2 rounded-full backdrop-blur shadow-lg">
+        {messages[index]}
       </div>
 
       {/* BUTTON */}
-      <button
-        onClick={handleClick}
-        className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110"
-        aria-label="Chat on WhatsApp"
-      >
+      <div className="h-14 w-14 bg-green-500 hover:bg-green-600 rounded-full grid place-items-center shadow-xl transition">
         <MessageCircle className="text-white" size={26} />
-      </button>
-    </div>
+      </div>
+    </a>
   );
 };
 
-export default WhatsAppButton;
+export default LiveChat;
