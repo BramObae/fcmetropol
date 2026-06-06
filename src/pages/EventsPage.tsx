@@ -8,6 +8,7 @@ import {
   ArrowRight,
   CheckCircle,
   Clock,
+  Building2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -67,8 +68,39 @@ const EventsPage = () => {
         description="Football scouting events, camps, tournaments and development programs."
       />
 
+      {/* TRAINING BASE (NEW TOP SECTION - VERY VISIBLE) */}
+      <section className="pt-32 pb-6">
+        <div className="container-pro">
+
+          <div className="glass rounded-2xl p-6 md:p-8 border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-xl bg-accent/10">
+                <Building2 className="text-accent" />
+              </div>
+
+              <div>
+                <h2 className="font-display text-2xl md:text-3xl">
+                  Official Training & Meeting Area
+                </h2>
+
+                <p className="mt-2 text-foreground/70">
+                  All training sessions, meetings and player development activities are held at:
+                </p>
+
+                <p className="mt-2 text-lg font-semibold text-accent">
+                  Jaffery’s Sports Club, Nairobi, Kenya
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
       {/* HERO */}
-      <section className="pt-36 pb-12">
+      <section className="pt-10 pb-12">
         <div className="container-pro">
 
           <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-6">
@@ -97,7 +129,7 @@ const EventsPage = () => {
 
           <div className="rounded-[2.5rem] border border-white/10 bg-card/20 p-6 md:p-10">
 
-            {/* POSTER (FIXED: FULL VISIBLE IMAGE) */}
+            {/* POSTER (FULL IMAGE FIXED) */}
             <div className="w-full flex justify-center">
               <img
                 src={featuredImage}
@@ -177,10 +209,7 @@ const EventsPage = () => {
           <div className="grid md:grid-cols-3 gap-6">
 
             {upcomingEvents.map((e, i) => (
-              <div
-                key={i}
-                className="glass-card rounded-[2rem] p-7 border border-white/10"
-              >
+              <div key={i} className="glass-card rounded-[2rem] p-7 border border-white/10">
 
                 <div className="flex items-center justify-between mb-5">
                   <e.icon className="text-accent" size={18} />
@@ -228,10 +257,7 @@ const EventsPage = () => {
           <div className="grid md:grid-cols-2 gap-6">
 
             {pastEvents.map((e, i) => (
-              <div
-                key={i}
-                className="glass-card rounded-[2rem] p-7 border border-white/10 opacity-90"
-              >
+              <div key={i} className="glass-card rounded-[2rem] p-7 border border-white/10 opacity-90">
 
                 <h4 className="text-xl font-semibold">{e.title}</h4>
 
