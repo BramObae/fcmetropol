@@ -109,7 +109,7 @@ export const Hero = () => {
             <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
 
             <span className="text-[10px] sm:text-xs uppercase tracking-[0.22em] text-foreground/75 font-medium">
-              FC Metropol HP · International Football Pathways: Pure Football & Football with Academics Opportunities
+              FC Metropol HP · International Football Pathways: Pure Football & Academics Opportunities
             </span>
           </div>
         </div>
@@ -126,7 +126,7 @@ export const Hero = () => {
           <p className="text-sm sm:text-base md:text-lg text-white/75 max-w-2xl mb-8 leading-relaxed">
             FC Metropol HP identifies, develops and places ambitious African
             footballers through elite coaching, international scouting exposure,
-            tournament tours and structured pathways into clubs, academies and
+            tournament tours and structured pathways into clubs, academics and
             scholarships across Europe, the Gulf, America and beyond.
           </p>
 
