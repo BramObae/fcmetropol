@@ -1,5 +1,11 @@
 import { SEO } from "@/components/SEO";
-import { Calendar, MapPin, Users, ArrowRight } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  ArrowRight,
+  CheckCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const EventsPage = () => {
@@ -10,152 +16,190 @@ const EventsPage = () => {
         description="Official FC Metropol HP Kenya Events."
       />
 
-      <section className="pt-32 pb-20">
-        <div className="container-pro max-w-6xl">
+      <section className="pt-32 pb-24">
+        <div className="container-pro">
 
-          {/* Header */}
-          <div className="text-center mb-10">
+          {/* Hero */}
+          <div className="text-center mb-12">
 
-            <div className="inline-flex items-center rounded-full border border-accent/20 bg-accent/10 px-5 py-2 text-accent text-sm font-medium">
-              FC Metropol HP Kenya • Official Event
-            </div>
+            <span className="inline-flex rounded-full bg-accent/10 text-accent px-5 py-2 text-sm font-medium">
+              ⚽ Registration Now Open
+            </span>
 
-            <h1 className="mt-6 font-display text-5xl md:text-7xl leading-tight">
-              Elite Scouting
+            <h1 className="font-display text-5xl md:text-7xl mt-6">
+              FC Metropol Elite
               <span className="block text-gradient-gold">
-                Tournament 2026
+                Scouting Tournament
               </span>
             </h1>
 
             <p className="mt-6 max-w-3xl mx-auto text-lg text-foreground/70">
               Join football enthusiasts, coaches, scouts, clubs and partners
-              for one of FC Metropol HP Kenya's biggest football events.
+              for an exciting football event focused on networking,
+              development and opportunity.
             </p>
 
           </div>
 
-          {/* Event Poster */}
-          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-card/20 shadow-2xl">
+          {/* Main Section */}
+          <div className="grid lg:grid-cols-2 gap-10 items-start">
 
-            <img
-              src="/event1.jpeg"
-              alt="FC Metropol Event"
-              className="w-full h-auto object-contain"
-            />
+            {/* Poster */}
+            <div>
 
-          </div>
+              <img
+                src="/event1.jpeg"
+                alt="Event Poster"
+                className="rounded-3xl border border-white/10 shadow-2xl w-full"
+              />
 
-          {/* Event Information */}
-          <div className="grid gap-6 md:grid-cols-3 mt-10">
+              {/* Event Info */}
+              <div className="grid sm:grid-cols-3 gap-4 mt-6">
 
-            <div className="glass rounded-2xl p-6">
+                <div className="glass rounded-xl p-5">
 
-              <Calendar className="text-accent mb-4" size={22} />
+                  <Calendar className="text-accent mb-3" />
 
-              <h3 className="font-semibold text-lg">
-                Event Date
-              </h3>
+                  <p className="text-xs uppercase tracking-widest text-accent">
+                    Date
+                  </p>
 
-              <p className="mt-2 text-foreground/70">
-                10th – 15th August 2026
+                  <p className="mt-2 font-semibold">
+                    10th – 15th August 2026
+                  </p>
+
+                </div>
+
+                <div className="glass rounded-xl p-5">
+
+                  <MapPin className="text-accent mb-3" />
+
+                  <p className="text-xs uppercase tracking-widest text-accent">
+                    Venue
+                  </p>
+
+                  <p className="mt-2 font-semibold">
+                    TBD
+                    <br />
+                    Nairobi
+                  </p>
+
+                </div>
+
+                <div className="glass rounded-xl p-5">
+
+                  <Users className="text-accent mb-3" />
+
+                  <p className="text-xs uppercase tracking-widest text-accent">
+                    Attendance
+                  </p>
+
+                  <p className="mt-2 font-semibold">
+                    Open
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* Registration Card */}
+            <div className="glass rounded-[2rem] p-8 sticky top-28">
+
+              <div className="flex items-center gap-2 text-green-500 font-medium">
+
+                <CheckCircle size={18} />
+
+                Limited Seats Available
+
+              </div>
+
+              <h2 className="font-display text-4xl mt-4">
+                Reserve Your Seat
+              </h2>
+
+              <p className="text-foreground/70 mt-3">
+                Complete the registration form to secure your place.
+                A confirmation email will be sent after submission.
               </p>
 
-            </div>
+              <form className="space-y-5 mt-8">
 
-            <div className="glass rounded-2xl p-6">
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3"
+                  required
+                />
 
-              <MapPin className="text-accent mb-4" size={22} />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3"
+                  required
+                />
 
-              <h3 className="font-semibold text-lg">
-                Venue
-              </h3>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3"
+                  required
+                />
 
-              <p className="mt-2 text-foreground/70">
-                TBD
-                <br />
-                Nairobi, Kenya
-              </p>
+                <input
+                  type="text"
+                  placeholder="Country"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3"
+                  required
+                />
 
-            </div>
+                <select
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3"
+                >
+                  <option>Attendance Category</option>
+                  <option>Football Enthusiast</option>
+                  <option>Coach</option>
+                  <option>Scout</option>
+                  <option>Club Representative</option>
+                  <option>Media</option>
+                  <option>Sponsor</option>
+                  <option>Guest</option>
+                </select>
 
-            <div className="glass rounded-2xl p-6">
+                <textarea
+                  rows={4}
+                  placeholder="Special Requests (Optional)"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3"
+                />
 
-              <Users className="text-accent mb-4" size={22} />
+                <label className="flex gap-3 text-sm items-start">
 
-              <h3 className="font-semibold text-lg">
-                Attendance
-              </h3>
+                  <input type="checkbox" required />
 
-              <p className="mt-2 text-foreground/70">
-                Open to football enthusiasts,
-                coaches, scouts, clubs,
-                partners and invited guests.
-              </p>
+                  <span>
+                    I confirm the information provided is accurate.
+                  </span>
+
+                </label>
+
+                <Button
+                  type="submit"
+                  variant="hero"
+                  size="lg"
+                  className="w-full"
+                >
+                  Reserve My Seat
+
+                  <ArrowRight className="ml-2" size={18} />
+
+                </Button>
+
+              </form>
 
             </div>
 
           </div>
-
-          {/* About */}
-          <div className="glass rounded-[2rem] p-8 mt-10">
-
-            <h2 className="font-display text-3xl">
-              About The Event
-            </h2>
-
-            <p className="mt-5 text-lg leading-8 text-foreground/70">
-              The FC Metropol Elite Scouting Tournament brings together football
-              stakeholders from across the region to celebrate talent, build
-              valuable connections and promote football development.
-              More information regarding fixtures, schedules and speakers
-              will be shared with registered attendees.
-            </p>
-
-          </div>
-
-          {/* Register CTA */}
-          <div className="mt-14 text-center">
-
-            <Button
-              variant="hero"
-              size="lg"
-              onClick={() =>
-                document
-                  .getElementById("registration")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-            >
-              Register to Attend
-              <ArrowRight className="ml-2" size={18} />
-            </Button>
-
-          </div>
-
-          {/* Registration Placeholder */}
-          <section
-            id="registration"
-            className="mt-20 glass rounded-[2rem] p-10 text-center"
-          >
-
-            <h2 className="font-display text-4xl">
-              Registration
-            </h2>
-
-            <p className="mt-4 max-w-2xl mx-auto text-foreground/70">
-              Event registration will open here.
-              Complete your details to reserve your place once registration
-              becomes available.
-            </p>
-
-            <div className="mt-8">
-
-              <Button variant="outlineLight" size="lg">
-                Registration Opening Soon
-              </Button>
-
-            </div>
-
-          </section>
 
         </div>
       </section>
