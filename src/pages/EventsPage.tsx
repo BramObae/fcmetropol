@@ -10,7 +10,7 @@ import {
   Calendar,
   MapPin,
   Ticket,
-  CreditCard,
+  Smartphone,
   ArrowDown,
   ArrowRight,
   CheckCircle,
@@ -20,7 +20,6 @@ import {
   Trophy,
   Handshake,
   Utensils,
-  QrCode,
   ShieldCheck,
   Sparkles,
   ChevronDown,
@@ -40,6 +39,7 @@ import {
 } from "@/components/ui/dialog";
 
 const featuredImage = "/event1.jpeg";
+const TILL_NUMBER = "000000";
 
 /* ------------------------------------------------------------------ */
 /* Package configuration                                              */
@@ -87,46 +87,15 @@ const INCLUSIONS = [
   { icon: Handshake, text: "Business Networking" },
   { icon: Utensils, text: "Dinner with the Team" },
   { icon: Sparkles, text: "Exclusive Networking Dinner at Weston Hotel" },
-  { icon: QrCode, text: "Official QR Event Pass" },
 ];
 
 const SCHEDULE = [
-  {
-    tag: "MD 01",
-    date: "10 Aug",
-    title: "Arrival & Registration",
-    desc: "Check-in, welcome reception and QR pass collection.",
-  },
-  {
-    tag: "MD 02",
-    date: "11 Aug",
-    title: "Leadership Forum",
-    desc: "Panel sessions with club executives, coaches and scouts.",
-  },
-  {
-    tag: "MD 03",
-    date: "12 Aug",
-    title: "Football Activities",
-    desc: "On-pitch sessions, clinics and friendly matches.",
-  },
-  {
-    tag: "MD 04",
-    date: "13 Aug",
-    title: "Business Networking",
-    desc: "Structured networking between investors and clubs.",
-  },
-  {
-    tag: "MD 05",
-    date: "14 Aug",
-    title: "Networking Dinner",
-    desc: "Exclusive dinner with the team at Weston Hotel.",
-  },
-  {
-    tag: "MD 06",
-    date: "15 Aug",
-    title: "Closing Ceremony",
-    desc: "Awards, closing remarks and group photos.",
-  },
+  { tag: "01", date: "10 Aug", title: "Arrival & Registration" },
+  { tag: "02", date: "11 Aug", title: "Leadership Forum" },
+  { tag: "03", date: "12 Aug", title: "Football Activities" },
+  { tag: "04", date: "13 Aug", title: "Business Networking" },
+  { tag: "05", date: "14 Aug", title: "Networking Dinner, Weston Hotel" },
+  { tag: "06", date: "15 Aug", title: "Closing Ceremony" },
 ];
 
 const STATS = [
@@ -136,34 +105,31 @@ const STATS = [
   { value: "03", label: "Ticket Categories" },
 ];
 
-const TICKER_ITEMS = [
-  "FOOTBALL",
-  "LEADERSHIP FORUM",
-  "BUSINESS NETWORKING",
-  "GALA DINNER · WESTON HOTEL",
-  "OFFICIAL QR PASS",
+const PAY_STEPS = [
+  "Go to M-Pesa on your phone",
+  "Select Lipa na M-Pesa",
+  "Select Buy Goods and Services",
+  `Enter Till Number: ${TILL_NUMBER}`,
+  "Enter the amount shown above",
+  "Enter your M-Pesa PIN and confirm",
 ];
 
 const FAQS = [
   {
-    q: "How do I pay for my ticket?",
-    a: "Payments are made via M-Pesa to the Paybill and Account number shown in the Ticket Packages section. After paying, enter your M-Pesa transaction code in the registration form.",
-  },
-  {
-    q: "What's included in every ticket?",
-    a: "Every ticket — Individual, Corporate or Sponsor — includes access to all six event days, football activities, the Leadership Forum, business networking, dinner with the team, the exclusive networking dinner at Weston Hotel, and your official QR event pass.",
+    q: "How do I pay?",
+    a: `Lipa na M-Pesa, Buy Goods, Till Number ${TILL_NUMBER}. Full steps are shown in the registration form. Enter the M-Pesa transaction code you receive when you register.`,
   },
   {
     q: "How does the Corporate Package work?",
-    a: "The Corporate Package covers 10 delegates from your organisation under a single registration. Add your company name during registration so we can prepare all 10 QR passes together.",
+    a: "It covers 10 delegates under one registration. Add your company name on the form.",
   },
   {
     q: "How does the Sponsor Package work?",
-    a: "Sponsor Packages are custom partnership amounts. Enter the agreed amount during registration and our team will follow up to confirm sponsorship benefits.",
+    a: "Enter your agreed partnership amount on the form. Our team will follow up to confirm details.",
   },
   {
     q: "Can I get a refund?",
-    a: "Reach out to our support team via email or phone and we'll walk you through the options for your specific booking.",
+    a: "Contact our support team below and we'll go through the options for your booking.",
   },
 ];
 
@@ -174,18 +140,6 @@ const TicketSeam = ({ className = "" }: { className?: string }) => (
     <div className="border-t-2 border-dashed border-white/20" />
     <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
     <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
-  </div>
-);
-
-const Barcode = () => (
-  <div className="flex items-end gap-[3px] h-8 opacity-70">
-    {[3, 1, 2, 1, 4, 1, 2, 3, 1, 2, 1, 3, 2, 1, 4, 1, 2, 1].map((w, i) => (
-      <span
-        key={i}
-        style={{ width: `${w}px`, height: i % 5 === 0 ? "100%" : "70%" }}
-        className="bg-foreground/70"
-      />
-    ))}
   </div>
 );
 
@@ -278,8 +232,10 @@ const EventsPage = () => {
     const result = await registerAttendee(payload);
 
     if (result.success) {
+      const firstName = form.fullName.trim().split(" ")[0] || "there";
       setSuccess(
-        `Registration Successful! Your Registration Number is ${result.registration}`
+        `Thank you for registering, ${firstName}! Your registration number is ${result.registration}. ` +
+          `We'll send your official confirmation to ${form.email} shortly.`
       );
       resetForm();
     } else {
@@ -296,30 +252,26 @@ const EventsPage = () => {
         description="Reserve your seat for the FC Metropol HP Kenya Event."
       />
 
-      {/* Scoped, self-contained styles for the ticket-strip marquee. */}
-      <style>{`
-        @keyframes fcmp-marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .fcmp-marquee-track {
-          animation: fcmp-marquee 26s linear infinite;
-        }
-        .fcmp-marquee-track:hover {
-          animation-play-state: paused;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .fcmp-marquee-track { animation: none; }
-        }
-      `}</style>
+      {/* STICKY REGISTRATION BAR */}
+      <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur">
+        <div className="container-pro max-w-6xl flex items-center justify-between py-3">
+          <span className="font-display text-sm md:text-base truncate">
+            FC Metropol HP Kenya
+          </span>
+          <Button onClick={() => setDialogOpen(true)}>
+            Register Now
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </div>
 
       {/* HERO */}
-      <section className="pt-28 pb-16">
+      <section className="pt-16 pb-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-5 py-2 text-sm">
               <Calendar size={16} />
-              AUGUST 2026 · ALL-ACCESS PASS
+              10 – 15 August 2026
             </span>
 
             <h1 className="mt-8 font-display text-5xl md:text-7xl">
@@ -329,10 +281,9 @@ const EventsPage = () => {
               </span>
             </h1>
 
-            <p className="mt-6 max-w-3xl mx-auto text-lg text-foreground/70 leading-relaxed">
-              Join football professionals, investors, club executives,
-              coaches, scouts, media personalities and sports enthusiasts
-              for one of Kenya's premier football networking events.
+            <p className="mt-6 max-w-2xl mx-auto text-lg text-foreground/70 leading-relaxed">
+              Six days of football, leadership and business networking in
+              Nairobi. Reserve your seat below.
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center items-center gap-4">
@@ -345,34 +296,19 @@ const EventsPage = () => {
                   View Ticket Packages
                 </Button>
               </a>
-              <span className="text-sm text-foreground/60">
-                Passes from{" "}
-                <strong className="text-accent">
-                  KES {getTicketAmount("Individual").toLocaleString()}
-                </strong>
-              </span>
             </div>
+
+            <p className="mt-4 text-sm text-foreground/60">
+              Passes from{" "}
+              <strong className="text-accent">
+                KES {getTicketAmount("Individual").toLocaleString()}
+              </strong>{" "}
+              · Pay with Lipa na M-Pesa
+            </p>
           </div>
 
-          {/* TICKER STRIP */}
-          <div className="mt-12 overflow-hidden border-y border-white/10 py-3">
-            <div className="fcmp-marquee-track flex w-max gap-10 whitespace-nowrap">
-              {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map(
-                (item, i) => (
-                  <span
-                    key={i}
-                    className="flex items-center gap-3 text-xs font-semibold tracking-widest text-foreground/50"
-                  >
-                    {item}
-                    <span className="h-1 w-1 rounded-full bg-accent" />
-                  </span>
-                )
-              )}
-            </div>
-          </div>
-
-          {/* POSTER — presented as the event's own admit-one stub */}
-          <div className="mt-14 flex justify-center">
+          {/* POSTER */}
+          <div className="mt-12 flex justify-center">
             <div className="relative w-full max-w-3xl">
               <span className="absolute -top-4 -right-4 z-10 rotate-[8deg] rounded-full bg-accent px-5 py-2 text-xs font-bold tracking-wide text-background shadow-lg">
                 ADMIT ONE
@@ -396,7 +332,7 @@ const EventsPage = () => {
                   </div>
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
-                      GATE
+                      VENUE
                     </div>
                     <div className="mt-1 font-display text-lg">Nairobi</div>
                   </div>
@@ -411,35 +347,8 @@ const EventsPage = () => {
             </div>
           </div>
 
-          {/* EVENT DETAILS */}
-          <div id="overview" className="grid md:grid-cols-3 gap-5 mt-14">
-            <div className="glass-card rounded-2xl p-6 text-center">
-              <Calendar className="mx-auto text-accent mb-3" />
-              <h3 className="font-semibold text-lg">Event Dates</h3>
-              <p className="text-foreground/70 mt-2">10th – 15th August 2026</p>
-            </div>
-
-            <div className="glass-card rounded-2xl p-6 text-center">
-              <MapPin className="mx-auto text-accent mb-3" />
-              <h3 className="font-semibold text-lg">Venue</h3>
-              <p className="text-foreground/70 mt-2">TBD, Nairobi</p>
-            </div>
-
-            <div className="glass-card rounded-2xl p-6 text-center">
-              <Ticket className="mx-auto text-accent mb-3" />
-              <h3 className="font-semibold text-lg">Registration</h3>
-              <p className="text-foreground/70 mt-2">Reserve your seat today.</p>
-            </div>
-          </div>
-
           {/* SCOREBOARD STATS */}
           <div className="mt-14 rounded-2xl border border-white/10 bg-black/20 px-6 py-8">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-[11px] font-semibold tracking-[0.2em] text-foreground/50">
-                ON THE SCOREBOARD
-              </span>
-            </div>
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
               {STATS.map((s) => (
                 <div key={s.label} className="text-center px-2">
@@ -456,84 +365,31 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="about" className="pb-20">
-        <div className="container-pro max-w-6xl grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <span className="text-sm text-accent font-semibold tracking-wide">
-              ABOUT THE EVENT
-            </span>
-            <h2 className="mt-3 font-display text-4xl">
-              Where Kenyan football meets serious business
-            </h2>
-            <p className="mt-5 text-foreground/70 leading-relaxed">
-              FC Metropol HP Kenya brings together six days of football
-              activity, leadership dialogue and structured business
-              networking. It's designed for anyone who takes the game — and
-              the business behind it — seriously: club owners, investors,
-              coaches, scouts, sponsors and media.
-            </p>
-            <p className="mt-4 text-foreground/70 leading-relaxed">
-              Every attendee leaves with new relationships, a QR-verified
-              event pass, and an invitation to the exclusive networking
-              dinner at Weston Hotel.
-            </p>
-          </div>
-          <div className="glass-card rounded-3xl p-8">
-            <h3 className="font-semibold text-xl mb-5">Why Attend</h3>
-            <ul className="space-y-4">
-              {[
-                "Meet decision-makers across Kenyan football",
-                "Direct access to club leadership and scouts",
-                "Structured, high-value networking sessions",
-                "A single pass covering every day of the forum",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <CheckCircle className="text-accent shrink-0 mt-0.5" size={18} />
-                  <span className="text-foreground/80">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* HIGHLIGHTS / MATCHDAY TIMELINE */}
+      {/* HIGHLIGHTS / TIMELINE */}
       <section id="highlights" className="pb-20">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
-              EVENT HIGHLIGHTS
+              SCHEDULE
             </span>
-            <h2 className="mt-3 font-display text-4xl">Six matchdays, one pass</h2>
+            <h2 className="mt-3 font-display text-4xl">Six days, one pass</h2>
           </div>
 
-          <div className="mt-14 relative">
-            <div className="absolute left-6 md:left-[4.5rem] top-2 bottom-2 w-px bg-white/10" />
-            <div className="space-y-8">
-              {SCHEDULE.map((item) => (
-                <div key={item.tag} className="relative flex gap-6 md:gap-8">
-                  <div className="shrink-0 flex flex-col items-center w-12 md:w-32">
-                    <div className="h-12 w-12 rounded-full border-2 border-accent/50 bg-background flex items-center justify-center font-display text-sm text-accent z-10">
-                      {item.tag.split(" ")[1]}
-                    </div>
-                    <div className="hidden md:block mt-2 text-xs text-foreground/50">
-                      {item.date}
-                    </div>
-                  </div>
-                  <div className="glass rounded-2xl p-6 border border-white/10 flex-1">
-                    <div className="flex items-center gap-2 md:hidden mb-1 text-xs text-foreground/50">
-                      {item.date}
-                    </div>
-                    <span className="text-[11px] font-semibold tracking-widest text-accent">
-                      MATCHDAY {item.tag.split(" ")[1]}
-                    </span>
-                    <h4 className="font-semibold text-lg mt-1">{item.title}</h4>
-                    <p className="text-foreground/70 mt-1">{item.desc}</p>
-                  </div>
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {SCHEDULE.map((item) => (
+              <div
+                key={item.tag}
+                className="glass rounded-2xl p-5 border border-white/10 flex items-center gap-4"
+              >
+                <div className="h-11 w-11 shrink-0 rounded-full border-2 border-accent/50 flex items-center justify-center font-display text-sm text-accent">
+                  {item.tag}
                 </div>
-              ))}
-            </div>
+                <div>
+                  <div className="text-xs text-foreground/50">{item.date}</div>
+                  <div className="font-medium">{item.title}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -546,10 +402,6 @@ const EventsPage = () => {
               TICKET PACKAGES
             </span>
             <h2 className="mt-3 font-display text-4xl">Choose your pass</h2>
-            <p className="mt-4 text-foreground/70">
-              Every pass below includes full access to the forum — pick the
-              one that fits how you're attending.
-            </p>
           </div>
 
           <div className="mt-12 grid md:grid-cols-3 gap-6">
@@ -559,7 +411,7 @@ const EventsPage = () => {
               return (
                 <div
                   key={key}
-                  className={`relative rounded-3xl flex flex-col border overflow-hidden ${
+                  className={`relative rounded-3xl flex flex-col border overflow-hidden p-8 ${
                     pkg.highlight
                       ? "border-accent/40 bg-accent/10 shadow-2xl md:-translate-y-3"
                       : "border-white/10 glass-card"
@@ -571,81 +423,42 @@ const EventsPage = () => {
                     </span>
                   )}
 
-                  <div className="p-8 flex flex-col flex-1">
-                    <Icon className="text-accent mb-4" size={28} />
-                    <h3 className="font-display text-2xl">{pkg.title}</h3>
-                    <p className="text-foreground/60 text-sm mt-1">
-                      {pkg.subtitle}
-                    </p>
+                  <Icon className="text-accent mb-4" size={28} />
+                  <h3 className="font-display text-2xl">{pkg.title}</h3>
+                  <p className="text-foreground/60 text-sm mt-1">
+                    {pkg.subtitle}
+                  </p>
 
-                    <div className="mt-6">
-                      {pkg.price !== null ? (
-                        <span className="font-display text-3xl tabular-nums">
-                          KES {pkg.price.toLocaleString()}
-                        </span>
-                      ) : (
-                        <span className="font-display text-3xl">Custom</span>
-                      )}
-                    </div>
-
-                    <ul className="mt-6 space-y-3 flex-1">
-                      {INCLUSIONS.map((inc) => (
-                        <li
-                          key={inc.text}
-                          className="flex items-start gap-3 text-sm"
-                        >
-                          <inc.icon
-                            className="text-accent shrink-0 mt-0.5"
-                            size={16}
-                          />
-                          <span className="text-foreground/80">{inc.text}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <Button
-                      className="mt-8 w-full"
-                      variant={pkg.highlight ? "default" : "outline"}
-                      onClick={() => handlePackageSelect(key)}
-                    >
-                      Select {pkg.title}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                  <div className="mt-6">
+                    {pkg.price !== null ? (
+                      <span className="font-display text-3xl tabular-nums">
+                        KES {pkg.price.toLocaleString()}
+                      </span>
+                    ) : (
+                      <span className="font-display text-3xl">Custom</span>
+                    )}
                   </div>
 
-                  <TicketSeam />
+                  <ul className="mt-6 space-y-3 flex-1">
+                    {INCLUSIONS.map((inc) => (
+                      <li key={inc.text} className="flex items-start gap-3 text-sm">
+                        <inc.icon className="text-accent shrink-0 mt-0.5" size={16} />
+                        <span className="text-foreground/80">{inc.text}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-                  <div className="flex items-center justify-between px-8 py-5">
-                    <Barcode />
-                    <span className="text-[10px] tracking-widest text-foreground/40">
-                      SCAN TO ENTER
-                    </span>
-                  </div>
+                  <Button
+                    className="mt-8 w-full"
+                    variant={pkg.highlight ? "default" : "outline"}
+                    onClick={() => handlePackageSelect(key)}
+                  >
+                    Select {pkg.title}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="pb-20">
-        <div className="container-pro max-w-6xl">
-          <div className="relative overflow-hidden rounded-3xl border border-accent/30 bg-accent/10 p-10 md:p-14 text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-background/40 px-4 py-1.5 text-xs font-semibold tracking-widest text-accent">
-              FINAL WHISTLE ON EARLY SEATS
-            </span>
-            <h2 className="mt-5 font-display text-3xl md:text-4xl">
-              Seats are limited. Secure yours today.
-            </h2>
-            <p className="mt-4 text-foreground/70 max-w-xl mx-auto">
-              Complete your registration in minutes and receive your official
-              QR event pass by email.
-            </p>
-            <Button size="lg" className="mt-8" onClick={() => setDialogOpen(true)}>
-              Reserve Your Seat
-              <ArrowDown className="ml-2 h-5 w-5" />
-            </Button>
           </div>
         </div>
       </section>
@@ -696,15 +509,9 @@ const EventsPage = () => {
           <div className="glass-card rounded-3xl p-10 md:p-12">
             <div className="text-center max-w-xl mx-auto">
               <span className="text-sm text-accent font-semibold tracking-wide">
-                CONTACT &amp; SUPPORT
+                SUPPORT
               </span>
-              <h2 className="mt-3 font-display text-3xl">
-                Need help with your registration?
-              </h2>
-              <p className="mt-3 text-foreground/70">
-                Our support team is on hand for ticketing, corporate group
-                bookings and sponsorship enquiries.
-              </p>
+              <h2 className="mt-3 font-display text-3xl">Need help?</h2>
             </div>
 
             <div className="mt-10 grid sm:grid-cols-3 gap-5">
@@ -713,11 +520,8 @@ const EventsPage = () => {
                 className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
               >
                 <Mail className="text-accent" size={20} />
-                <div>
-                  <div className="text-sm font-medium">Email</div>
-                  <div className="text-sm text-foreground/70">
-                    events@fcmetropolhp.co.ke
-                  </div>
+                <div className="text-sm text-foreground/70">
+                  events@fcmetropolhp.co.ke
                 </div>
               </a>
               <a
@@ -725,9 +529,8 @@ const EventsPage = () => {
                 className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
               >
                 <Phone className="text-accent" size={20} />
-                <div>
-                  <div className="text-sm font-medium">Phone</div>
-                  <div className="text-sm text-foreground/70">+254 700 000 000</div>
+                <div className="text-sm text-foreground/70">
+                  +254 700 000 000
                 </div>
               </a>
               <a
@@ -735,10 +538,7 @@ const EventsPage = () => {
                 className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
               >
                 <MessageCircle className="text-accent" size={20} />
-                <div>
-                  <div className="text-sm font-medium">WhatsApp</div>
-                  <div className="text-sm text-foreground/70">Chat with us</div>
-                </div>
+                <div className="text-sm text-foreground/70">WhatsApp</div>
               </a>
             </div>
           </div>
@@ -761,8 +561,8 @@ const EventsPage = () => {
               Event Registration
             </DialogTitle>
             <DialogDescription>
-              Complete the form and submit your M-Pesa transaction code. Once
-              payment is verified you'll receive your official confirmation.
+              Pick your package, pay via Lipa na M-Pesa, then enter your
+              details below.
             </DialogDescription>
           </DialogHeader>
 
@@ -795,28 +595,52 @@ const EventsPage = () => {
             })}
           </div>
 
-          {/* Amount payable */}
+          {/* Sponsor amount needs to be set before the payment steps make sense */}
+          {ticketType === "Sponsor" && (
+            <div className="mt-5">
+              <label className="mb-2 block text-sm font-medium">
+                Sponsor Amount (KES) *
+              </label>
+              <input
+                type="number"
+                min={1}
+                name="sponsorAmount"
+                value={form.sponsorAmount}
+                onChange={handleChange}
+                required
+                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
+                placeholder="e.g. 100000"
+              />
+            </div>
+          )}
+
+          {/* Lipa na M-Pesa */}
           <div className="mt-5 rounded-2xl border border-accent/30 bg-accent/10 p-5">
-            <div className="flex items-center gap-3">
-              <CreditCard className="text-accent" size={18} />
-              <strong className="text-sm">M-Pesa Payment</strong>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-2">
+                <Smartphone className="text-accent" size={18} />
+                <strong className="text-sm">Lipa na M-Pesa</strong>
+              </div>
+              <div className="text-sm">
+                <span className="text-foreground/60">Till Number </span>
+                <strong>{TILL_NUMBER}</strong>
+              </div>
             </div>
-            <div className="mt-4 space-y-1 text-sm">
-              <p>
-                <strong>Paybill:</strong> 000000
-              </p>
-              <p>
-                <strong>Account:</strong> EVENTS
-              </p>
-              <p>
-                <strong>Amount:</strong>{" "}
-                {ticketType === "Sponsor"
-                  ? amount
-                    ? `KES ${amount.toLocaleString()}`
-                    : "Enter your sponsor amount below"
+
+            <div className="mt-2 text-sm">
+              <span className="text-foreground/60">Amount to pay: </span>
+              <strong className="text-accent">
+                {ticketType === "Sponsor" && !amount
+                  ? "Enter sponsor amount above"
                   : `KES ${amount.toLocaleString()}`}
-              </p>
+              </strong>
             </div>
+
+            <ol className="mt-4 space-y-1.5 text-sm text-foreground/80 list-decimal list-inside">
+              {PAY_STEPS.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5 mt-6">
@@ -902,25 +726,6 @@ const EventsPage = () => {
               </div>
             )}
 
-            {/* Sponsor: amount */}
-            {ticketType === "Sponsor" && (
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Sponsor Amount (KES) *
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  name="sponsorAmount"
-                  value={form.sponsorAmount}
-                  onChange={handleChange}
-                  required
-                  className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-                  placeholder="e.g. 100000"
-                />
-              </div>
-            )}
-
             {/* Transaction */}
             <div>
               <label className="mb-2 block text-sm font-medium">
@@ -932,9 +737,13 @@ const EventsPage = () => {
                 value={form.transactionCode}
                 onChange={handleChange}
                 required
-                placeholder="SIH5ABCD12"
+                placeholder="UG45CA77YR"
                 className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
               />
+              <p className="mt-1.5 text-xs text-foreground/50">
+                The code at the start of your M-Pesa confirmation SMS, e.g.
+                "UG45CA77YR Confirmed..."
+              </p>
             </div>
 
             {/* Notes */}
