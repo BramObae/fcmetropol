@@ -26,6 +26,9 @@ import {
   Mail,
   Phone,
   MessageCircle,
+  Building2,
+  Receipt,
+  ShieldAlert,
   X,
 } from "lucide-react";
 
@@ -143,9 +146,25 @@ const TicketSeam = ({ className = "" }: { className?: string }) => (
   </div>
 );
 
+/* Premium icon-prefixed input wrapper used throughout the registration form. */
+const IconField = ({
+  icon: Icon,
+  children,
+}: {
+  icon: typeof User;
+  children: React.ReactNode;
+}) => (
+  <div className="relative">
+    <Icon className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40" size={18} />
+    {children}
+  </div>
+);
+
 const EventsPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmChecked, setConfirmChecked] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const [ticketType, setTicketType] = useState<TicketType>("Individual");
@@ -198,11 +217,22 @@ const EventsPage = () => {
       notes: "",
     });
     setTicketType("Individual");
+    setConfirmChecked(false);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Fires when the form's native validation passes (all required fields,
+  // including the M-Pesa transaction code, are filled). Instead of
+  // registering immediately, it opens a payment-confirmation popup so
+  // nobody can submit a code without deliberately confirming they paid.
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setConfirmOpen(true);
+  };
 
+  // The actual registration call — only triggered once the person has
+  // ticked "I confirm I have paid" in the popup.
+  const submitRegistration = async () => {
     setLoading(true);
     setError("");
     setSuccess("");
@@ -243,6 +273,7 @@ const EventsPage = () => {
     }
 
     setLoading(false);
+    setConfirmOpen(false);
   };
 
   return (
@@ -253,7 +284,7 @@ const EventsPage = () => {
       />
 
       {/* STICKY REGISTRATION BAR */}
-      <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur">
+      <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
         <div className="container-pro max-w-6xl flex items-center justify-between py-3">
           <span className="font-display text-sm md:text-base truncate">
             FC Metropol HP Kenya
@@ -411,7 +442,7 @@ const EventsPage = () => {
               return (
                 <div
                   key={key}
-                  className={`relative rounded-3xl flex flex-col border overflow-hidden p-8 ${
+                  className={`relative rounded-3xl flex flex-col border overflow-hidden p-8 transition-transform duration-300 hover:-translate-y-1 ${
                     pkg.highlight
                       ? "border-accent/40 bg-accent/10 shadow-2xl md:-translate-y-3"
                       : "border-white/10 glass-card"
@@ -555,234 +586,320 @@ const EventsPage = () => {
           }
         }}
       >
-        <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="font-display text-2xl">
-              Event Registration
-            </DialogTitle>
-            <DialogDescription>
-              Pick your package, pay via Lipa na M-Pesa, then enter your
-              details below.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto p-0 gap-0">
+          <div className="h-1.5 w-full bg-gradient-to-r from-accent/40 via-accent to-accent/40" />
 
-          {/* Package switcher inside modal */}
-          <div className="grid grid-cols-3 gap-3 mt-2">
-            {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
-              const pkg = PACKAGES[key];
-              const Icon = pkg.icon;
-              const active = ticketType === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setTicketType(key)}
-                  className={`rounded-xl border p-3 text-center transition-colors ${
-                    active
-                      ? "border-accent bg-accent/10"
-                      : "border-white/10 bg-background"
-                  }`}
-                >
-                  <Icon
-                    className={`mx-auto mb-1 ${
-                      active ? "text-accent" : "text-foreground/60"
-                    }`}
-                    size={18}
-                  />
-                  <div className="text-xs font-medium">{pkg.title}</div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Sponsor amount needs to be set before the payment steps make sense */}
-          {ticketType === "Sponsor" && (
-            <div className="mt-5">
-              <label className="mb-2 block text-sm font-medium">
-                Sponsor Amount (KES) *
-              </label>
-              <input
-                type="number"
-                min={1}
-                name="sponsorAmount"
-                value={form.sponsorAmount}
-                onChange={handleChange}
-                required
-                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-                placeholder="e.g. 100000"
-              />
-            </div>
-          )}
-
-          {/* Lipa na M-Pesa */}
-          <div className="mt-5 rounded-2xl border border-accent/30 bg-accent/10 p-5">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="flex items-center gap-2">
-                <Smartphone className="text-accent" size={18} />
-                <strong className="text-sm">Lipa na M-Pesa</strong>
-              </div>
-              <div className="text-sm">
-                <span className="text-foreground/60">Till Number </span>
-                <strong>{TILL_NUMBER}</strong>
-              </div>
-            </div>
-
-            <div className="mt-2 text-sm">
-              <span className="text-foreground/60">Amount to pay: </span>
-              <strong className="text-accent">
-                {ticketType === "Sponsor" && !amount
-                  ? "Enter sponsor amount above"
-                  : `KES ${amount.toLocaleString()}`}
-              </strong>
-            </div>
-
-            <ol className="mt-4 space-y-1.5 text-sm text-foreground/80 list-decimal list-inside">
-              {PAY_STEPS.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ol>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-5 mt-6">
-            {/* Full Name */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                Full Name *
-              </label>
-              <input
-                type="text"
-                name="fullName"
-                value={form.fullName}
-                onChange={handleChange}
-                required
-                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-                placeholder="John Doe"
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                Email Address *
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-                placeholder="john@example.com"
-              />
-            </div>
-
-            {/* Phone */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                required
-                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-                placeholder="+2547..."
-              />
-            </div>
-
-            {/* Country */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                Country *
-              </label>
-              <input
-                type="text"
-                name="country"
-                value={form.country}
-                onChange={handleChange}
-                required
-                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-                placeholder="Kenya"
-              />
-            </div>
-
-            {/* Corporate: company name */}
-            {ticketType === "Corporate" && (
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Company Name *
-                </label>
-                <input
-                  type="text"
-                  name="companyName"
-                  value={form.companyName}
-                  onChange={handleChange}
-                  required
-                  className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-                  placeholder="Your Company Ltd"
-                />
-              </div>
-            )}
-
-            {/* Transaction */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                M-Pesa Transaction Code *
-              </label>
-              <input
-                type="text"
-                name="transactionCode"
-                value={form.transactionCode}
-                onChange={handleChange}
-                required
-                placeholder="UG45CA77YR"
-                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none focus:border-accent"
-              />
-              <p className="mt-1.5 text-xs text-foreground/50">
-                The code at the start of your M-Pesa confirmation SMS, e.g.
-                "UG45CA77YR Confirmed..."
-              </p>
-            </div>
-
-            {/* Notes */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">
-                Additional Notes (Optional)
-              </label>
-              <textarea
-                rows={3}
-                name="notes"
-                value={form.notes}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none resize-none focus:border-accent"
-                placeholder="Special requests..."
-              />
-            </div>
-
-            {/* Messages */}
-            {error && (
-              <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-400 flex items-start gap-2">
-                <X size={18} className="shrink-0 mt-0.5" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            {success && (
-              <div className="rounded-xl bg-green-500/10 border border-green-500/20 p-4">
-                <div className="flex gap-2 items-start text-green-400">
-                  <CheckCircle size={18} className="shrink-0 mt-0.5" />
-                  <span>{success}</span>
+          <div className="p-6 md:p-8">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 border border-accent/30">
+                  <Ticket className="text-accent" size={20} />
+                </span>
+                <div>
+                  <DialogTitle className="font-display text-2xl">
+                    Event Registration
+                  </DialogTitle>
+                  <DialogDescription className="mt-0.5">
+                    Pick your package, pay via Lipa na M-Pesa, then confirm.
+                  </DialogDescription>
                 </div>
               </div>
-            )}
+            </DialogHeader>
 
-            {/* Submit */}
-            <Button type="submit" size="lg" className="w-full" disabled={loading}>
-              {loading ? "Submitting Registration..." : "Reserve My Seat"}
-            </Button>
-          </form>
+            {/* STEP 1 — Package */}
+            <div className="mt-8">
+              <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
+                01 · PACKAGE
+              </span>
+              <div className="grid grid-cols-3 gap-3 mt-3">
+                {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
+                  const pkg = PACKAGES[key];
+                  const Icon = pkg.icon;
+                  const active = ticketType === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setTicketType(key)}
+                      className={`rounded-2xl border p-4 text-center transition-all ${
+                        active
+                          ? "border-accent bg-accent/10 shadow-md scale-[1.02]"
+                          : "border-white/10 bg-background hover:border-white/20"
+                      }`}
+                    >
+                      <Icon
+                        className={`mx-auto mb-1.5 ${
+                          active ? "text-accent" : "text-foreground/60"
+                        }`}
+                        size={20}
+                      />
+                      <div className="text-xs font-medium">{pkg.title}</div>
+                      <div className="text-[11px] text-foreground/50 mt-0.5">
+                        {pkg.price !== null
+                          ? `KES ${pkg.price.toLocaleString()}`
+                          : "Custom"}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {ticketType === "Sponsor" && (
+                <div className="mt-4">
+                  <IconField icon={Award}>
+                    <input
+                      type="number"
+                      min={1}
+                      name="sponsorAmount"
+                      value={form.sponsorAmount}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder="Sponsor amount, e.g. 100000"
+                    />
+                  </IconField>
+                </div>
+              )}
+            </div>
+
+            {/* STEP 2 — Pay */}
+            <div className="mt-8">
+              <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
+                02 · PAY
+              </span>
+              <div className="mt-3 rounded-2xl border border-accent/30 bg-accent/10 p-5">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="text-accent" size={18} />
+                    <strong className="text-sm">Lipa na M-Pesa</strong>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-foreground/60">Till Number </span>
+                    <strong>{TILL_NUMBER}</strong>
+                  </div>
+                </div>
+
+                <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
+                  <span className="text-foreground/60">Amount to pay </span>
+                  <strong className="text-accent">
+                    {ticketType === "Sponsor" && !amount
+                      ? "— enter sponsor amount above"
+                      : `KES ${amount.toLocaleString()}`}
+                  </strong>
+                </div>
+
+                <ul className="mt-4 space-y-2.5">
+                  {PAY_STEPS.map((step, i) => (
+                    <li key={step} className="flex items-start gap-3 text-sm">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/20 text-[11px] font-semibold text-accent">
+                        {i + 1}
+                      </span>
+                      <span className="text-foreground/80">{step}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* STEP 3 — Details */}
+            <form onSubmit={handleFormSubmit} className="mt-8">
+              <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
+                03 · YOUR DETAILS
+              </span>
+
+              <div className="mt-3 space-y-4">
+                <IconField icon={User}>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={form.fullName}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                    placeholder="Full name"
+                  />
+                </IconField>
+
+                <IconField icon={Mail}>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                    placeholder="Email address"
+                  />
+                </IconField>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <IconField icon={Phone}>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder="+2547..."
+                    />
+                  </IconField>
+
+                  <IconField icon={MapPin}>
+                    <input
+                      type="text"
+                      name="country"
+                      value={form.country}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder="Country"
+                    />
+                  </IconField>
+                </div>
+
+                {ticketType === "Corporate" && (
+                  <IconField icon={Building2}>
+                    <input
+                      type="text"
+                      name="companyName"
+                      value={form.companyName}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder="Company name"
+                    />
+                  </IconField>
+                )}
+
+                <textarea
+                  rows={2}
+                  name="notes"
+                  value={form.notes}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none resize-none focus:border-accent"
+                  placeholder="Additional notes (optional)"
+                />
+
+                {/* Transaction code is the last field, deliberately */}
+                <div>
+                  <IconField icon={Receipt}>
+                    <input
+                      type="text"
+                      name="transactionCode"
+                      value={form.transactionCode}
+                      onChange={handleChange}
+                      required
+                      placeholder="M-Pesa transaction code, e.g. UG45CA77YR"
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                    />
+                  </IconField>
+                  <p className="mt-1.5 text-xs text-foreground/50">
+                    The code at the start of your M-Pesa confirmation SMS,
+                    e.g. "UG45CA77YR Confirmed..."
+                  </p>
+                </div>
+              </div>
+
+              {error && (
+                <div className="mt-5 rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-400 flex items-start gap-2">
+                  <X size={18} className="shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {success && (
+                <div className="mt-5 rounded-xl bg-green-500/10 border border-green-500/20 p-4">
+                  <div className="flex gap-2 items-start text-green-400">
+                    <CheckCircle size={18} className="shrink-0 mt-0.5" />
+                    <span>{success}</span>
+                  </div>
+                </div>
+              )}
+
+              <Button type="submit" size="lg" className="w-full mt-6">
+                Review &amp; Confirm Payment
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* PAYMENT CONFIRMATION POPUP */}
+      <Dialog
+        open={confirmOpen}
+        onOpenChange={(open) => {
+          if (!loading) setConfirmOpen(open);
+        }}
+      >
+        <DialogContent className="max-w-md p-0 gap-0">
+          <div className="h-1.5 w-full bg-gradient-to-r from-accent/40 via-accent to-accent/40" />
+          <div className="p-6 md:p-8">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 border border-accent/30">
+                <ShieldAlert className="text-accent" size={20} />
+              </span>
+              <DialogTitle className="font-display text-xl">
+                Confirm Your Payment
+              </DialogTitle>
+            </div>
+
+            <p className="mt-4 text-sm text-foreground/70">
+              Please double-check the details below before we submit your
+              registration.
+            </p>
+
+            <div className="mt-4 rounded-xl border border-white/10 bg-background/60 divide-y divide-white/10 text-sm">
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-foreground/60">Package</span>
+                <strong>{selectedPackage.title}</strong>
+              </div>
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-foreground/60">Amount</span>
+                <strong className="text-accent">
+                  KES {amount.toLocaleString()}
+                </strong>
+              </div>
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-foreground/60">Transaction Code</span>
+                <strong>{form.transactionCode || "—"}</strong>
+              </div>
+            </div>
+
+            <label className="mt-5 flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={confirmChecked}
+                onChange={(e) => setConfirmChecked(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-white/20 accent-current text-accent"
+              />
+              <span className="text-sm text-foreground/80">
+                I confirm I have completed this M-Pesa payment and the
+                transaction code above is correct.
+              </span>
+            </label>
+
+            <div className="mt-6 flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                disabled={loading}
+                onClick={() => setConfirmOpen(false)}
+              >
+                Go Back
+              </Button>
+              <Button
+                type="button"
+                className="flex-1"
+                disabled={!confirmChecked || loading}
+                onClick={submitRegistration}
+              >
+                {loading ? "Submitting..." : "Confirm & Reserve Seat"}
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </>
