@@ -143,7 +143,7 @@ const FAQS = [
   },
   {
     q: "How does the Corporate Package work?",
-    a: "One registration covers 10 delegates at a fixed KES 40,000, with the full six-day pass for each delegate. Add your company name on the form so we can allocate seats correctly.",
+    a: "One registration covers 10 delegates at a fixed KES 100,000, with the full six-day pass for each delegate. Add your company name on the form so we can allocate seats correctly.",
   },
   {
     q: "How does the Sponsor Package work?",
