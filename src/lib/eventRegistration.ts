@@ -1,12 +1,13 @@
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwQuY20HTQfE9i28Hjoh0a5qTyZn5d5ysp4po1NbiKK38q-tDI79QZ4-Lthz8U3oFQUEw/exec";
 
+// Matches the keys used in EventsPage's PACKAGES object exactly.
 export type TicketType =
-  | "dinner"
-  | "openPlay"
-  | "workshop"
-  | "combo"
-  | "corporate";
+  | "Dinner"
+  | "CorporateTable"
+  | "OpenPlay"
+  | "Workshop"
+  | "OpenPlayWorkshop";
 
 export interface RegistrationData {
   fullName: string;
@@ -15,15 +16,8 @@ export interface RegistrationData {
   country: string;
   ticketType: TicketType;
   transactionCode: string;
-  // Optional now: the new registration flow no longer collects the raw
-  // M-Pesa confirmation SMS.
   mpesaMessage?: string;
-  // How many people/players this registration covers. Always 1 for the
-  // fixed-quantity Corporate Table. Defaults to 1 if omitted.
   quantity?: number;
-  // Optional override for the total amount actually charged (price ×
-  // quantity). The events page always passes this explicitly, but the
-  // fallback below keeps single-unit registrations working either way.
   amount?: number;
   notes?: string;
 }
@@ -34,26 +28,33 @@ export interface RegistrationResponse {
   error?: string;
 }
 
-// Base price per unit (per person / per player / per table). Multiply by
-// quantity to get the total — the events page already does this and
-// passes the result via `amount`, but this stays here as the source of
-// truth and as a fallback if `amount` isn't supplied.
+// Base price per unit (per person / per player / per table of 10).
 export function getTicketAmount(ticket: TicketType) {
   switch (ticket) {
-    case "dinner":
+    case "Dinner":
       return 5000;
-    case "openPlay":
+    case "OpenPlay":
       return 5000;
-    case "workshop":
+    case "Workshop":
       return 10000;
-    case "combo":
+    case "OpenPlayWorkshop":
       return 15000;
-    case "corporate":
+    case "CorporateTable":
       return 100000;
     default:
       return 0;
   }
 }
+
+// Backend (Apps Script / Sheet) expects the old lowercase codes.
+// Map new-style keys -> legacy values so the sheet keeps working.
+const BACKEND_TICKET_CODE: Record<TicketType, string> = {
+  Dinner: "dinner",
+  CorporateTable: "corporate",
+  OpenPlay: "openPlay",
+  Workshop: "workshop",
+  OpenPlayWorkshop: "combo",
+};
 
 export async function registerAttendee(
   data: RegistrationData
@@ -67,7 +68,7 @@ export async function registerAttendee(
     formData.append("email", data.email);
     formData.append("phone", data.phone);
     formData.append("country", data.country);
-    formData.append("ticketType", data.ticketType);
+    formData.append("ticketType", BACKEND_TICKET_CODE[data.ticketType]);
     formData.append("quantity", quantity.toString());
     formData.append("amount", amount.toString());
     formData.append("transactionCode", data.transactionCode);
