@@ -1,4 +1,11 @@
 import { useState } from "react";
+import { SEO } from "@/components/SEO";
+import {
+  registerAttendee,
+  getTicketAmount,
+  TicketType,
+} from "@/lib/eventRegistration";
+
 import {
   Calendar,
   MapPin,
@@ -7,116 +14,143 @@ import {
   ArrowDown,
   ArrowRight,
   CheckCircle,
-  Trophy,
-  Award,
+  User,
+  Users,
   Utensils,
-  Sparkles,
-  Building2,
+  Target,
+  GraduationCap,
+  Layers,
+  Star,
+  Globe,
   ChevronDown,
   Mail,
   Phone,
-  MessageCircle,
+  Building2,
   Receipt,
   ShieldAlert,
-  User,
   X,
-  Plus,
-  Minus,
-  Star,
 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
+const featuredImage = "/event1.jpeg";
 const TILL_NUMBER = "000000";
 
-const PACKAGES = {
-  dinner: {
-    title: "Launch Dinner Pass",
-    subtitle: "9 Aug · Per person",
-    price: 5000,
-    unit: "person",
+/* ------------------------------------------------------------------ */
+/* Package configuration                                              */
+/* Five fixed-price ticket categories, matching the real event         */
+/* structure: Launch Dinner (9 Aug), Open Play (10–11 Aug),            */
+/* Workshops (12–14 Aug). Corporate Table and the Open Play + Workshop */
+/* combo sit alongside these. Prices come from getTicketAmount().      */
+/* ------------------------------------------------------------------ */
+
+const PACKAGES: Record<
+  TicketType,
+  {
+    title: string;
+    subtitle: string;
+    price: number;
+    icon: typeof User;
+    includes: string[];
+  }
+> = {
+  Dinner: {
+    title: "Launch Dinner",
+    subtitle: "Per person · 9 Aug",
+    price: getTicketAmount("Dinner"),
     icon: Utensils,
-    minQty: 1,
-    maxQty: 12,
-    inclusions: [
-      "Entry to the Official Launch Dinner",
+    includes: [
+      "Official Launch Dinner, 9 Aug",
       "Sports Investment & Partnership Forum",
-      "Dinner and refreshments",
-      "Networking with international delegates",
+      "Networking with government, corporate & football leaders",
+      "Meet Chief Guest Micky Adams (England)",
     ],
   },
-  openPlay: {
-    title: "Open Play Pass",
-    subtitle: "10–11 Aug · Per player",
-    price: 5000,
-    unit: "player",
-    icon: Trophy,
-    minQty: 1,
-    maxQty: 20,
-    inclusions: [
-      "Two days of scouted talent assessment",
+  CorporateTable: {
+    title: "Corporate Table",
+    subtitle: "Table of 10 · 9 Aug",
+    price: getTicketAmount("CorporateTable"),
+    icon: Users,
+    includes: [
+      "Reserved table of 10 at the Launch Dinner",
+      "Sports Investment & Partnership Forum access",
+      "Corporate recognition on the night",
+      "Priority networking access",
+    ],
+  },
+  OpenPlay: {
+    title: "Open Play",
+    subtitle: "Per player · 10–11 Aug",
+    price: getTicketAmount("OpenPlay"),
+    icon: Target,
+    includes: [
+      "Two days of talent assessment, 10–11 Aug",
+      "Assessed by international scouts & academies",
       "Technical, tactical & athletic evaluation",
-      "Observed by international clubs & scouts",
-      "Player performance profile",
+      "For players aged 14–20",
     ],
   },
-  workshop: {
-    title: "Workshop Pass",
-    subtitle: "12–14 Aug · Per player",
-    price: 10000,
-    unit: "player",
-    icon: Award,
-    minQty: 1,
-    maxQty: 20,
-    inclusions: [
-      "Three days of elite development sessions",
-      "High performance training & sports science",
-      "Scholarship & career pathway guidance",
+  Workshop: {
+    title: "Workshop",
+    subtitle: "Per player · 12–14 Aug",
+    price: getTicketAmount("Workshop"),
+    icon: GraduationCap,
+    includes: [
+      "Three days of elite development, 12–14 Aug",
+      "Led by international facilitators",
+      "Player & coach development sessions",
       "Certificate of participation",
     ],
   },
-  combo: {
+  OpenPlayWorkshop: {
     title: "Open Play + Workshop",
-    subtitle: "10–14 Aug · Full programme",
-    price: 15000,
-    unit: "player",
-    icon: Sparkles,
-    highlight: true,
-    minQty: 1,
-    maxQty: 20,
-    inclusions: [
-      "Everything in the Open Play Pass",
-      "Everything in the Workshop Pass",
-      "Priority visibility with scouts",
-      "One registration for the full five days",
-    ],
-  },
-  corporate: {
-    title: "Corporate Table",
-    subtitle: "9 Aug · Table of 10",
-    price: 100000,
-    unit: "table",
-    icon: Building2,
-    fixedQty: true,
-    inclusions: [
-      "Reserved table of 10 at the Launch Dinner",
-      "Company branding on table signage",
-      "Direct networking with delegates & sponsors",
-      "Logo recognition in the event programme",
+    subtitle: "Per player · 10–14 Aug",
+    price: getTicketAmount("OpenPlayWorkshop"),
+    icon: Layers,
+    includes: [
+      "Full player programme, 10–14 Aug",
+      "Open Play talent assessment",
+      "Elite player development workshops",
+      "Best for players serious about scouting",
     ],
   },
 };
 
 const SCHEDULE = [
-  { tag: "01", date: "9 Aug", title: "Official Launch Dinner & Partnership Forum" },
-  { tag: "02", date: "10–11 Aug", title: "Open Play Talent Identification" },
-  { tag: "03", date: "12–14 Aug", title: "Elite Player & Coach Workshops" },
-  { tag: "04", date: "15 Aug", title: "PWD Curtain Raiser & Showcase Match" },
+  {
+    range: "09 Aug",
+    title: "Launch Dinner & Partnership Forum",
+    desc: "Official launch, with Chief Guest Micky Adams (England).",
+  },
+  {
+    range: "10–11 Aug",
+    title: "Open Play Talent Identification",
+    desc: "Scouting and assessment for players aged 14–20.",
+  },
+  {
+    range: "12–14 Aug",
+    title: "Elite Player & Coach Workshops",
+    desc: "International development sessions for players and coaches.",
+  },
+  {
+    range: "15 Aug",
+    title: "Showcase Match & Closing Ceremony",
+    desc: "PWD curtain-raiser, international showcase match, awards.",
+  },
 ];
 
 const STATS = [
-  { value: "500+", label: "Players & Coaches" },
+  { value: "07", label: "Event Days" },
+  { value: "300+", label: "Players Assessed" },
   { value: "30+", label: "Int'l Delegates" },
   { value: "05", label: "Ticket Categories" },
-  { value: "7", label: "Event Days" },
 ];
 
 const PAY_STEPS = [
@@ -131,98 +165,57 @@ const PAY_STEPS = [
 const FAQS = [
   {
     q: "How do I pay?",
-    a: `Lipa na M-Pesa, Buy Goods, Till Number ${TILL_NUMBER}. Enter the amount shown for your pass, then confirm with your M-Pesa PIN. You'll enter the transaction code from your confirmation SMS on the registration form.`,
+    a: `Lipa na M-Pesa, Buy Goods, Till Number ${TILL_NUMBER}. Full steps are shown in the registration form. Enter the M-Pesa transaction code you receive when you register.`,
   },
   {
-    q: "What's the difference between Open Play and Workshop?",
-    a: "Open Play (10–11 Aug) is the two-day scouting and assessment programme. Workshop (12–14 Aug) is the three-day player and coach development programme. If your child is doing both, the combined pass at KES 15,000 covers all five days under one registration.",
+    q: "What's the difference between Open Play, Workshop and the combo?",
+    a: "Open Play (10–11 Aug) is the scouting and talent assessment. Workshop (12–14 Aug) is the elite player and coach development sessions. The combo covers both, 10–14 Aug.",
   },
   {
     q: "How does the Corporate Table work?",
-    a: "KES 100,000 reserves one table of 10 seats at the Launch Dinner on 9 August, with your company name on the table and recognition in the event programme.",
+    a: "It reserves a table of 10 at the Launch Dinner under one registration. Add your company name on the form.",
   },
   {
-    q: "Can I register more than one player?",
-    a: "Yes. Use the quantity control on the Open Play, Workshop or Combo pass to register multiple players in a single payment.",
+    q: "Can I get a refund?",
+    a: "Contact our support team below and we'll go through the options for your booking.",
   },
 ];
 
-/* ---------- tiny local UI primitives (no external component deps) ---------- */
+/* Small reusable "tear line" seam — the perforated edge of a ticket
+   stub, complete with the two punched notches at either end. */
+const TicketSeam = ({ className = "" }: { className?: string }) => (
+  <div className={`relative ${className}`}>
+    <div className="border-t-2 border-dashed border-white/20" />
+    <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
+    <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
+  </div>
+);
 
-const Btn = ({ variant = "solid", className = "", children, ...props }) => {
-  const base =
-    "inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold transition-colors";
-  const styles =
-    variant === "solid"
-      ? "bg-amber-400 text-zinc-900 hover:bg-amber-300"
-      : variant === "outline"
-      ? "border border-white/20 text-zinc-100 hover:border-white/40"
-      : "text-zinc-100 hover:text-amber-300";
-  return (
-    <button className={`${base} ${styles} ${className}`} {...props}>
-      {children}
-    </button>
-  );
-};
-
-const IconField = ({ icon: Icon, children }) => (
+/* Premium icon-prefixed input wrapper used throughout the registration form. */
+const IconField = ({
+  icon: Icon,
+  children,
+}: {
+  icon: typeof User;
+  children: React.ReactNode;
+}) => (
   <div className="relative">
-    <Icon className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+    <Icon
+      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40"
+      size={18}
+    />
     {children}
   </div>
 );
 
-const QuantityStepper = ({ value, onChange, min = 1, max = 20, unit }) => (
-  <div className="flex items-center justify-between rounded-xl border border-white/10 bg-zinc-900 px-4 py-2.5">
-    <span className="text-sm text-zinc-400">
-      Number of {unit}
-      {value === 1 ? "" : "s"}
-    </span>
-    <div className="flex items-center gap-3">
-      <button
-        type="button"
-        onClick={() => onChange(Math.max(min, value - 1))}
-        disabled={value <= min}
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-zinc-400 disabled:opacity-30 hover:border-amber-400/50 hover:text-amber-300 transition-colors"
-      >
-        <Minus size={14} />
-      </button>
-      <span className="w-6 text-center font-semibold tabular-nums text-zinc-100">{value}</span>
-      <button
-        type="button"
-        onClick={() => onChange(Math.min(max, value + 1))}
-        disabled={value >= max}
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-zinc-400 disabled:opacity-30 hover:border-amber-400/50 hover:text-amber-300 transition-colors"
-      >
-        <Plus size={14} />
-      </button>
-    </div>
-  </div>
-);
-
-/* Faux registration call — mimics your real registerAttendee(), just without
-   the network round trip, so this preview can actually "succeed". */
-function mockRegisterAttendee(payload) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        registration:
-          "FCM-" + new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 14),
-      });
-    }, 900);
-  });
-}
-
-export default function EventsPagePreview() {
+const EventsPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmChecked, setConfirmChecked] = useState(false);
-  const [openFaq, setOpenFaq] = useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const [packageKey, setPackageKey] = useState("openPlay");
-  const [quantity, setQuantity] = useState(1);
+  const [ticketType, setTicketType] = useState<TicketType>("Dinner");
 
   const [form, setForm] = useState({
     fullName: "",
@@ -233,19 +226,30 @@ export default function EventsPagePreview() {
     companyName: "",
     notes: "",
   });
-  const [touched, setTouched] = useState(false);
+
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
-  const selectedPackage = PACKAGES[packageKey];
-  const effectiveQty = selectedPackage.fixedQty ? 1 : quantity;
-  const amount = selectedPackage.price * effectiveQty;
+  const selectedPackage = PACKAGES[ticketType];
+  const amount = selectedPackage.price;
+  const isPlayerTicket =
+    ticketType === "OpenPlay" ||
+    ticketType === "Workshop" ||
+    ticketType === "OpenPlayWorkshop";
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handlePackageSelect = (key) => {
-    setPackageKey(key);
-    setQuantity(1);
+  const handlePackageSelect = (key: TicketType) => {
+    setTicketType(key);
     setDialogOpen(true);
   };
 
@@ -259,50 +263,56 @@ export default function EventsPagePreview() {
       companyName: "",
       notes: "",
     });
-    setPackageKey("openPlay");
-    setQuantity(1);
+    setTicketType("Dinner");
     setConfirmChecked(false);
-    setTouched(false);
   };
 
-  const requiredFilled =
-    form.fullName.trim() &&
-    form.email.trim() &&
-    form.phone.trim() &&
-    form.country.trim() &&
-    form.transactionCode.trim() &&
-    (packageKey !== "corporate" || form.companyName.trim());
-
-  const handleReview = () => {
-    setTouched(true);
+  // Fires when the form's native validation passes (all required fields,
+  // including the M-Pesa transaction code, are filled). Instead of
+  // registering immediately, it opens a payment-confirmation popup so
+  // nobody can submit a code without deliberately confirming they paid.
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     setError("");
-    if (!requiredFilled) return;
     setConfirmOpen(true);
   };
 
+  // The actual registration call — only triggered once the person has
+  // ticked "I confirm I have paid" in the popup.
   const submitRegistration = async () => {
     setLoading(true);
     setError("");
     setSuccess("");
+
+    // Fold package-specific details into `notes` for extra context.
+    let composedNotes = "";
+    if (ticketType === "CorporateTable" && form.companyName) {
+      composedNotes += `Company: ${form.companyName}`;
+    }
+    if (form.notes) {
+      composedNotes += composedNotes
+        ? ` | Notes: ${form.notes}`
+        : `Notes: ${form.notes}`;
+    }
 
     const payload = {
       fullName: form.fullName,
       email: form.email,
       phone: form.phone,
       country: form.country,
-      ticketType: packageKey,
-      quantity: effectiveQty,
+      ticketType,
       transactionCode: form.transactionCode,
       amount,
-      notes: form.notes,
+      notes: composedNotes,
     };
 
-    const result = await mockRegisterAttendee(payload);
+    const result = await registerAttendee(payload);
 
     if (result.success) {
       const firstName = form.fullName.trim().split(" ")[0] || "there";
       setSuccess(
-        `Thank you for registering, ${firstName}! Your registration number is ${result.registration}. We'll send your official confirmation to ${form.email} shortly.`
+        `Thank you for registering, ${firstName}! Your registration number is ${result.registration}. ` +
+          `We'll send your official confirmation to ${form.email} shortly.`
       );
       resetForm();
     } else {
@@ -314,56 +324,119 @@ export default function EventsPagePreview() {
   };
 
   return (
-    <div className="bg-zinc-950 text-zinc-100 min-h-screen">
-      <div className="sticky top-0 z-40 border-b border-white/10 bg-zinc-950/90 backdrop-blur">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3">
-          <span className="font-bold text-sm md:text-base truncate">Metropol Open Play Kenya 2026</span>
-          <Btn onClick={() => setDialogOpen(true)}>
-            Get Tickets <ArrowRight className="ml-2 h-4 w-4" />
-          </Btn>
+    <>
+      <SEO
+        title="Metropol Open Play Kenya 2026"
+        description="Register for Metropol Open Play Kenya 2026 — the Launch Dinner, Open Play talent identification and elite development workshops."
+      />
+
+      {/* STICKY REGISTRATION BAR */}
+      <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
+        <div className="container-pro max-w-6xl flex items-center justify-between py-3">
+          <span className="font-display text-sm md:text-base truncate">
+            Metropol Open Play Kenya 2026
+          </span>
+          <Button onClick={() => setDialogOpen(true)}>
+            Register Now
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
 
-      <section className="pt-16 pb-16 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm text-amber-300">
-            <Calendar size={16} /> 9 – 15 August 2026 · Nairobi
-          </span>
+      {/* HERO */}
+      <section className="pt-16 pb-16">
+        <div className="container-pro max-w-6xl">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-5 py-2 text-sm">
+              <Calendar size={16} />
+              9 – 15 August 2026
+            </span>
 
-          <h1 className="mt-8 text-5xl md:text-6xl font-extrabold tracking-tight">
-            Metropol Open Play
-            <span className="block text-amber-400">Kenya 2026</span>
-          </h1>
+            <h1 className="mt-8 font-display text-5xl md:text-7xl">
+              Metropol Open Play
+              <span className="block text-gradient-gold">Kenya 2026</span>
+            </h1>
 
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-zinc-400 leading-relaxed">
-            Creating global opportunities through football, education and international
-            partnerships. Scouting, coach education and a Launch Dinner with delegates
-            from Europe and South America.
-          </p>
+            <p className="mt-6 max-w-2xl mx-auto text-lg text-foreground/70 leading-relaxed">
+              Football scouting, development, coach education and
+              international pathways for players aged 14–20. Featuring
+              Chief Guest Micky Adams (England).
+            </p>
 
-          <div className="mt-10 flex flex-wrap justify-center items-center gap-4">
-            <Btn className="px-6 py-3.5 text-base" onClick={() => setDialogOpen(true)}>
-              Reserve Your Pass <ArrowDown className="ml-2 h-5 w-5" />
-            </Btn>
-            <a href="#tickets">
-              <Btn variant="outline" className="px-6 py-3.5 text-base">
-                View Ticket Categories
-              </Btn>
-            </a>
+            <div className="mt-10 flex flex-wrap justify-center items-center gap-4">
+              <Button size="lg" onClick={() => setDialogOpen(true)}>
+                Reserve Your Spot
+                <ArrowDown className="ml-2 h-5 w-5" />
+              </Button>
+              <a href="#tickets">
+                <Button size="lg" variant="outline">
+                  View Ticket Packages
+                </Button>
+              </a>
+            </div>
+
+            <p className="mt-4 text-sm text-foreground/60">
+              Tickets from{" "}
+              <strong className="text-accent">
+                KES {getTicketAmount("Dinner").toLocaleString()}
+              </strong>{" "}
+              · Pay with Lipa na M-Pesa
+            </p>
           </div>
 
-          <p className="mt-4 text-sm text-zinc-500">
-            Passes from <strong className="text-amber-300">KES 5,000</strong> · Pay with Lipa na M-Pesa
-          </p>
+          {/* POSTER */}
+          <div className="mt-12 flex justify-center">
+            <div className="relative w-full max-w-3xl">
+              <span className="absolute -top-4 -right-4 z-10 rotate-[8deg] rounded-full bg-accent px-5 py-2 text-xs font-bold tracking-wide text-background shadow-lg">
+                ADMIT ONE
+              </span>
 
-          <div className="mt-14 rounded-2xl border border-white/10 bg-black/30 px-6 py-8">
+              <div className="glass-card rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+                <img
+                  src={featuredImage}
+                  alt="Metropol Open Play Kenya 2026"
+                  className="w-full max-h-[560px] object-contain bg-black/10"
+                />
+
+                <TicketSeam className="mx-6" />
+
+                <div className="grid grid-cols-3 divide-x divide-white/10 text-center py-5">
+                  <div>
+                    <div className="text-[11px] tracking-widest text-foreground/50">
+                      LAUNCH
+                    </div>
+                    <div className="mt-1 font-display text-lg">9 Aug</div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] tracking-widest text-foreground/50">
+                      VENUE
+                    </div>
+                    <div className="mt-1 font-display text-lg">
+                      Nairobi (TBD)
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] tracking-widest text-foreground/50">
+                      DURATION
+                    </div>
+                    <div className="mt-1 font-display text-lg">7 Days</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SCOREBOARD STATS */}
+          <div className="mt-14 rounded-2xl border border-white/10 bg-black/20 px-6 py-8">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
               {STATS.map((s) => (
                 <div key={s.label} className="text-center px-2">
-                  <div className="text-4xl md:text-5xl font-extrabold tabular-nums text-amber-400">
+                  <div className="font-display text-4xl md:text-5xl tabular-nums text-gradient-gold">
                     {s.value}
                   </div>
-                  <div className="mt-2 text-xs tracking-widest text-zinc-500 uppercase">{s.label}</div>
+                  <div className="mt-2 text-xs tracking-widest text-foreground/60 uppercase">
+                    {s.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -371,86 +444,93 @@ export default function EventsPagePreview() {
         </div>
       </section>
 
-      <section className="pb-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      {/* SCHEDULE */}
+      <section id="highlights" className="pb-20">
+        <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
-            <span className="text-sm text-amber-400 font-semibold tracking-wide">PROGRAMME</span>
-            <h2 className="mt-3 text-4xl font-bold">Four stages, one pass each</h2>
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              SCHEDULE
+            </span>
+            <h2 className="mt-3 font-display text-4xl">Four phases, one event</h2>
           </div>
 
-          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-12 grid sm:grid-cols-2 gap-4">
             {SCHEDULE.map((item) => (
-              <div key={item.tag} className="rounded-2xl p-5 border border-white/10 bg-white/5 flex items-start gap-4">
-                <div className="h-11 w-11 shrink-0 rounded-full border-2 border-amber-400/50 flex items-center justify-center font-bold text-sm text-amber-300">
-                  {item.tag}
-                </div>
-                <div>
-                  <div className="text-xs text-zinc-500">{item.date}</div>
-                  <div className="font-medium leading-snug">{item.title}</div>
-                </div>
+              <div
+                key={item.range}
+                className="glass rounded-2xl p-6 border border-white/10"
+              >
+                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-xs font-semibold text-accent">
+                  {item.range}
+                </span>
+                <h4 className="font-semibold text-lg mt-3">{item.title}</h4>
+                <p className="text-foreground/70 mt-1 text-sm">{item.desc}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mt-6 glass rounded-2xl p-5 border border-white/10 flex items-center gap-3">
+            <Star className="text-accent shrink-0" size={20} />
+            <p className="text-sm text-foreground/80">
+              <strong>Chief Guest:</strong> Micky Adams (England) — former
+              professional football manager and international football
+              development expert.
+            </p>
           </div>
         </div>
       </section>
 
-      <section id="tickets" className="pb-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      {/* TICKET PACKAGES */}
+      <section id="tickets" className="pb-20">
+        <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
-            <span className="text-sm text-amber-400 font-semibold tracking-wide">TICKET CATEGORIES</span>
-            <h2 className="mt-3 text-4xl font-bold">Choose your pass</h2>
-            <p className="mt-3 text-zinc-500">
-              Every pass is priced per player or guest — pick what fits, and adjust the
-              quantity when you register.
-            </p>
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              TICKET PACKAGES
+            </span>
+            <h2 className="mt-3 font-display text-4xl">Choose your ticket</h2>
           </div>
 
-          <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Object.keys(PACKAGES).map((key) => {
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
               const pkg = PACKAGES[key];
               const Icon = pkg.icon;
               return (
                 <div
                   key={key}
-                  className={`relative rounded-3xl flex flex-col border overflow-hidden p-8 transition-transform duration-300 hover:-translate-y-1 ${
-                    pkg.highlight
-                      ? "border-amber-400/40 bg-amber-400/10 shadow-xl md:-translate-y-3"
-                      : "border-white/10 bg-white/5"
-                  }`}
+                  className="relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden p-8 transition-transform duration-300 hover:-translate-y-1"
                 >
-                  {pkg.highlight && (
-                    <span className="absolute top-5 -right-9 z-10 rotate-45 bg-amber-400 px-10 py-1 text-[11px] font-bold tracking-wide text-zinc-900 shadow flex items-center gap-1 justify-center">
-                      <Star size={11} className="fill-current" /> FULL PROGRAMME
-                    </span>
-                  )}
+                  <Icon className="text-accent mb-4" size={28} />
+                  <h3 className="font-display text-2xl">{pkg.title}</h3>
+                  <p className="text-foreground/60 text-sm mt-1">
+                    {pkg.subtitle}
+                  </p>
 
-                  <Icon className="text-amber-400 mb-4" size={28} />
-                  <h3 className="text-2xl font-bold">{pkg.title}</h3>
-                  <p className="text-zinc-500 text-sm mt-1">{pkg.subtitle}</p>
-
-                  <div className="mt-6 flex items-baseline gap-1.5">
-                    <span className="text-3xl font-extrabold tabular-nums">
+                  <div className="mt-6">
+                    <span className="font-display text-3xl tabular-nums">
                       KES {pkg.price.toLocaleString()}
                     </span>
-                    <span className="text-sm text-zinc-500">/ {pkg.unit}</span>
                   </div>
 
                   <ul className="mt-6 space-y-3 flex-1">
-                    {pkg.inclusions.map((text) => (
+                    {pkg.includes.map((text) => (
                       <li key={text} className="flex items-start gap-3 text-sm">
-                        <CheckCircle className="text-amber-400 shrink-0 mt-0.5" size={16} />
-                        <span className="text-zinc-300">{text}</span>
+                        <CheckCircle
+                          className="text-accent shrink-0 mt-0.5"
+                          size={16}
+                        />
+                        <span className="text-foreground/80">{text}</span>
                       </li>
                     ))}
                   </ul>
 
-                  <Btn
-                    variant={pkg.highlight ? "solid" : "outline"}
+                  <Button
                     className="mt-8 w-full"
+                    variant="outline"
                     onClick={() => handlePackageSelect(key)}
                   >
-                    Select {pkg.title} <ArrowRight className="ml-2 h-4 w-4" />
-                  </Btn>
+                    Select {pkg.title}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
               );
             })}
@@ -458,16 +538,22 @@ export default function EventsPagePreview() {
         </div>
       </section>
 
-      <section className="pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
+      {/* FAQ */}
+      <section id="faq" className="pb-20">
+        <div className="container-pro max-w-4xl">
           <div className="text-center">
-            <span className="text-sm text-amber-400 font-semibold tracking-wide">FAQ</span>
-            <h2 className="mt-3 text-4xl font-bold">Common questions</h2>
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              FAQ
+            </span>
+            <h2 className="mt-3 font-display text-4xl">Common questions</h2>
           </div>
 
           <div className="mt-10 space-y-3">
             {FAQS.map((item, i) => (
-              <div key={item.q} className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+              <div
+                key={item.q}
+                className="glass rounded-2xl border border-white/10 overflow-hidden"
+              >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -475,36 +561,63 @@ export default function EventsPagePreview() {
                 >
                   <span className="font-medium">{item.q}</span>
                   <ChevronDown
-                    className={`shrink-0 text-amber-400 transition-transform ${openFaq === i ? "rotate-180" : ""}`}
+                    className={`shrink-0 text-accent transition-transform ${
+                      openFaq === i ? "rotate-180" : ""
+                    }`}
                     size={18}
                   />
                 </button>
-                {openFaq === i && <div className="px-5 pb-5 text-zinc-400 leading-relaxed">{item.a}</div>}
+                {openFaq === i && (
+                  <div className="px-5 pb-5 text-foreground/70 leading-relaxed">
+                    {item.a}
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="pb-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-10 md:p-12">
+      {/* CONTACT / SUPPORT */}
+      <section id="contact" className="pb-24">
+        <div className="container-pro max-w-6xl">
+          <div className="glass-card rounded-3xl p-10 md:p-12">
             <div className="text-center max-w-xl mx-auto">
-              <span className="text-sm text-amber-400 font-semibold tracking-wide">SUPPORT</span>
-              <h2 className="mt-3 text-3xl font-bold">Need help?</h2>
+              <span className="text-sm text-accent font-semibold tracking-wide">
+                SUPPORT
+              </span>
+              <h2 className="mt-3 font-display text-3xl">Need help?</h2>
             </div>
+
             <div className="mt-10 grid sm:grid-cols-3 gap-5">
-              <a href="mailto:hallo@fcmetropolhp.com" className="rounded-2xl p-5 flex items-center gap-3 border border-white/10 bg-white/5">
-                <Mail className="text-amber-400" size={20} />
-                <div className="text-sm text-zinc-300">hallo@fcmetropolhp.com</div>
+              <a
+                href="mailto:hallo@fcmetropolhp.com"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+              >
+                <Mail className="text-accent" size={20} />
+                <div className="text-sm text-foreground/70">
+                  hallo@fcmetropolhp.com
+                </div>
               </a>
-              <a href="tel:+254708666576" className="rounded-2xl p-5 flex items-center gap-3 border border-white/10 bg-white/5">
-                <Phone className="text-amber-400" size={20} />
-                <div className="text-sm text-zinc-300">+254 708 666 576</div>
+              <a
+                href="tel:+254708666576"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+              >
+                <Phone className="text-accent" size={20} />
+                <div className="text-sm text-foreground/70">
+                  +254 708 666 576
+                </div>
               </a>
-              <a href="https://wa.me/254708666576" className="rounded-2xl p-5 flex items-center gap-3 border border-white/10 bg-white/5">
-                <MessageCircle className="text-amber-400" size={20} />
-                <div className="text-sm text-zinc-300">WhatsApp</div>
+              <a
+                href="https://www.fcmetropolhp.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+              >
+                <Globe className="text-accent" size={20} />
+                <div className="text-sm text-foreground/70">
+                  fcmetropolhp.com
+                </div>
               </a>
             </div>
           </div>
@@ -512,298 +625,312 @@ export default function EventsPagePreview() {
       </section>
 
       {/* REGISTRATION MODAL */}
-      {dialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setDialogOpen(false)}>
-          <div
-            className="max-w-2xl w-full max-h-[88vh] overflow-y-auto rounded-2xl bg-zinc-950 border border-white/10"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="h-1.5 w-full bg-amber-400" />
-            <div className="p-6 md:p-8">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-amber-400/10 border border-amber-400/30">
-                    <Ticket className="text-amber-400" size={20} />
-                  </span>
-                  <div>
-                    <h3 className="text-2xl font-bold">Ticket Registration</h3>
-                    <p className="text-sm text-zinc-500 mt-0.5">Pick your pass, pay via Lipa na M-Pesa, then confirm.</p>
-                  </div>
-                </div>
-                <button onClick={() => setDialogOpen(false)} className="text-zinc-500 hover:text-zinc-200">
-                  <X size={20} />
-                </button>
-              </div>
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) {
+            setError("");
+          }
+        }}
+      >
+        <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto p-0 gap-0">
+          <div className="h-1.5 w-full bg-gradient-to-r from-accent/40 via-accent to-accent/40" />
 
-              <div className="mt-8">
-                <span className="text-[11px] font-semibold tracking-widest text-zinc-500">01 · PASS</span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
-                  {Object.keys(PACKAGES).map((key) => {
-                    const pkg = PACKAGES[key];
-                    const Icon = pkg.icon;
-                    const active = packageKey === key;
-                    return (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => {
-                          setPackageKey(key);
-                          setQuantity(1);
-                        }}
-                        className={`rounded-2xl border p-4 text-center transition-all ${
-                          active ? "border-amber-400 bg-amber-400/10 scale-[1.02]" : "border-white/10 bg-zinc-900 hover:border-white/20"
+          <div className="p-6 md:p-8">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 border border-accent/30">
+                  <Ticket className="text-accent" size={20} />
+                </span>
+                <div>
+                  <DialogTitle className="font-display text-2xl">
+                    Event Registration
+                  </DialogTitle>
+                  <DialogDescription className="mt-0.5">
+                    Pick your ticket, pay via Lipa na M-Pesa, then confirm.
+                  </DialogDescription>
+                </div>
+              </div>
+            </DialogHeader>
+
+            {/* STEP 1 — Package */}
+            <div className="mt-8">
+              <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
+                01 · TICKET
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+                {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
+                  const pkg = PACKAGES[key];
+                  const Icon = pkg.icon;
+                  const active = ticketType === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setTicketType(key)}
+                      className={`rounded-2xl border p-4 text-center transition-all ${
+                        active
+                          ? "border-accent bg-accent/10 shadow-md scale-[1.02]"
+                          : "border-white/10 bg-background hover:border-white/20"
+                      }`}
+                    >
+                      <Icon
+                        className={`mx-auto mb-1.5 ${
+                          active ? "text-accent" : "text-foreground/60"
                         }`}
-                      >
-                        <Icon className={`mx-auto mb-1.5 ${active ? "text-amber-400" : "text-zinc-500"}`} size={20} />
-                        <div className="text-xs font-medium">{pkg.title}</div>
-                        <div className="text-[11px] text-zinc-500 mt-0.5">
-                          KES {pkg.price.toLocaleString()} / {pkg.unit}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {!selectedPackage.fixedQty && (
-                  <div className="mt-4">
-                    <QuantityStepper
-                      value={quantity}
-                      onChange={setQuantity}
-                      min={selectedPackage.minQty}
-                      max={selectedPackage.maxQty}
-                      unit={selectedPackage.unit}
-                    />
-                  </div>
-                )}
-
-                {packageKey === "corporate" && (
-                  <div className="mt-4">
-                    <IconField icon={Building2}>
-                      <input
-                        type="text"
-                        name="companyName"
-                        value={form.companyName}
-                        onChange={handleChange}
-                        className="w-full rounded-xl border border-white/10 bg-zinc-900 pl-11 pr-4 py-3 outline-none focus:border-amber-400"
-                        placeholder="Company name"
+                        size={20}
                       />
-                    </IconField>
-                    {touched && !form.companyName.trim() && (
-                      <p className="mt-1.5 text-xs text-red-400">Company name is required for a Corporate Table.</p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-8">
-                <span className="text-[11px] font-semibold tracking-widest text-zinc-500">02 · PAY</span>
-                <div className="mt-3 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-5">
-                  <div className="flex items-center justify-between flex-wrap gap-3">
-                    <div className="flex items-center gap-2">
-                      <Smartphone className="text-amber-400" size={18} />
-                      <strong className="text-sm">Lipa na M-Pesa</strong>
-                    </div>
-                    <div className="text-sm">
-                      <span className="text-zinc-400">Till Number </span>
-                      <strong>{TILL_NUMBER}</strong>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 rounded-xl bg-black/30 px-4 py-3 text-sm flex items-center justify-between flex-wrap gap-2">
-                    <span className="text-zinc-400">
-                      {selectedPackage.title}
-                      {!selectedPackage.fixedQty && ` × ${effectiveQty}`}
-                    </span>
-                    <strong className="text-amber-300 text-base">KES {amount.toLocaleString()}</strong>
-                  </div>
-
-                  <ul className="mt-4 space-y-2.5">
-                    {PAY_STEPS.map((step, i) => (
-                      <li key={step} className="flex items-start gap-3 text-sm">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-400/20 text-[11px] font-semibold text-amber-300">
-                          {i + 1}
-                        </span>
-                        <span className="text-zinc-300">{step}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <span className="text-[11px] font-semibold tracking-widest text-zinc-500">03 · YOUR DETAILS</span>
-
-                <div className="mt-3 space-y-4">
-                  <div>
-                    <IconField icon={User}>
-                      <input
-                        type="text"
-                        name="fullName"
-                        value={form.fullName}
-                        onChange={handleChange}
-                        className="w-full rounded-xl border border-white/10 bg-zinc-900 pl-11 pr-4 py-3 outline-none focus:border-amber-400"
-                        placeholder="Full name"
-                      />
-                    </IconField>
-                    {touched && !form.fullName.trim() && <p className="mt-1 text-xs text-red-400">Full name is required.</p>}
-                  </div>
-
-                  <div>
-                    <IconField icon={Mail}>
-                      <input
-                        type="email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        className="w-full rounded-xl border border-white/10 bg-zinc-900 pl-11 pr-4 py-3 outline-none focus:border-amber-400"
-                        placeholder="Email address"
-                      />
-                    </IconField>
-                    {touched && !form.email.trim() && <p className="mt-1 text-xs text-red-400">Email is required.</p>}
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <IconField icon={Phone}>
-                        <input
-                          type="tel"
-                          name="phone"
-                          value={form.phone}
-                          onChange={handleChange}
-                          className="w-full rounded-xl border border-white/10 bg-zinc-900 pl-11 pr-4 py-3 outline-none focus:border-amber-400"
-                          placeholder="+2547..."
-                        />
-                      </IconField>
-                      {touched && !form.phone.trim() && <p className="mt-1 text-xs text-red-400">Phone is required.</p>}
-                    </div>
-                    <div>
-                      <IconField icon={MapPin}>
-                        <input
-                          type="text"
-                          name="country"
-                          value={form.country}
-                          onChange={handleChange}
-                          className="w-full rounded-xl border border-white/10 bg-zinc-900 pl-11 pr-4 py-3 outline-none focus:border-amber-400"
-                          placeholder="Country"
-                        />
-                      </IconField>
-                      {touched && !form.country.trim() && <p className="mt-1 text-xs text-red-400">Country is required.</p>}
-                    </div>
-                  </div>
-
-                  <textarea
-                    rows={2}
-                    name="notes"
-                    value={form.notes}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-white/10 bg-zinc-900 px-4 py-3 outline-none resize-none focus:border-amber-400"
-                    placeholder="Additional notes (optional)"
-                  />
-
-                  <div>
-                    <IconField icon={Receipt}>
-                      <input
-                        type="text"
-                        name="transactionCode"
-                        value={form.transactionCode}
-                        onChange={handleChange}
-                        placeholder="M-Pesa transaction code, e.g. UG45CA77YR"
-                        className="w-full rounded-xl border border-white/10 bg-zinc-900 pl-11 pr-4 py-3 outline-none focus:border-amber-400"
-                      />
-                    </IconField>
-                    <p className="mt-1.5 text-xs text-zinc-500">
-                      The code at the start of your M-Pesa confirmation SMS, e.g. "UG45CA77YR Confirmed..."
-                    </p>
-                    {touched && !form.transactionCode.trim() && (
-                      <p className="mt-1 text-xs text-red-400">Transaction code is required.</p>
-                    )}
-                  </div>
-                </div>
-
-                {error && (
-                  <div className="mt-5 rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-400 flex items-start gap-2">
-                    <X size={18} className="shrink-0 mt-0.5" />
-                    <span>{error}</span>
-                  </div>
-                )}
-
-                {success && (
-                  <div className="mt-5 rounded-xl bg-green-500/10 border border-green-500/20 p-4">
-                    <div className="flex gap-2 items-start text-green-400">
-                      <CheckCircle size={18} className="shrink-0 mt-0.5" />
-                      <span>{success}</span>
-                    </div>
-                  </div>
-                )}
-
-                <Btn className="w-full mt-6" onClick={handleReview}>
-                  Review &amp; Confirm Payment <ArrowRight className="ml-2 h-4 w-4" />
-                </Btn>
+                      <div className="text-xs font-medium">{pkg.title}</div>
+                      <div className="text-[11px] text-foreground/50 mt-0.5">
+                        KES {pkg.price.toLocaleString()}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* PAYMENT CONFIRMATION POPUP */}
-      {confirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="max-w-md w-full rounded-2xl bg-zinc-950 border border-white/10">
-            <div className="h-1.5 w-full bg-amber-400" />
-            <div className="p-6 md:p-8">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-amber-400/10 border border-amber-400/30">
-                  <ShieldAlert className="text-amber-400" size={20} />
-                </span>
-                <h3 className="text-xl font-bold">Confirm Your Payment</h3>
-              </div>
+            {/* STEP 2 — Pay */}
+            <div className="mt-8">
+              <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
+                02 · PAY
+              </span>
+              <div className="mt-3 rounded-2xl border border-accent/30 bg-accent/10 p-5">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="text-accent" size={18} />
+                    <strong className="text-sm">Lipa na M-Pesa</strong>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-foreground/60">Till Number </span>
+                    <strong>{TILL_NUMBER}</strong>
+                  </div>
+                </div>
 
-              <p className="mt-4 text-sm text-zinc-400">
-                Please double-check the details below before we submit your registration.
-              </p>
-
-              <div className="mt-4 rounded-xl border border-white/10 bg-black/30 divide-y divide-white/10 text-sm">
-                <div className="flex justify-between px-4 py-3">
-                  <span className="text-zinc-400">Pass</span>
-                  <strong>
-                    {selectedPackage.title}
-                    {!selectedPackage.fixedQty && ` × ${effectiveQty}`}
+                <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
+                  <span className="text-foreground/60">Amount to pay </span>
+                  <strong className="text-accent">
+                    KES {amount.toLocaleString()}
                   </strong>
                 </div>
-                <div className="flex justify-between px-4 py-3">
-                  <span className="text-zinc-400">Amount</span>
-                  <strong className="text-amber-300">KES {amount.toLocaleString()}</strong>
-                </div>
-                <div className="flex justify-between px-4 py-3">
-                  <span className="text-zinc-400">Transaction Code</span>
-                  <strong>{form.transactionCode || "—"}</strong>
-                </div>
-              </div>
 
-              <label className="mt-5 flex items-start gap-3 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={confirmChecked}
-                  onChange={(e) => setConfirmChecked(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-white/20"
-                />
-                <span className="text-sm text-zinc-300">
-                  I confirm I have completed this M-Pesa payment and the transaction code above is correct.
-                </span>
-              </label>
-
-              <div className="mt-6 flex gap-3">
-                <Btn variant="outline" className="flex-1" disabled={loading} onClick={() => setConfirmOpen(false)}>
-                  Go Back
-                </Btn>
-                <Btn className="flex-1" disabled={!confirmChecked || loading} onClick={submitRegistration}>
-                  {loading ? "Submitting..." : "Confirm & Reserve"}
-                </Btn>
+                <ul className="mt-4 space-y-2.5">
+                  {PAY_STEPS.map((step, i) => (
+                    <li key={step} className="flex items-start gap-3 text-sm">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/20 text-[11px] font-semibold text-accent">
+                        {i + 1}
+                      </span>
+                      <span className="text-foreground/80">{step}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
+
+            {/* STEP 3 — Details */}
+            <form onSubmit={handleFormSubmit} className="mt-8">
+              <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
+                03 · YOUR DETAILS
+              </span>
+
+              <div className="mt-3 space-y-4">
+                <IconField icon={User}>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={form.fullName}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                    placeholder={isPlayerTicket ? "Player full name" : "Full name"}
+                  />
+                </IconField>
+
+                <IconField icon={Mail}>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                    placeholder="Email address"
+                  />
+                </IconField>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <IconField icon={Phone}>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder="+2547..."
+                    />
+                  </IconField>
+
+                  <IconField icon={MapPin}>
+                    <input
+                      type="text"
+                      name="country"
+                      value={form.country}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder="Country"
+                    />
+                  </IconField>
+                </div>
+
+                {ticketType === "CorporateTable" && (
+                  <IconField icon={Building2}>
+                    <input
+                      type="text"
+                      name="companyName"
+                      value={form.companyName}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder="Company name"
+                    />
+                  </IconField>
+                )}
+
+                <textarea
+                  rows={2}
+                  name="notes"
+                  value={form.notes}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-white/10 bg-background px-4 py-3 outline-none resize-none focus:border-accent"
+                  placeholder="Additional notes (optional)"
+                />
+
+                {/* Transaction code is the last field, deliberately */}
+                <div>
+                  <IconField icon={Receipt}>
+                    <input
+                      type="text"
+                      name="transactionCode"
+                      value={form.transactionCode}
+                      onChange={handleChange}
+                      required
+                      placeholder="M-Pesa transaction code, e.g. UG45CA77YR"
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                    />
+                  </IconField>
+                  <p className="mt-1.5 text-xs text-foreground/50">
+                    The code at the start of your M-Pesa confirmation SMS,
+                    e.g. "UG45CA77YR Confirmed..."
+                  </p>
+                </div>
+              </div>
+
+              {error && (
+                <div className="mt-5 rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-400 flex items-start gap-2">
+                  <X size={18} className="shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {success && (
+                <div className="mt-5 rounded-xl bg-green-500/10 border border-green-500/20 p-4">
+                  <div className="flex gap-2 items-start text-green-400">
+                    <CheckCircle size={18} className="shrink-0 mt-0.5" />
+                    <span>{success}</span>
+                  </div>
+                </div>
+              )}
+
+              <Button type="submit" size="lg" className="w-full mt-6">
+                Review &amp; Confirm Payment
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
           </div>
-        </div>
-      )}
-    </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* PAYMENT CONFIRMATION POPUP */}
+      <Dialog
+        open={confirmOpen}
+        onOpenChange={(open) => {
+          if (!loading) setConfirmOpen(open);
+        }}
+      >
+        <DialogContent className="max-w-md p-0 gap-0">
+          <div className="h-1.5 w-full bg-gradient-to-r from-accent/40 via-accent to-accent/40" />
+          <div className="p-6 md:p-8">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 border border-accent/30">
+                <ShieldAlert className="text-accent" size={20} />
+              </span>
+              <DialogTitle className="font-display text-xl">
+                Confirm Your Payment
+              </DialogTitle>
+            </div>
+
+            <p className="mt-4 text-sm text-foreground/70">
+              Please double-check the details below before we submit your
+              registration.
+            </p>
+
+            <div className="mt-4 rounded-xl border border-white/10 bg-background/60 divide-y divide-white/10 text-sm">
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-foreground/60">Ticket</span>
+                <strong>{selectedPackage.title}</strong>
+              </div>
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-foreground/60">Amount</span>
+                <strong className="text-accent">
+                  KES {amount.toLocaleString()}
+                </strong>
+              </div>
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-foreground/60">Transaction Code</span>
+                <strong>{form.transactionCode || "—"}</strong>
+              </div>
+            </div>
+
+            <label className="mt-5 flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={confirmChecked}
+                onChange={(e) => setConfirmChecked(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-white/20 accent-current text-accent"
+              />
+              <span className="text-sm text-foreground/80">
+                I confirm I have completed this M-Pesa payment and the
+                transaction code above is correct.
+              </span>
+            </label>
+
+            <div className="mt-6 flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                disabled={loading}
+                onClick={() => setConfirmOpen(false)}
+              >
+                Go Back
+              </Button>
+              <Button
+                type="button"
+                className="flex-1"
+                disabled={!confirmChecked || loading}
+                onClick={submitRegistration}
+              >
+                {loading ? "Submitting..." : "Confirm & Reserve"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
-}
+};
+
+export default EventsPage;
