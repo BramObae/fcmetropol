@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SEO } from "@/components/SEO";
 import {
   registerAttendee,
@@ -29,6 +29,7 @@ import {
   Receipt,
   ShieldAlert,
   X,
+  Timer,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ import {
 
 const featuredImage = "/event1.jpeg";
 const TILL_NUMBER = "000000";
+const KICKOFF = new Date("2026-08-09T00:00:00+03:00");
 
 /* ------------------------------------------------------------------ */
 /* Package configuration                                              */
@@ -55,6 +57,7 @@ const PACKAGES: Record<
   TicketType,
   {
     title: string;
+    tag: string;
     subtitle: string;
     price: number;
     icon: typeof User;
@@ -63,6 +66,7 @@ const PACKAGES: Record<
 > = {
   Dinner: {
     title: "Launch Dinner",
+    tag: "GALA",
     subtitle: "Per person · 9 Aug",
     price: getTicketAmount("Dinner"),
     icon: Utensils,
@@ -75,6 +79,7 @@ const PACKAGES: Record<
   },
   CorporateTable: {
     title: "Corporate Table",
+    tag: "TABLE OF 10",
     subtitle: "Table of 10 · 9 Aug",
     price: getTicketAmount("CorporateTable"),
     icon: Users,
@@ -87,6 +92,7 @@ const PACKAGES: Record<
   },
   OpenPlay: {
     title: "Open Play",
+    tag: "SCOUTING",
     subtitle: "Per player · 10–11 Aug",
     price: getTicketAmount("OpenPlay"),
     icon: Target,
@@ -99,6 +105,7 @@ const PACKAGES: Record<
   },
   Workshop: {
     title: "Workshop",
+    tag: "DEVELOPMENT",
     subtitle: "Per player · 12–14 Aug",
     price: getTicketAmount("Workshop"),
     icon: GraduationCap,
@@ -111,6 +118,7 @@ const PACKAGES: Record<
   },
   OpenPlayWorkshop: {
     title: "Open Play + Workshop",
+    tag: "FULL PROGRAMME",
     subtitle: "Per player · 10–14 Aug",
     price: getTicketAmount("OpenPlayWorkshop"),
     icon: Layers,
@@ -191,6 +199,26 @@ const TicketSeam = ({ className = "" }: { className?: string }) => (
   </div>
 );
 
+/* Pitch-marking divider — a shallow chevron pair, like the halfway-line
+   arc seen from a broadcast camera. Used between sections instead of a
+   plain rule so the "field" motif carries through the page. */
+const PitchDivider = () => (
+  <div className="flex items-center justify-center gap-2 py-2" aria-hidden="true">
+    <span className="h-px w-16 bg-white/10" />
+    <svg width="22" height="14" viewBox="0 0 22 14" className="text-accent/60">
+      <path
+        d="M1 1 L11 13 L21 1"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+    <span className="h-px w-16 bg-white/10" />
+  </div>
+);
+
 /* Premium icon-prefixed input wrapper used throughout the registration form. */
 const IconField = ({
   icon: Icon,
@@ -208,6 +236,26 @@ const IconField = ({
   </div>
 );
 
+/* Countdown to kickoff (9 Aug 2026). Ticks client-side once per second;
+   used both in the sticky bar (compact) and the hero (full scoreboard). */
+function useCountdown(target: Date) {
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return useMemo(() => {
+    const diff = Math.max(0, target.getTime() - now);
+    const days = Math.floor(diff / 86_400_000);
+    const hours = Math.floor((diff % 86_400_000) / 3_600_000);
+    const minutes = Math.floor((diff % 3_600_000) / 60_000);
+    const seconds = Math.floor((diff % 60_000) / 1000);
+    return { days, hours, minutes, seconds, done: diff === 0 };
+  }, [now, target]);
+}
+
 const EventsPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -216,6 +264,7 @@ const EventsPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const [ticketType, setTicketType] = useState<TicketType>("Dinner");
+  const countdown = useCountdown(KICKOFF);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -332,19 +381,42 @@ const EventsPage = () => {
 
       {/* STICKY REGISTRATION BAR */}
       <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
-        <div className="container-pro max-w-6xl flex items-center justify-between py-3">
+        <div className="container-pro max-w-6xl flex items-center justify-between gap-3 py-3">
           <span className="font-display text-sm md:text-base truncate">
             Metropol Open Play Kenya 2026
           </span>
-          <Button onClick={() => setDialogOpen(true)}>
-            Register Now
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+
+          <div className="flex items-center gap-3">
+            {!countdown.done && (
+              <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs tabular-nums">
+                <Timer size={13} className="text-accent" />
+                <span>
+                  {countdown.days}d {String(countdown.hours).padStart(2, "0")}h{" "}
+                  {String(countdown.minutes).padStart(2, "0")}m to kickoff
+                </span>
+              </div>
+            )}
+            <Button onClick={() => setDialogOpen(true)}>
+              Register Now
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* HERO */}
-      <section className="pt-16 pb-16">
+      <section className="relative pt-16 pb-16 overflow-hidden">
+        {/* Floodlight glow — two soft radial washes, ambient not animated,
+            evoking a pitch lit for a night match without being loud. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(600px 300px at 15% 0%, rgba(227,167,60,0.10), transparent 60%), radial-gradient(600px 300px at 85% 10%, rgba(227,167,60,0.08), transparent 60%)",
+          }}
+        />
+
         <div className="container-pro max-w-6xl">
           <div className="text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-5 py-2 text-sm">
@@ -426,26 +498,50 @@ const EventsPage = () => {
             </div>
           </div>
 
-          {/* SCOREBOARD STATS */}
+          {/* SCOREBOARD — stats on the left, live countdown on the right */}
           <div className="mt-14 rounded-2xl border border-white/10 bg-black/20 px-6 py-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-              {STATS.map((s) => (
-                <div key={s.label} className="text-center px-2">
-                  <div className="font-display text-4xl md:text-5xl tabular-nums text-gradient-gold">
-                    {s.value}
+            <div className="grid gap-8 lg:grid-cols-[1fr_auto]">
+              <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+                {STATS.map((s) => (
+                  <div key={s.label} className="text-center px-2">
+                    <div className="font-display text-4xl md:text-5xl tabular-nums text-gradient-gold">
+                      {s.value}
+                    </div>
+                    <div className="mt-2 text-xs tracking-widest text-foreground/60 uppercase">
+                      {s.label}
+                    </div>
                   </div>
-                  <div className="mt-2 text-xs tracking-widest text-foreground/60 uppercase">
-                    {s.label}
-                  </div>
+                ))}
+              </div>
+
+              {!countdown.done && (
+                <div className="flex items-center justify-center gap-4 border-t border-white/10 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+                  {[
+                    { label: "DAYS", value: countdown.days },
+                    { label: "HRS", value: countdown.hours },
+                    { label: "MIN", value: countdown.minutes },
+                    { label: "SEC", value: countdown.seconds },
+                  ].map((unit) => (
+                    <div key={unit.label} className="text-center">
+                      <div className="font-display text-3xl tabular-nums w-14">
+                        {String(unit.value).padStart(2, "0")}
+                      </div>
+                      <div className="mt-1 text-[10px] tracking-widest text-foreground/50">
+                        {unit.label}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
       </section>
 
+      <PitchDivider />
+
       {/* SCHEDULE */}
-      <section id="highlights" className="pb-20">
+      <section id="highlights" className="py-20">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -458,9 +554,9 @@ const EventsPage = () => {
             {SCHEDULE.map((item) => (
               <div
                 key={item.range}
-                className="glass rounded-2xl p-6 border border-white/10"
+                className="glass rounded-2xl p-6 border border-white/10 transition-colors hover:border-accent/30"
               >
-                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-xs font-semibold text-accent">
+                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-xs font-semibold text-accent tabular-nums">
                   {item.range}
                 </span>
                 <h4 className="font-semibold text-lg mt-3">{item.title}</h4>
@@ -480,8 +576,12 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* TICKET PACKAGES */}
-      <section id="tickets" className="pb-20">
+      <PitchDivider />
+
+      {/* TICKET PACKAGES — styled as match-programme cards: a corner tag
+          instead of a plain heading, and a foil price strip instead of a
+          bare number, so the pricing grid reads like the event itself. */}
+      <section id="tickets" className="py-20">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -497,21 +597,31 @@ const EventsPage = () => {
               return (
                 <div
                   key={key}
-                  className="relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden p-8 transition-transform duration-300 hover:-translate-y-1"
+                  className="group relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.25),0_20px_40px_-20px_rgba(0,0,0,0.6)]"
                 >
-                  <Icon className="text-accent mb-4" size={28} />
-                  <h3 className="font-display text-2xl">{pkg.title}</h3>
-                  <p className="text-foreground/60 text-sm mt-1">
-                    {pkg.subtitle}
-                  </p>
+                  {/* corner tag */}
+                  <div className="flex items-center justify-between px-6 pt-6">
+                    <span className="rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-foreground/60">
+                      {pkg.tag}
+                    </span>
+                    <Icon className="text-accent" size={22} />
+                  </div>
 
-                  <div className="mt-6">
-                    <span className="font-display text-3xl tabular-nums">
+                  <div className="px-8 pt-4">
+                    <h3 className="font-display text-2xl">{pkg.title}</h3>
+                    <p className="text-foreground/60 text-sm mt-1">
+                      {pkg.subtitle}
+                    </p>
+                  </div>
+
+                  {/* foil price strip */}
+                  <div className="mx-6 mt-6 rounded-xl border border-accent/20 bg-accent/10 px-4 py-3">
+                    <span className="font-display text-3xl tabular-nums text-gradient-gold">
                       KES {pkg.price.toLocaleString()}
                     </span>
                   </div>
 
-                  <ul className="mt-6 space-y-3 flex-1">
+                  <ul className="mt-6 space-y-3 flex-1 px-8">
                     {pkg.includes.map((text) => (
                       <li key={text} className="flex items-start gap-3 text-sm">
                         <CheckCircle
@@ -523,14 +633,16 @@ const EventsPage = () => {
                     ))}
                   </ul>
 
-                  <Button
-                    className="mt-8 w-full"
-                    variant="outline"
-                    onClick={() => handlePackageSelect(key)}
-                  >
-                    Select {pkg.title}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  <div className="p-8 pt-8">
+                    <Button
+                      className="w-full"
+                      variant="outline"
+                      onClick={() => handlePackageSelect(key)}
+                    >
+                      Select {pkg.title}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               );
             })}
@@ -538,8 +650,10 @@ const EventsPage = () => {
         </div>
       </section>
 
+      <PitchDivider />
+
       {/* FAQ */}
-      <section id="faq" className="pb-20">
+      <section id="faq" className="py-20">
         <div className="container-pro max-w-4xl">
           <div className="text-center">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -558,6 +672,7 @@ const EventsPage = () => {
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                  aria-expanded={openFaq === i}
                 >
                   <span className="font-medium">{item.q}</span>
                   <ChevronDown
@@ -592,7 +707,7 @@ const EventsPage = () => {
             <div className="mt-10 grid sm:grid-cols-3 gap-5">
               <a
                 href="mailto:hallo@fcmetropolhp.com"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
               >
                 <Mail className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
@@ -601,7 +716,7 @@ const EventsPage = () => {
               </a>
               <a
                 href="tel:+254708666576"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
               >
                 <Phone className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
@@ -612,7 +727,7 @@ const EventsPage = () => {
                 href="https://www.fcmetropolhp.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
               >
                 <Globe className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
@@ -682,7 +797,7 @@ const EventsPage = () => {
                         size={20}
                       />
                       <div className="text-xs font-medium">{pkg.title}</div>
-                      <div className="text-[11px] text-foreground/50 mt-0.5">
+                      <div className="text-[11px] text-foreground/50 mt-0.5 tabular-nums">
                         KES {pkg.price.toLocaleString()}
                       </div>
                     </button>
@@ -710,7 +825,7 @@ const EventsPage = () => {
 
                 <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
                   <span className="text-foreground/60">Amount to pay </span>
-                  <strong className="text-accent">
+                  <strong className="text-accent tabular-nums">
                     KES {amount.toLocaleString()}
                   </strong>
                 </div>
@@ -884,7 +999,7 @@ const EventsPage = () => {
               </div>
               <div className="flex justify-between px-4 py-3">
                 <span className="text-foreground/60">Amount</span>
-                <strong className="text-accent">
+                <strong className="text-accent tabular-nums">
                   KES {amount.toLocaleString()}
                 </strong>
               </div>
