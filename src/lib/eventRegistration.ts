@@ -1,9 +1,9 @@
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwQuY20HTQfE9i28Hjoh0a5qTyZn5d5ysp4po1NbiKK38q-tDI79QZ4-Lthz8U3oFQUEw/exec";
 
-// Matches the five real ticket categories from the event proposal:
-// Launch Dinner, Corporate Table (10 seats, fixed package price),
-// Open Play, Workshop, and the Open Play + Workshop combo.
+// Matches the five real ticket categories for Metropol Open Play Kenya
+// 2026: Launch Dinner, Corporate Table (10-seat table), Open Play,
+// Workshop, and the Open Play + Workshop combo.
 export type TicketType =
   | "Dinner"
   | "CorporateTable"
@@ -20,9 +20,6 @@ export interface RegistrationData {
   transactionCode: string;
   mpesaMessage?: string;
   companyName?: string;
-  // Total amount actually charged. All current packages are fixed
-  // price via getTicketAmount(), but the page always passes it
-  // explicitly so a future custom-amount package needs no changes here.
   amount?: number;
   notes?: string;
 }
@@ -33,7 +30,7 @@ export interface RegistrationResponse {
   error?: string;
 }
 
-// Fixed prices for every package.
+// Fixed prices per package.
 export function getTicketAmount(ticket: TicketType) {
   switch (ticket) {
     case "Dinner":
@@ -51,7 +48,9 @@ export function getTicketAmount(ticket: TicketType) {
   }
 }
 
-// Backend (Apps Script / Sheet) expects lowercase, snake_case ticket codes.
+// Backend (Apps Script / Sheet) expects these exact snake_case codes,
+// see TICKET_PACKAGES in the Apps Script file. Keep this mapping in
+// sync with that file if either side's keys ever change.
 const BACKEND_TICKET_CODE: Record<TicketType, string> = {
   Dinner: "dinner",
   CorporateTable: "corporate_table",
