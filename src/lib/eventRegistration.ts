@@ -1,9 +1,15 @@
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwQuY20HTQfE9i28Hjoh0a5qTyZn5d5ysp4po1NbiKK38q-tDI79QZ4-Lthz8U3oFQUEw/exec";
 
-// Matches the three real ticket categories: Individual, Corporate (10
-// delegates, fixed package price), and Sponsor (custom partnership amount).
-export type TicketType = "Individual" | "Corporate" | "Sponsor";
+// Matches the five real ticket categories from the event proposal:
+// Launch Dinner, Corporate Table (10 seats, fixed package price),
+// Open Play, Workshop, and the Open Play + Workshop combo.
+export type TicketType =
+  | "Dinner"
+  | "CorporateTable"
+  | "OpenPlay"
+  | "Workshop"
+  | "OpenPlayWorkshop";
 
 export interface RegistrationData {
   fullName: string;
@@ -14,8 +20,9 @@ export interface RegistrationData {
   transactionCode: string;
   mpesaMessage?: string;
   companyName?: string;
-  // Total amount actually charged. Required for Sponsor (custom amount);
-  // for Individual/Corporate the page passes getTicketAmount() explicitly.
+  // Total amount actually charged. All current packages are fixed
+  // price via getTicketAmount(), but the page always passes it
+  // explicitly so a future custom-amount package needs no changes here.
   amount?: number;
   notes?: string;
 }
@@ -26,27 +33,31 @@ export interface RegistrationResponse {
   error?: string;
 }
 
-// Fixed prices. Sponsor has no fixed price — it's a custom partnership
-// amount collected on the form — so it returns 0 here as a safe default
-// only; the page always supplies the real amount explicitly for Sponsor.
+// Fixed prices for every package.
 export function getTicketAmount(ticket: TicketType) {
   switch (ticket) {
-    case "Individual":
+    case "Dinner":
       return 5000;
-    case "Corporate":
-      return 40000;
-    case "Sponsor":
-      return 0;
+    case "CorporateTable":
+      return 100000;
+    case "OpenPlay":
+      return 5000;
+    case "Workshop":
+      return 10000;
+    case "OpenPlayWorkshop":
+      return 15000;
     default:
       return 0;
   }
 }
 
-// Backend (Apps Script / Sheet) expects lowercase ticket codes.
+// Backend (Apps Script / Sheet) expects lowercase, snake_case ticket codes.
 const BACKEND_TICKET_CODE: Record<TicketType, string> = {
-  Individual: "individual",
-  Corporate: "corporate",
-  Sponsor: "sponsor",
+  Dinner: "dinner",
+  CorporateTable: "corporate_table",
+  OpenPlay: "open_play",
+  Workshop: "workshop",
+  OpenPlayWorkshop: "open_play_workshop",
 };
 
 export async function registerAttendee(
