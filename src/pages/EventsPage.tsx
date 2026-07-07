@@ -66,9 +66,9 @@ const PACKAGES: Record<
   }
 > = {
   Dinner: {
-    title: "Launch Dinner",
+    title: "Dinner Launch",
     tag: "GALA",
-    subtitle: "Per person, 9 Aug",
+    subtitle: "5,000 per person, 9 Aug",
     venue: "Weston Hotel",
     price: getTicketAmount("Dinner"),
     icon: Utensils,
@@ -81,8 +81,8 @@ const PACKAGES: Record<
   },
   CorporateTable: {
     title: "Corporate Table",
-    tag: "TABLE OF 10",
-    subtitle: "Table of 10, 9 Aug",
+    tag: "10 PAX",
+    subtitle: "100,000 per table, 9 Aug",
     venue: "Weston Hotel",
     price: getTicketAmount("CorporateTable"),
     icon: Users,
@@ -94,9 +94,9 @@ const PACKAGES: Record<
     ],
   },
   OpenPlay: {
-    title: "Open Play",
+    title: "Metropol Open Play",
     tag: "SCOUTING",
-    subtitle: "Per player, 10 to 11 Aug",
+    subtitle: "5,000 per pax, 10 to 11 Aug",
     venue: "Jaffery Sports Club",
     price: getTicketAmount("OpenPlay"),
     icon: Target,
@@ -108,9 +108,9 @@ const PACKAGES: Record<
     ],
   },
   Workshop: {
-    title: "Workshop",
+    title: "Metropol Workshop",
     tag: "DEVELOPMENT",
-    subtitle: "Per player, 12 to 14 Aug",
+    subtitle: "10,000 per pax, 12 to 14 Aug",
     venue: "Jaffery Sports Club",
     price: getTicketAmount("Workshop"),
     icon: GraduationCap,
@@ -122,9 +122,9 @@ const PACKAGES: Record<
     ],
   },
   OpenPlayWorkshop: {
-    title: "Open Play + Workshop",
+    title: "Open Play & Workshop",
     tag: "FULL PROGRAMME",
-    subtitle: "Per player, 10 to 14 Aug",
+    subtitle: "15,000 per pax, 10 to 14 Aug",
     venue: "Jaffery Sports Club",
     price: getTicketAmount("OpenPlayWorkshop"),
     icon: Layers,
@@ -453,9 +453,110 @@ const EventsPage = () => {
               , pay with Lipa na M-Pesa
             </p>
           </div>
+        </div>
+      </section>
 
-          {/* POSTER */}
-          <div className="mt-12 flex justify-center">
+      {/* TICKET PACKAGES, the primary decision on the page, so it leads
+          right after the headline. Each card reads like a premium
+          match-day pass: a gold foil price strip, a corner category tag,
+          and a ticket-stub perforation at the base tying it back to the
+          event's overall ticket motif. */}
+      <section id="tickets" className="py-20">
+        <div className="container-pro max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              TICKET PACKAGES
+            </span>
+            <h2 className="mt-3 font-display text-4xl">Choose your ticket</h2>
+            <p className="mt-3 text-foreground/60 text-sm">
+              Five ways to be part of Metropol Open Play Kenya 2026.
+            </p>
+          </div>
+
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
+              const pkg = PACKAGES[key];
+              const Icon = pkg.icon;
+              return (
+                <div
+                  key={key}
+                  className="group relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.3),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
+                >
+                  {/* thin gold rule across the top, a quiet premium cue
+                      shared by every card regardless of tag */}
+                  <div className="h-1 w-full bg-gradient-to-r from-accent/30 via-accent to-accent/30" />
+
+                  <div className="flex items-center justify-between px-6 pt-6">
+                    <span className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-accent">
+                      {pkg.tag}
+                    </span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 border border-accent/20">
+                      <Icon className="text-accent" size={18} />
+                    </span>
+                  </div>
+
+                  <div className="px-8 pt-5">
+                    <h3 className="font-display text-2xl">{pkg.title}</h3>
+                    <p className="text-foreground/50 text-xs mt-2 flex items-center gap-1.5">
+                      <MapPin size={12} className="text-accent/70" />
+                      {pkg.venue}
+                    </p>
+                  </div>
+
+                  <div className="mx-6 mt-6 rounded-xl border border-accent/20 bg-gradient-to-br from-accent/15 to-accent/5 px-5 py-4">
+                    <p className="text-[10px] tracking-widest text-foreground/50 uppercase">
+                      {pkg.subtitle}
+                    </p>
+                    <span className="mt-1 block font-display text-3xl tabular-nums text-gradient-gold">
+                      KES {pkg.price.toLocaleString()}
+                    </span>
+                  </div>
+
+                  <ul className="mt-6 space-y-3 flex-1 px-8">
+                    {pkg.includes.map((text) => (
+                      <li key={text} className="flex items-start gap-3 text-sm">
+                        <CheckCircle
+                          className="text-accent shrink-0 mt-0.5"
+                          size={16}
+                        />
+                        <span className="text-foreground/80">{text}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="px-8 pt-8">
+                    <Button
+                      className="w-full"
+                      variant="outline"
+                      onClick={() => handlePackageSelect(key)}
+                    >
+                      Select {pkg.title}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {/* ticket-stub perforation at the base */}
+                  <div className="relative mt-8 px-6">
+                    <div className="border-t-2 border-dashed border-white/15" />
+                    <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
+                    <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
+                  </div>
+                  <div className="pb-6" />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* EVENT POSTER, moved below the tickets so the pricing decision
+          leads and the poster serves as supporting detail rather than
+          the first thing on the page. */}
+      <section className="py-20">
+        <div className="container-pro max-w-6xl">
+          <div className="flex justify-center">
             <div className="relative w-full max-w-3xl">
               <span className="absolute -top-4 -right-4 z-10 rotate-[8deg] rounded-full bg-accent px-5 py-2 text-xs font-bold tracking-wide text-background shadow-lg">
                 ADMIT ONE
@@ -532,82 +633,6 @@ const EventsPage = () => {
                 </div>
               )}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <SectionDivider />
-
-      {/* TICKET PACKAGES, moved directly under the hero since this is the
-          primary decision on the page: styled as match-programme cards
-          with a corner tag and a foil price strip. */}
-      <section id="tickets" className="py-20">
-        <div className="container-pro max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="text-sm text-accent font-semibold tracking-wide">
-              TICKET PACKAGES
-            </span>
-            <h2 className="mt-3 font-display text-4xl">Choose your ticket</h2>
-          </div>
-
-          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
-              const pkg = PACKAGES[key];
-              const Icon = pkg.icon;
-              return (
-                <div
-                  key={key}
-                  className="group relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.25),0_20px_40px_-20px_rgba(0,0,0,0.6)]"
-                >
-                  <div className="flex items-center justify-between px-6 pt-6">
-                    <span className="rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-foreground/60">
-                      {pkg.tag}
-                    </span>
-                    <Icon className="text-accent" size={22} />
-                  </div>
-
-                  <div className="px-8 pt-4">
-                    <h3 className="font-display text-2xl">{pkg.title}</h3>
-                    <p className="text-foreground/60 text-sm mt-1">
-                      {pkg.subtitle}
-                    </p>
-                    <p className="text-foreground/50 text-xs mt-1 flex items-center gap-1.5">
-                      <MapPin size={12} className="text-accent/70" />
-                      {pkg.venue}
-                    </p>
-                  </div>
-
-                  <div className="mx-6 mt-6 rounded-xl border border-accent/20 bg-accent/10 px-4 py-3">
-                    <span className="font-display text-3xl tabular-nums text-gradient-gold">
-                      KES {pkg.price.toLocaleString()}
-                    </span>
-                  </div>
-
-                  <ul className="mt-6 space-y-3 flex-1 px-8">
-                    {pkg.includes.map((text) => (
-                      <li key={text} className="flex items-start gap-3 text-sm">
-                        <CheckCircle
-                          className="text-accent shrink-0 mt-0.5"
-                          size={16}
-                        />
-                        <span className="text-foreground/80">{text}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="p-8 pt-8">
-                    <Button
-                      className="w-full"
-                      variant="outline"
-                      onClick={() => handlePackageSelect(key)}
-                    >
-                      Select {pkg.title}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </section>
