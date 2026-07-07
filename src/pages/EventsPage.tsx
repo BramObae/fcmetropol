@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SEO } from "@/components/SEO";
 import {
   registerAttendee,
@@ -21,14 +21,16 @@ import {
   GraduationCap,
   Layers,
   Star,
-  Globe,
   ChevronDown,
   Mail,
   Phone,
+  Globe,
   Building2,
   Receipt,
   ShieldAlert,
   X,
+  Timer,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -42,20 +44,22 @@ import {
 
 const featuredImage = "/event1.jpeg";
 const TILL_NUMBER = "000000";
+const KICKOFF = new Date("2026-08-09T00:00:00+03:00");
 
 /* ------------------------------------------------------------------ */
 /* Package configuration                                              */
-/* Five fixed-price ticket categories, matching the real event         */
-/* structure: Launch Dinner (9 Aug), Open Play (10–11 Aug),            */
-/* Workshops (12–14 Aug). Corporate Table and the Open Play + Workshop */
-/* combo sit alongside these. Prices come from getTicketAmount().      */
+/* Five fixed-price ticket categories: Launch Dinner (9 Aug), Corporate */
+/* Table (9 Aug, table of 10), Open Play (10-11 Aug), Workshop          */
+/* (12-14 Aug), and the Open Play + Workshop combo (10-14 Aug).         */
 /* ------------------------------------------------------------------ */
 
 const PACKAGES: Record<
   TicketType,
   {
     title: string;
+    tag: string;
     subtitle: string;
+    venue: string;
     price: number;
     icon: typeof User;
     includes: string[];
@@ -63,59 +67,69 @@ const PACKAGES: Record<
 > = {
   Dinner: {
     title: "Launch Dinner",
-    subtitle: "Per person · 9 Aug",
+    tag: "GALA",
+    subtitle: "Per person, 9 Aug",
+    venue: "Weston Hotel",
     price: getTicketAmount("Dinner"),
     icon: Utensils,
     includes: [
       "Official Launch Dinner, 9 Aug",
-      "Sports Investment & Partnership Forum",
-      "Networking with government, corporate & football leaders",
+      "Sports Investment and Partnership Forum",
+      "Networking with government, corporate and football leaders",
       "Meet Chief Guest Micky Adams (England)",
     ],
   },
   CorporateTable: {
     title: "Corporate Table",
-    subtitle: "Table of 10 · 9 Aug",
+    tag: "TABLE OF 10",
+    subtitle: "Table of 10, 9 Aug",
+    venue: "Weston Hotel",
     price: getTicketAmount("CorporateTable"),
     icon: Users,
     includes: [
       "Reserved table of 10 at the Launch Dinner",
-      "Sports Investment & Partnership Forum access",
+      "Sports Investment and Partnership Forum access",
       "Corporate recognition on the night",
       "Priority networking access",
     ],
   },
   OpenPlay: {
     title: "Open Play",
-    subtitle: "Per player · 10–11 Aug",
+    tag: "SCOUTING",
+    subtitle: "Per player, 10 to 11 Aug",
+    venue: "Jaffery Sports Club",
     price: getTicketAmount("OpenPlay"),
     icon: Target,
     includes: [
-      "Two days of talent assessment, 10–11 Aug",
-      "Assessed by international scouts & academies",
-      "Technical, tactical & athletic evaluation",
-      "For players aged 14–20",
+      "Two days of talent assessment, 10 to 11 Aug",
+      "Assessed by international scouts and academies",
+      "Technical, tactical and athletic evaluation",
+      "For players aged 14 to 20",
     ],
   },
   Workshop: {
     title: "Workshop",
-    subtitle: "Per player · 12–14 Aug",
+    tag: "DEVELOPMENT",
+    subtitle: "Per player, 12 to 14 Aug",
+    venue: "Jaffery Sports Club",
     price: getTicketAmount("Workshop"),
     icon: GraduationCap,
     includes: [
-      "Three days of elite development, 12–14 Aug",
+      "Three days of elite development, 12 to 14 Aug",
       "Led by international facilitators",
-      "Player & coach development sessions",
-      "Certificate of participation",
+      "High performance training and sports science",
+      "One on one feedback from a lead facilitator",
     ],
   },
   OpenPlayWorkshop: {
     title: "Open Play + Workshop",
-    subtitle: "Per player · 10–14 Aug",
+    tag: "FULL PROGRAMME",
+    subtitle: "Per player, 10 to 14 Aug",
+    venue: "Jaffery Sports Club",
     price: getTicketAmount("OpenPlayWorkshop"),
     icon: Layers,
     includes: [
-      "Full player programme, 10–14 Aug",
+      "Full player programme, 10 to 14 Aug",
       "Open Play talent assessment",
       "Elite player development workshops",
       "Best for players serious about scouting",
@@ -126,23 +140,23 @@ const PACKAGES: Record<
 const SCHEDULE = [
   {
     range: "09 Aug",
-    title: "Launch Dinner & Partnership Forum",
-    desc: "Official launch, with Chief Guest Micky Adams (England).",
+    title: "Launch Dinner and Partnership Forum",
+    desc: "Official launch, with Chief Guest Micky Adams (England). Weston Hotel.",
   },
   {
-    range: "10–11 Aug",
+    range: "10-11 Aug",
     title: "Open Play Talent Identification",
-    desc: "Scouting and assessment for players aged 14–20.",
+    desc: "Scouting and assessment for players aged 14 to 20. Jaffery Sports Club.",
   },
   {
-    range: "12–14 Aug",
-    title: "Elite Player & Coach Workshops",
-    desc: "International development sessions for players and coaches.",
+    range: "12-14 Aug",
+    title: "Elite Player and Coach Workshops",
+    desc: "International development sessions for players and coaches. Jaffery Sports Club.",
   },
   {
     range: "15 Aug",
-    title: "Showcase Match & Closing Ceremony",
-    desc: "PWD curtain-raiser, international showcase match, awards.",
+    title: "Showcase Match and Closing Ceremony",
+    desc: "PWD curtain raiser, international showcase match, awards.",
   },
 ];
 
@@ -165,15 +179,19 @@ const PAY_STEPS = [
 const FAQS = [
   {
     q: "How do I pay?",
-    a: `Lipa na M-Pesa, Buy Goods, Till Number ${TILL_NUMBER}. Full steps are shown in the registration form. Enter the M-Pesa transaction code you receive when you register.`,
+    a: `Lipa na M-Pesa, Buy Goods, Till Number ${TILL_NUMBER}. Full steps are shown in the registration form. Enter the exact M-Pesa confirmation code from your payment message when you register.`,
   },
   {
     q: "What's the difference between Open Play, Workshop and the combo?",
-    a: "Open Play (10–11 Aug) is the scouting and talent assessment. Workshop (12–14 Aug) is the elite player and coach development sessions. The combo covers both, 10–14 Aug.",
+    a: "Open Play (10 to 11 Aug) is the scouting and talent assessment. Workshop (12 to 14 Aug) is the elite player and coach development sessions. The combo covers both, 10 to 14 Aug. Both run at Jaffery Sports Club.",
   },
   {
     q: "How does the Corporate Table work?",
-    a: "It reserves a table of 10 at the Launch Dinner under one registration. Add your company name on the form.",
+    a: "It reserves a table of 10 at the Launch Dinner at Weston Hotel, under one registration. Add your company name on the form.",
+  },
+  {
+    q: "Why does my name need to match the M-Pesa payment?",
+    a: "We verify each registration against the M-Pesa payment used to pay for it. If the name on your registration doesn't match the name on the M-Pesa line that made the payment, we may not be able to confirm your ticket without contacting you directly, which can cause delays.",
   },
   {
     q: "Can I get a refund?",
@@ -181,13 +199,32 @@ const FAQS = [
   },
 ];
 
-/* Small reusable "tear line" seam — the perforated edge of a ticket
+/* Small reusable "tear line" seam, the perforated edge of a ticket
    stub, complete with the two punched notches at either end. */
 const TicketSeam = ({ className = "" }: { className?: string }) => (
   <div className={`relative ${className}`}>
     <div className="border-t-2 border-dashed border-white/20" />
     <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
     <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
+  </div>
+);
+
+/* Pitch marking divider, a shallow chevron pair, used between sections
+   instead of a plain rule so the motif carries through quietly. */
+const SectionDivider = () => (
+  <div className="flex items-center justify-center gap-2 py-2" aria-hidden="true">
+    <span className="h-px w-16 bg-white/10" />
+    <svg width="22" height="14" viewBox="0 0 22 14" className="text-accent/60">
+      <path
+        d="M1 1 L11 13 L21 1"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+    <span className="h-px w-16 bg-white/10" />
   </div>
 );
 
@@ -208,6 +245,24 @@ const IconField = ({
   </div>
 );
 
+function useCountdown(target: Date) {
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return useMemo(() => {
+    const diff = Math.max(0, target.getTime() - now);
+    const days = Math.floor(diff / 86_400_000);
+    const hours = Math.floor((diff % 86_400_000) / 3_600_000);
+    const minutes = Math.floor((diff % 3_600_000) / 60_000);
+    const seconds = Math.floor((diff % 60_000) / 1000);
+    return { days, hours, minutes, seconds, done: diff === 0 };
+  }, [now, target]);
+}
+
 const EventsPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -216,6 +271,7 @@ const EventsPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const [ticketType, setTicketType] = useState<TicketType>("Dinner");
+  const countdown = useCountdown(KICKOFF);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -267,24 +323,17 @@ const EventsPage = () => {
     setConfirmChecked(false);
   };
 
-  // Fires when the form's native validation passes (all required fields,
-  // including the M-Pesa transaction code, are filled). Instead of
-  // registering immediately, it opens a payment-confirmation popup so
-  // nobody can submit a code without deliberately confirming they paid.
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setConfirmOpen(true);
   };
 
-  // The actual registration call — only triggered once the person has
-  // ticked "I confirm I have paid" in the popup.
   const submitRegistration = async () => {
     setLoading(true);
     setError("");
     setSuccess("");
 
-    // Fold package-specific details into `notes` for extra context.
     let composedNotes = "";
     if (ticketType === "CorporateTable" && form.companyName) {
       composedNotes += `Company: ${form.companyName}`;
@@ -311,8 +360,8 @@ const EventsPage = () => {
     if (result.success) {
       const firstName = form.fullName.trim().split(" ")[0] || "there";
       setSuccess(
-        `Thank you for registering, ${firstName}! Your registration number is ${result.registration}. ` +
-          `We'll send your official confirmation to ${form.email} shortly.`
+        `Thank you for registering, ${firstName}. Your registration number is ${result.registration}. ` +
+          `We'll send your confirmation to ${form.email} once your payment is verified.`
       );
       resetForm();
     } else {
@@ -327,29 +376,50 @@ const EventsPage = () => {
     <>
       <SEO
         title="Metropol Open Play Kenya 2026"
-        description="Register for Metropol Open Play Kenya 2026 — the Launch Dinner, Open Play talent identification and elite development workshops."
+        description="Register for Metropol Open Play Kenya 2026, the Launch Dinner, Open Play talent identification and elite development workshops."
       />
 
       {/* STICKY REGISTRATION BAR */}
       <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
-        <div className="container-pro max-w-6xl flex items-center justify-between py-3">
+        <div className="container-pro max-w-6xl flex items-center justify-between gap-3 py-3">
           <span className="font-display text-sm md:text-base truncate">
             Metropol Open Play Kenya 2026
           </span>
-          <Button onClick={() => setDialogOpen(true)}>
-            Register Now
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+
+          <div className="flex items-center gap-3">
+            {!countdown.done && (
+              <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs tabular-nums">
+                <Timer size={13} className="text-accent" />
+                <span>
+                  {countdown.days}d {String(countdown.hours).padStart(2, "0")}h{" "}
+                  {String(countdown.minutes).padStart(2, "0")}m to kickoff
+                </span>
+              </div>
+            )}
+            <Button onClick={() => setDialogOpen(true)}>
+              Register Now
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* HERO */}
-      <section className="pt-16 pb-16">
+      <section className="relative pt-16 pb-16 overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(600px 300px at 15% 0%, rgba(227,167,60,0.10), transparent 60%), radial-gradient(600px 300px at 85% 10%, rgba(227,167,60,0.08), transparent 60%)",
+          }}
+        />
+
         <div className="container-pro max-w-6xl">
           <div className="text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-5 py-2 text-sm">
               <Calendar size={16} />
-              9 – 15 August 2026
+              9-15 August 2026
             </span>
 
             <h1 className="mt-8 font-display text-5xl md:text-7xl">
@@ -359,20 +429,20 @@ const EventsPage = () => {
 
             <p className="mt-6 max-w-2xl mx-auto text-lg text-foreground/70 leading-relaxed">
               Football scouting, development, coach education and
-              international pathways for players aged 14–20. Featuring
+              international pathways for players aged 14 to 20. Featuring
               Chief Guest Micky Adams (England).
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center items-center gap-4">
-              <Button size="lg" onClick={() => setDialogOpen(true)}>
-                Reserve Your Spot
-                <ArrowDown className="ml-2 h-5 w-5" />
-              </Button>
               <a href="#tickets">
-                <Button size="lg" variant="outline">
+                <Button size="lg">
                   View Ticket Packages
+                  <ArrowDown className="ml-2 h-5 w-5" />
                 </Button>
               </a>
+              <Button size="lg" variant="outline" onClick={() => setDialogOpen(true)}>
+                Register Now
+              </Button>
             </div>
 
             <p className="mt-4 text-sm text-foreground/60">
@@ -380,7 +450,7 @@ const EventsPage = () => {
               <strong className="text-accent">
                 KES {getTicketAmount("Dinner").toLocaleString()}
               </strong>{" "}
-              · Pay with Lipa na M-Pesa
+              , pay with Lipa na M-Pesa
             </p>
           </div>
 
@@ -409,10 +479,10 @@ const EventsPage = () => {
                   </div>
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
-                      VENUE
+                      VENUES
                     </div>
-                    <div className="mt-1 font-display text-lg">
-                      Nairobi (TBD)
+                    <div className="mt-1 font-display text-base">
+                      Weston Hotel · Jaffery SC
                     </div>
                   </div>
                   <div>
@@ -426,62 +496,52 @@ const EventsPage = () => {
             </div>
           </div>
 
-          {/* SCOREBOARD STATS */}
+          {/* SCOREBOARD */}
           <div className="mt-14 rounded-2xl border border-white/10 bg-black/20 px-6 py-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-              {STATS.map((s) => (
-                <div key={s.label} className="text-center px-2">
-                  <div className="font-display text-4xl md:text-5xl tabular-nums text-gradient-gold">
-                    {s.value}
+            <div className="grid gap-8 lg:grid-cols-[1fr_auto]">
+              <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+                {STATS.map((s) => (
+                  <div key={s.label} className="text-center px-2">
+                    <div className="font-display text-4xl md:text-5xl tabular-nums text-gradient-gold">
+                      {s.value}
+                    </div>
+                    <div className="mt-2 text-xs tracking-widest text-foreground/60 uppercase">
+                      {s.label}
+                    </div>
                   </div>
-                  <div className="mt-2 text-xs tracking-widest text-foreground/60 uppercase">
-                    {s.label}
-                  </div>
+                ))}
+              </div>
+
+              {!countdown.done && (
+                <div className="flex items-center justify-center gap-4 border-t border-white/10 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+                  {[
+                    { label: "DAYS", value: countdown.days },
+                    { label: "HRS", value: countdown.hours },
+                    { label: "MIN", value: countdown.minutes },
+                    { label: "SEC", value: countdown.seconds },
+                  ].map((unit) => (
+                    <div key={unit.label} className="text-center">
+                      <div className="font-display text-3xl tabular-nums w-14">
+                        {String(unit.value).padStart(2, "0")}
+                      </div>
+                      <div className="mt-1 text-[10px] tracking-widest text-foreground/50">
+                        {unit.label}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* SCHEDULE */}
-      <section id="highlights" className="pb-20">
-        <div className="container-pro max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="text-sm text-accent font-semibold tracking-wide">
-              SCHEDULE
-            </span>
-            <h2 className="mt-3 font-display text-4xl">Four phases, one event</h2>
-          </div>
+      <SectionDivider />
 
-          <div className="mt-12 grid sm:grid-cols-2 gap-4">
-            {SCHEDULE.map((item) => (
-              <div
-                key={item.range}
-                className="glass rounded-2xl p-6 border border-white/10"
-              >
-                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-xs font-semibold text-accent">
-                  {item.range}
-                </span>
-                <h4 className="font-semibold text-lg mt-3">{item.title}</h4>
-                <p className="text-foreground/70 mt-1 text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 glass rounded-2xl p-5 border border-white/10 flex items-center gap-3">
-            <Star className="text-accent shrink-0" size={20} />
-            <p className="text-sm text-foreground/80">
-              <strong>Chief Guest:</strong> Micky Adams (England) — former
-              professional football manager and international football
-              development expert.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* TICKET PACKAGES */}
-      <section id="tickets" className="pb-20">
+      {/* TICKET PACKAGES, moved directly under the hero since this is the
+          primary decision on the page: styled as match-programme cards
+          with a corner tag and a foil price strip. */}
+      <section id="tickets" className="py-20">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -497,21 +557,33 @@ const EventsPage = () => {
               return (
                 <div
                   key={key}
-                  className="relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-accent/30"
+                  className="group relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.25),0_20px_40px_-20px_rgba(0,0,0,0.6)]"
                 >
-                  <Icon className="text-accent mb-4" size={28} />
-                  <h3 className="font-display text-2xl">{pkg.title}</h3>
-                  <p className="text-foreground/60 text-sm mt-1">
-                    {pkg.subtitle}
-                  </p>
+                  <div className="flex items-center justify-between px-6 pt-6">
+                    <span className="rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-foreground/60">
+                      {pkg.tag}
+                    </span>
+                    <Icon className="text-accent" size={22} />
+                  </div>
 
-                  <div className="mt-6">
-                    <span className="font-display text-3xl tabular-nums">
+                  <div className="px-8 pt-4">
+                    <h3 className="font-display text-2xl">{pkg.title}</h3>
+                    <p className="text-foreground/60 text-sm mt-1">
+                      {pkg.subtitle}
+                    </p>
+                    <p className="text-foreground/50 text-xs mt-1 flex items-center gap-1.5">
+                      <MapPin size={12} className="text-accent/70" />
+                      {pkg.venue}
+                    </p>
+                  </div>
+
+                  <div className="mx-6 mt-6 rounded-xl border border-accent/20 bg-accent/10 px-4 py-3">
+                    <span className="font-display text-3xl tabular-nums text-gradient-gold">
                       KES {pkg.price.toLocaleString()}
                     </span>
                   </div>
 
-                  <ul className="mt-6 space-y-3 flex-1">
+                  <ul className="mt-6 space-y-3 flex-1 px-8">
                     {pkg.includes.map((text) => (
                       <li key={text} className="flex items-start gap-3 text-sm">
                         <CheckCircle
@@ -523,14 +595,16 @@ const EventsPage = () => {
                     ))}
                   </ul>
 
-                  <Button
-                    className="mt-8 w-full"
-                    variant="outline"
-                    onClick={() => handlePackageSelect(key)}
-                  >
-                    Select {pkg.title}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  <div className="p-8 pt-8">
+                    <Button
+                      className="w-full"
+                      variant="outline"
+                      onClick={() => handlePackageSelect(key)}
+                    >
+                      Select {pkg.title}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               );
             })}
@@ -538,8 +612,48 @@ const EventsPage = () => {
         </div>
       </section>
 
+      <SectionDivider />
+
+      {/* SCHEDULE */}
+      <section id="highlights" className="py-20">
+        <div className="container-pro max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              SCHEDULE
+            </span>
+            <h2 className="mt-3 font-display text-4xl">Four phases, one event</h2>
+          </div>
+
+          <div className="mt-12 grid sm:grid-cols-2 gap-4">
+            {SCHEDULE.map((item) => (
+              <div
+                key={item.range}
+                className="glass rounded-2xl p-6 border border-white/10 transition-colors hover:border-accent/30"
+              >
+                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-xs font-semibold text-accent tabular-nums">
+                  {item.range}
+                </span>
+                <h4 className="font-semibold text-lg mt-3">{item.title}</h4>
+                <p className="text-foreground/70 mt-1 text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 glass rounded-2xl p-5 border border-white/10 flex items-center gap-3">
+            <Star className="text-accent shrink-0" size={20} />
+            <p className="text-sm text-foreground/80">
+              <strong>Chief Guest:</strong> Micky Adams (England), former
+              professional football manager and international football
+              development expert.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
       {/* FAQ */}
-      <section id="faq" className="pb-20">
+      <section id="faq" className="py-20">
         <div className="container-pro max-w-4xl">
           <div className="text-center">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -558,6 +672,7 @@ const EventsPage = () => {
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                  aria-expanded={openFaq === i}
                 >
                   <span className="font-medium">{item.q}</span>
                   <ChevronDown
@@ -592,7 +707,7 @@ const EventsPage = () => {
             <div className="mt-10 grid sm:grid-cols-3 gap-5">
               <a
                 href="mailto:hallo@fcmetropolhp.com"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
               >
                 <Mail className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
@@ -601,7 +716,7 @@ const EventsPage = () => {
               </a>
               <a
                 href="tel:+254708666576"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
               >
                 <Phone className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
@@ -612,7 +727,7 @@ const EventsPage = () => {
                 href="https://www.fcmetropolhp.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
               >
                 <Globe className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
@@ -629,10 +744,7 @@ const EventsPage = () => {
         open={dialogOpen}
         onOpenChange={(open) => {
           setDialogOpen(open);
-          if (!open) {
-            setError("");
-            setConfirmOpen(false);
-          }
+          if (!open) setError("");
         }}
       >
         <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto p-0 gap-0">
@@ -655,22 +767,7 @@ const EventsPage = () => {
               </div>
             </DialogHeader>
 
-            {/* Event details, right where people are registering */}
-            <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-foreground/70">
-              <span className="flex items-center gap-1.5">
-                <Calendar size={14} className="text-accent" />9–15 Aug 2026
-              </span>
-              <span className="flex items-center gap-1.5">
-                <MapPin size={14} className="text-accent" />
-                Nairobi (Venue TBD)
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Star size={14} className="text-accent" />
-                Chief Guest: Micky Adams
-              </span>
-            </div>
-
-            {/* STEP 1 — Package */}
+            {/* STEP 1 - Package */}
             <div className="mt-8">
               <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
                 01 · TICKET
@@ -685,7 +782,7 @@ const EventsPage = () => {
                       key={key}
                       type="button"
                       onClick={() => setTicketType(key)}
-                      className={`rounded-2xl border p-4 text-center transition-all duration-200 ease-out ${
+                      className={`rounded-2xl border p-4 text-center transition-all ${
                         active
                           ? "border-accent bg-accent/10 shadow-md scale-[1.02]"
                           : "border-white/10 bg-background hover:border-white/20"
@@ -698,7 +795,7 @@ const EventsPage = () => {
                         size={20}
                       />
                       <div className="text-xs font-medium">{pkg.title}</div>
-                      <div className="text-[11px] text-foreground/50 mt-0.5">
+                      <div className="text-[11px] text-foreground/50 mt-0.5 tabular-nums">
                         KES {pkg.price.toLocaleString()}
                       </div>
                     </button>
@@ -707,7 +804,7 @@ const EventsPage = () => {
               </div>
             </div>
 
-            {/* STEP 2 — Pay */}
+            {/* STEP 2 - Pay */}
             <div className="mt-8">
               <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
                 02 · PAY
@@ -726,7 +823,7 @@ const EventsPage = () => {
 
                 <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
                   <span className="text-foreground/60">Amount to pay </span>
-                  <strong className="text-accent">
+                  <strong className="text-accent tabular-nums">
                     KES {amount.toLocaleString()}
                   </strong>
                 </div>
@@ -741,27 +838,45 @@ const EventsPage = () => {
                     </li>
                   ))}
                 </ul>
+
+                {/* Name-matching disclaimer */}
+                <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 flex items-start gap-3">
+                  <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={18} />
+                  <p className="text-xs text-foreground/80 leading-relaxed">
+                    <strong className="text-amber-500">Important: </strong>
+                    pay using the M-Pesa line registered to the same name you
+                    enter below. If the payer name and the registration name
+                    don't match, we may not be able to verify your ticket
+                    without contacting you directly, which can delay it.
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* STEP 3 — Details */}
+            {/* STEP 3 - Details */}
             <form onSubmit={handleFormSubmit} className="mt-8">
               <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
                 03 · YOUR DETAILS
               </span>
 
               <div className="mt-3 space-y-4">
-                <IconField icon={User}>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={form.fullName}
-                    onChange={handleChange}
-                    required
-                    className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
-                    placeholder={isPlayerTicket ? "Player full name" : "Full name"}
-                  />
-                </IconField>
+                <div>
+                  <IconField icon={User}>
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={form.fullName}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
+                      placeholder={isPlayerTicket ? "Player full name" : "Full name"}
+                    />
+                  </IconField>
+                  <p className="mt-1.5 text-xs text-foreground/50">
+                    Use the same name registered on the M-Pesa line used to
+                    pay above.
+                  </p>
+                </div>
 
                 <IconField icon={Mail}>
                   <input
@@ -838,8 +953,11 @@ const EventsPage = () => {
                     />
                   </IconField>
                   <p className="mt-1.5 text-xs text-foreground/50">
-                    The code at the start of your M-Pesa confirmation SMS,
-                    e.g. "UG45CA77YR Confirmed..."
+                    Copy the exact code from your M-Pesa confirmation
+                    message, the letters and numbers at the very start,
+                    e.g. "UG45CA77YR Confirmed...". An incorrect or
+                    mistyped code cannot be verified and will delay your
+                    ticket.
                   </p>
                 </div>
               </div>
@@ -861,7 +979,7 @@ const EventsPage = () => {
               )}
 
               <Button type="submit" size="lg" className="w-full mt-6">
-                Review &amp; Confirm Payment
+                Review and Confirm Payment
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
@@ -889,7 +1007,7 @@ const EventsPage = () => {
             </div>
 
             <p className="mt-4 text-sm text-foreground/70">
-              Please double-check the details below before we submit your
+              Please double check the details below before we submit your
               registration.
             </p>
 
@@ -899,14 +1017,18 @@ const EventsPage = () => {
                 <strong>{selectedPackage.title}</strong>
               </div>
               <div className="flex justify-between px-4 py-3">
+                <span className="text-foreground/60">Venue</span>
+                <strong>{selectedPackage.venue}</strong>
+              </div>
+              <div className="flex justify-between px-4 py-3">
                 <span className="text-foreground/60">Amount</span>
-                <strong className="text-accent">
+                <strong className="text-accent tabular-nums">
                   KES {amount.toLocaleString()}
                 </strong>
               </div>
               <div className="flex justify-between px-4 py-3">
                 <span className="text-foreground/60">Transaction Code</span>
-                <strong>{form.transactionCode || "—"}</strong>
+                <strong>{form.transactionCode || "-"}</strong>
               </div>
             </div>
 
@@ -918,8 +1040,9 @@ const EventsPage = () => {
                 className="mt-0.5 h-4 w-4 rounded border-white/20 accent-current text-accent"
               />
               <span className="text-sm text-foreground/80">
-                I confirm I have completed this M-Pesa payment and the
-                transaction code above is correct.
+                I confirm I have completed this M-Pesa payment using the
+                same name as this registration, and the transaction code
+                above is correct.
               </span>
             </label>
 
@@ -939,7 +1062,7 @@ const EventsPage = () => {
                 disabled={!confirmChecked || loading}
                 onClick={submitRegistration}
               >
-                {loading ? "Submitting..." : "Confirm & Reserve"}
+                {loading ? "Submitting..." : "Confirm and Reserve"}
               </Button>
             </div>
           </div>
