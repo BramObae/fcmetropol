@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { SEO } from "@/components/SEO";
 import {
   registerAttendee,
@@ -16,18 +16,19 @@ import {
   CheckCircle,
   User,
   Users,
-  Handshake,
-  Trophy,
+  Utensils,
+  Target,
+  GraduationCap,
+  Layers,
+  Star,
+  Globe,
   ChevronDown,
   Mail,
   Phone,
-  MessageCircle,
   Building2,
   Receipt,
   ShieldAlert,
   X,
-  Timer,
-  Wallet,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -41,90 +42,115 @@ import {
 
 const featuredImage = "/event1.jpeg";
 const TILL_NUMBER = "000000";
-const KICKOFF = new Date("2026-08-10T00:00:00+03:00");
-const WHATSAPP_URL = "https://wa.me/254700000000";
 
 /* ------------------------------------------------------------------ */
 /* Package configuration                                              */
-/* Three real ticket categories: Individual (single attendee), the      */
-/* Corporate Package (fixed price covering 10 delegates), and a Sponsor */
-/* Package at a custom partnership amount, entered on the form.         */
+/* Five fixed-price ticket categories, matching the real event         */
+/* structure: Launch Dinner (9 Aug), Open Play (10–11 Aug),            */
+/* Workshops (12–14 Aug). Corporate Table and the Open Play + Workshop */
+/* combo sit alongside these. Prices come from getTicketAmount().      */
 /* ------------------------------------------------------------------ */
 
 const PACKAGES: Record<
   TicketType,
   {
     title: string;
-    tag: string;
     subtitle: string;
-    price: number | null; // null = custom amount, entered on the form
+    price: number;
     icon: typeof User;
-    highlight?: string;
     includes: string[];
   }
 > = {
-  Individual: {
-    title: "Individual Ticket",
-    tag: "SINGLE PASS",
-    subtitle: "For the single attendee",
-    price: getTicketAmount("Individual"),
-    icon: User,
+  Dinner: {
+    title: "Launch Dinner",
+    subtitle: "Per person · 9 Aug",
+    price: getTicketAmount("Dinner"),
+    icon: Utensils,
     includes: [
-      "Access to all six event days",
-      "Football activities",
-      "Leadership Forum",
-      "Business Networking",
-      "Dinner with the Team",
-      "Exclusive Networking Dinner at Weston Hotel",
+      "Official Launch Dinner, 9 Aug",
+      "Sports Investment & Partnership Forum",
+      "Networking with government, corporate & football leaders",
+      "Meet Chief Guest Micky Adams (England)",
     ],
   },
-  Corporate: {
-    title: "Corporate Package",
-    tag: "10 DELEGATES",
-    subtitle: "10 delegates, one registration",
-    price: getTicketAmount("Corporate"),
+  CorporateTable: {
+    title: "Corporate Table",
+    subtitle: "Table of 10 · 9 Aug",
+    price: getTicketAmount("CorporateTable"),
     icon: Users,
-    highlight: "Team's Pick",
     includes: [
-      "Access to all six event days",
-      "Football activities",
-      "Leadership Forum",
-      "Business Networking",
-      "Dinner with the Team",
-      "Exclusive Networking Dinner at Weston Hotel",
+      "Reserved table of 10 at the Launch Dinner",
+      "Sports Investment & Partnership Forum access",
+      "Corporate recognition on the night",
+      "Priority networking access",
     ],
   },
-  Sponsor: {
-    title: "Sponsor Package",
-    tag: "PARTNERSHIP",
-    subtitle: "Custom partnership amount",
-    price: null,
-    icon: Handshake,
+  OpenPlay: {
+    title: "Open Play",
+    subtitle: "Per player · 10–11 Aug",
+    price: getTicketAmount("OpenPlay"),
+    icon: Target,
     includes: [
-      "Access to all six event days",
-      "Football activities",
-      "Leadership Forum",
-      "Business Networking",
-      "Dinner with the Team",
-      "Exclusive Networking Dinner at Weston Hotel",
+      "Two days of talent assessment, 10–11 Aug",
+      "Assessed by international scouts & academies",
+      "Technical, tactical & athletic evaluation",
+      "For players aged 14–20",
+    ],
+  },
+  Workshop: {
+    title: "Workshop",
+    subtitle: "Per player · 12–14 Aug",
+    price: getTicketAmount("Workshop"),
+    icon: GraduationCap,
+    includes: [
+      "Three days of elite development, 12–14 Aug",
+      "Led by international facilitators",
+      "Player & coach development sessions",
+      "Certificate of participation",
+    ],
+  },
+  OpenPlayWorkshop: {
+    title: "Open Play + Workshop",
+    subtitle: "Per player · 10–14 Aug",
+    price: getTicketAmount("OpenPlayWorkshop"),
+    icon: Layers,
+    includes: [
+      "Full player programme, 10–14 Aug",
+      "Open Play talent assessment",
+      "Elite player development workshops",
+      "Best for players serious about scouting",
     ],
   },
 };
 
 const SCHEDULE = [
-  { day: "01", date: "10 Aug", title: "Arrival & Registration" },
-  { day: "02", date: "11 Aug", title: "Leadership Forum" },
-  { day: "03", date: "12 Aug", title: "Football Activities" },
-  { day: "04", date: "13 Aug", title: "Business Networking" },
-  { day: "05", date: "14 Aug", title: "Networking Dinner, Weston Hotel" },
-  { day: "06", date: "15 Aug", title: "Closing Ceremony" },
+  {
+    range: "09 Aug",
+    title: "Launch Dinner & Partnership Forum",
+    desc: "Official launch, with Chief Guest Micky Adams (England).",
+  },
+  {
+    range: "10–11 Aug",
+    title: "Open Play Talent Identification",
+    desc: "Scouting and assessment for players aged 14–20.",
+  },
+  {
+    range: "12–14 Aug",
+    title: "Elite Player & Coach Workshops",
+    desc: "International development sessions for players and coaches.",
+  },
+  {
+    range: "15 Aug",
+    title: "Showcase Match & Closing Ceremony",
+    desc: "PWD curtain-raiser, international showcase match, awards.",
+  },
 ];
 
 const STATS = [
-  { value: "06", label: "Event Days" },
-  { value: "500+", label: "Participants" },
-  { value: "20+", label: "Speakers" },
-  { value: "03", label: "Ticket Categories" },
+  { value: "07", label: "Event Days" },
+  { value: "300+", label: "Players Assessed" },
+  { value: "30+", label: "Int'l Delegates" },
+  { value: "05", label: "Ticket Categories" },
 ];
 
 const PAY_STEPS = [
@@ -142,12 +168,12 @@ const FAQS = [
     a: `Lipa na M-Pesa, Buy Goods, Till Number ${TILL_NUMBER}. Full steps are shown in the registration form. Enter the M-Pesa transaction code you receive when you register.`,
   },
   {
-    q: "How does the Corporate Package work?",
-    a: "One registration covers 10 delegates at a fixed KES 100,000, with the full six-day pass for each delegate. Add your company name on the form so we can allocate seats correctly.",
+    q: "What's the difference between Open Play, Workshop and the combo?",
+    a: "Open Play (10–11 Aug) is the scouting and talent assessment. Workshop (12–14 Aug) is the elite player and coach development sessions. The combo covers both, 10–14 Aug.",
   },
   {
-    q: "How does the Sponsor Package work?",
-    a: "Sponsor packages are custom partnership amounts, agreed with our team. Enter the amount on the form, or contact us first via WhatsApp or email to arrange a package tailored to your organisation.",
+    q: "How does the Corporate Table work?",
+    a: "It reserves a table of 10 at the Launch Dinner under one registration. Add your company name on the form.",
   },
   {
     q: "Can I get a refund?",
@@ -155,25 +181,17 @@ const FAQS = [
   },
 ];
 
-/* Pitch-marking divider — a shallow chevron pair, used between sections
-   instead of a plain rule so the football motif carries through quietly. */
-const SectionDivider = () => (
-  <div className="flex items-center justify-center gap-2 py-2" aria-hidden="true">
-    <span className="h-px w-16 bg-white/10" />
-    <svg width="22" height="14" viewBox="0 0 22 14" className="text-accent/60">
-      <path
-        d="M1 1 L11 13 L21 1"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-    <span className="h-px w-16 bg-white/10" />
+/* Small reusable "tear line" seam — the perforated edge of a ticket
+   stub, complete with the two punched notches at either end. */
+const TicketSeam = ({ className = "" }: { className?: string }) => (
+  <div className={`relative ${className}`}>
+    <div className="border-t-2 border-dashed border-white/20" />
+    <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
+    <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
   </div>
 );
 
+/* Premium icon-prefixed input wrapper used throughout the registration form. */
 const IconField = ({
   icon: Icon,
   children,
@@ -190,24 +208,6 @@ const IconField = ({
   </div>
 );
 
-function useCountdown(target: Date) {
-  const [now, setNow] = useState(() => Date.now());
-
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return useMemo(() => {
-    const diff = Math.max(0, target.getTime() - now);
-    const days = Math.floor(diff / 86_400_000);
-    const hours = Math.floor((diff % 86_400_000) / 3_600_000);
-    const minutes = Math.floor((diff % 3_600_000) / 60_000);
-    const seconds = Math.floor((diff % 60_000) / 1000);
-    return { days, hours, minutes, seconds, done: diff === 0 };
-  }, [now, target]);
-}
-
 const EventsPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -215,8 +215,7 @@ const EventsPage = () => {
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const [ticketType, setTicketType] = useState<TicketType>("Individual");
-  const countdown = useCountdown(KICKOFF);
+  const [ticketType, setTicketType] = useState<TicketType>("Dinner");
 
   const [form, setForm] = useState({
     fullName: "",
@@ -225,7 +224,6 @@ const EventsPage = () => {
     country: "",
     transactionCode: "",
     companyName: "",
-    sponsorAmount: "",
     notes: "",
   });
 
@@ -233,15 +231,11 @@ const EventsPage = () => {
   const [error, setError] = useState("");
 
   const selectedPackage = PACKAGES[ticketType];
-  const isSponsor = ticketType === "Sponsor";
-  const isCorporate = ticketType === "Corporate";
-
-  const parsedSponsorAmount = Number(form.sponsorAmount);
-  const amount = isSponsor
-    ? Number.isFinite(parsedSponsorAmount) && parsedSponsorAmount > 0
-      ? parsedSponsorAmount
-      : 0
-    : selectedPackage.price ?? 0;
+  const amount = selectedPackage.price;
+  const isPlayerTicket =
+    ticketType === "OpenPlay" ||
+    ticketType === "Workshop" ||
+    ticketType === "OpenPlayWorkshop";
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -267,36 +261,38 @@ const EventsPage = () => {
       country: "",
       transactionCode: "",
       companyName: "",
-      sponsorAmount: "",
       notes: "",
     });
-    setTicketType("Individual");
+    setTicketType("Dinner");
     setConfirmChecked(false);
   };
 
-  // Fires when the form's native validation passes. Instead of registering
-  // immediately, it opens a payment-confirmation popup so nobody can submit
-  // a code without deliberately confirming they paid.
+  // Fires when the form's native validation passes (all required fields,
+  // including the M-Pesa transaction code, are filled). Instead of
+  // registering immediately, it opens a payment-confirmation popup so
+  // nobody can submit a code without deliberately confirming they paid.
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (isSponsor && amount <= 0) {
-      setError("Enter a valid partnership amount before continuing.");
-      return;
-    }
-
     setConfirmOpen(true);
   };
 
+  // The actual registration call — only triggered once the person has
+  // ticked "I confirm I have paid" in the popup.
   const submitRegistration = async () => {
     setLoading(true);
     setError("");
     setSuccess("");
 
+    // Fold package-specific details into `notes` for extra context.
     let composedNotes = "";
+    if (ticketType === "CorporateTable" && form.companyName) {
+      composedNotes += `Company: ${form.companyName}`;
+    }
     if (form.notes) {
-      composedNotes = `Notes: ${form.notes}`;
+      composedNotes += composedNotes
+        ? ` | Notes: ${form.notes}`
+        : `Notes: ${form.notes}`;
     }
 
     const payload = {
@@ -306,7 +302,6 @@ const EventsPage = () => {
       country: form.country,
       ticketType,
       transactionCode: form.transactionCode,
-      companyName: form.companyName,
       amount,
       notes: composedNotes,
     };
@@ -331,68 +326,46 @@ const EventsPage = () => {
   return (
     <>
       <SEO
-        title="FC Metropol HP Kenya — Networking & Sports Business Forum"
-        description="Register for FC Metropol HP Kenya's Networking & Sports Business Forum — six days of football, leadership and business networking in Nairobi."
+        title="Metropol Open Play Kenya 2026"
+        description="Register for Metropol Open Play Kenya 2026 — the Launch Dinner, Open Play talent identification and elite development workshops."
       />
 
       {/* STICKY REGISTRATION BAR */}
       <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
-        <div className="container-pro max-w-6xl flex items-center justify-between gap-3 py-3">
+        <div className="container-pro max-w-6xl flex items-center justify-between py-3">
           <span className="font-display text-sm md:text-base truncate">
-            FC Metropol HP Kenya
+            Metropol Open Play Kenya 2026
           </span>
-
-          <div className="flex items-center gap-3">
-            {!countdown.done && (
-              <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs tabular-nums">
-                <Timer size={13} className="text-accent" />
-                <span>
-                  {countdown.days}d {String(countdown.hours).padStart(2, "0")}h{" "}
-                  {String(countdown.minutes).padStart(2, "0")}m to kickoff
-                </span>
-              </div>
-            )}
-            <Button onClick={() => setDialogOpen(true)}>
-              Reserve Your Seat
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
+          <Button onClick={() => setDialogOpen(true)}>
+            Register Now
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
 
       {/* HERO */}
-      <section className="relative pt-16 pb-16 overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background:
-              "radial-gradient(600px 300px at 15% 0%, rgba(227,167,60,0.10), transparent 60%), radial-gradient(600px 300px at 85% 10%, rgba(227,167,60,0.08), transparent 60%)",
-          }}
-        />
-
+      <section className="pt-16 pb-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-5 py-2 text-sm">
               <Calendar size={16} />
-              10 – 15 August 2026
+              9 – 15 August 2026
             </span>
 
             <h1 className="mt-8 font-display text-5xl md:text-7xl">
-              FC Metropol HP Kenya
-              <span className="block text-gradient-gold">
-                Networking &amp; Sports Business Forum
-              </span>
+              Metropol Open Play
+              <span className="block text-gradient-gold">Kenya 2026</span>
             </h1>
 
             <p className="mt-6 max-w-2xl mx-auto text-lg text-foreground/70 leading-relaxed">
-              Six days of football, leadership and business networking in
-              Nairobi. Reserve your seat below.
+              Football scouting, development, coach education and
+              international pathways for players aged 14–20. Featuring
+              Chief Guest Micky Adams (England).
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center items-center gap-4">
               <Button size="lg" onClick={() => setDialogOpen(true)}>
-                Reserve Your Seat
+                Reserve Your Spot
                 <ArrowDown className="ml-2 h-5 w-5" />
               </Button>
               <a href="#tickets">
@@ -403,9 +376,9 @@ const EventsPage = () => {
             </div>
 
             <p className="mt-4 text-sm text-foreground/60">
-              Passes from{" "}
+              Tickets from{" "}
               <strong className="text-accent">
-                KES {getTicketAmount("Individual").toLocaleString()}
+                KES {getTicketAmount("Dinner").toLocaleString()}
               </strong>{" "}
               · Pay with Lipa na M-Pesa
             </p>
@@ -421,177 +394,124 @@ const EventsPage = () => {
               <div className="glass-card rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
                 <img
                   src={featuredImage}
-                  alt="FC Metropol HP Kenya — Networking & Sports Business Forum"
+                  alt="Metropol Open Play Kenya 2026"
                   className="w-full max-h-[560px] object-contain bg-black/10"
                 />
 
-                <div className="relative">
-                  <div className="border-t-2 border-dashed border-white/20 mx-6" />
-                  <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
-                  <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
-                </div>
+                <TicketSeam className="mx-6" />
 
                 <div className="grid grid-cols-3 divide-x divide-white/10 text-center py-5">
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
-                      KICKOFF
+                      LAUNCH
                     </div>
-                    <div className="mt-1 font-display text-lg">10 Aug</div>
+                    <div className="mt-1 font-display text-lg">9 Aug</div>
                   </div>
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
                       VENUE
                     </div>
-                    <div className="mt-1 font-display text-lg">Nairobi</div>
+                    <div className="mt-1 font-display text-lg">
+                      Nairobi (TBD)
+                    </div>
                   </div>
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
                       DURATION
                     </div>
-                    <div className="mt-1 font-display text-lg">6 Days</div>
+                    <div className="mt-1 font-display text-lg">7 Days</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* SCOREBOARD — stats on the left, live countdown on the right */}
+          {/* SCOREBOARD STATS */}
           <div className="mt-14 rounded-2xl border border-white/10 bg-black/20 px-6 py-8">
-            <div className="grid gap-8 lg:grid-cols-[1fr_auto]">
-              <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
-                {STATS.map((s) => (
-                  <div key={s.label} className="text-center px-2">
-                    <div className="font-display text-4xl md:text-5xl tabular-nums text-gradient-gold">
-                      {s.value}
-                    </div>
-                    <div className="mt-2 text-xs tracking-widest text-foreground/60 uppercase">
-                      {s.label}
-                    </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+              {STATS.map((s) => (
+                <div key={s.label} className="text-center px-2">
+                  <div className="font-display text-4xl md:text-5xl tabular-nums text-gradient-gold">
+                    {s.value}
                   </div>
-                ))}
-              </div>
-
-              {!countdown.done && (
-                <div className="flex items-center justify-center gap-4 border-t border-white/10 pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
-                  {[
-                    { label: "DAYS", value: countdown.days },
-                    { label: "HRS", value: countdown.hours },
-                    { label: "MIN", value: countdown.minutes },
-                    { label: "SEC", value: countdown.seconds },
-                  ].map((unit) => (
-                    <div key={unit.label} className="text-center">
-                      <div className="font-display text-3xl tabular-nums w-14">
-                        {String(unit.value).padStart(2, "0")}
-                      </div>
-                      <div className="mt-1 text-[10px] tracking-widest text-foreground/50">
-                        {unit.label}
-                      </div>
-                    </div>
-                  ))}
+                  <div className="mt-2 text-xs tracking-widest text-foreground/60 uppercase">
+                    {s.label}
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      <SectionDivider />
-
       {/* SCHEDULE */}
-      <section id="highlights" className="py-20">
+      <section id="highlights" className="pb-20">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
               SCHEDULE
             </span>
-            <h2 className="mt-3 font-display text-4xl">Six days, one pass</h2>
+            <h2 className="mt-3 font-display text-4xl">Four phases, one event</h2>
           </div>
 
-          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-12 grid sm:grid-cols-2 gap-4">
             {SCHEDULE.map((item) => (
               <div
-                key={item.day}
-                className="glass rounded-2xl p-6 border border-white/10 flex items-start gap-4 transition-colors hover:border-accent/30"
+                key={item.range}
+                className="glass rounded-2xl p-6 border border-white/10"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 border border-accent/30 font-display text-sm text-accent tabular-nums">
-                  {item.day}
+                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-xs font-semibold text-accent">
+                  {item.range}
                 </span>
-                <div>
-                  <span className="text-xs tracking-widest text-foreground/50 tabular-nums">
-                    {item.date}
-                  </span>
-                  <h4 className="font-semibold text-lg mt-1">{item.title}</h4>
-                </div>
+                <h4 className="font-semibold text-lg mt-3">{item.title}</h4>
+                <p className="text-foreground/70 mt-1 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
 
           <div className="mt-6 glass rounded-2xl p-5 border border-white/10 flex items-center gap-3">
-            <Trophy className="text-accent shrink-0" size={20} />
+            <Star className="text-accent shrink-0" size={20} />
             <p className="text-sm text-foreground/80">
-              The forum closes with an <strong>Exclusive Networking Dinner at
-              Weston Hotel</strong>, bringing together delegates, sponsors and
-              guests from across the six-day programme.
+              <strong>Chief Guest:</strong> Micky Adams (England) — former
+              professional football manager and international football
+              development expert.
             </p>
           </div>
         </div>
       </section>
 
-      <SectionDivider />
-
       {/* TICKET PACKAGES */}
-      <section id="tickets" className="py-20">
+      <section id="tickets" className="pb-20">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
               TICKET PACKAGES
             </span>
-            <h2 className="mt-3 font-display text-4xl">Choose your pass</h2>
+            <h2 className="mt-3 font-display text-4xl">Choose your ticket</h2>
           </div>
 
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
               const pkg = PACKAGES[key];
               const Icon = pkg.icon;
-              const featured = Boolean(pkg.highlight);
               return (
                 <div
                   key={key}
-                  className={`group relative rounded-3xl flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 glass-card ${
-                    featured
-                      ? "border-2 border-accent/50 shadow-[0_0_0_1px_rgba(227,167,60,0.35),0_24px_48px_-24px_rgba(0,0,0,0.65)]"
-                      : "border border-white/10 hover:border-accent/40"
-                  }`}
+                  className="relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-accent/30"
                 >
-                  {featured && (
-                    <div className="bg-accent px-4 py-1.5 text-center text-[11px] font-bold tracking-widest text-background">
-                      {pkg.highlight?.toUpperCase()}
-                    </div>
-                  )}
+                  <Icon className="text-accent mb-4" size={28} />
+                  <h3 className="font-display text-2xl">{pkg.title}</h3>
+                  <p className="text-foreground/60 text-sm mt-1">
+                    {pkg.subtitle}
+                  </p>
 
-                  <div className="flex items-center justify-between px-6 pt-6">
-                    <span className="rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-foreground/60">
-                      {pkg.tag}
-                    </span>
-                    <Icon className="text-accent" size={22} />
-                  </div>
-
-                  <div className="px-8 pt-4">
-                    <h3 className="font-display text-2xl">{pkg.title}</h3>
-                    <p className="text-foreground/60 text-sm mt-1">
-                      {pkg.subtitle}
-                    </p>
-                  </div>
-
-                  <div className="mx-6 mt-6 rounded-xl border border-accent/20 bg-accent/10 px-4 py-3">
-                    <span className="font-display text-3xl tabular-nums text-gradient-gold">
-                      {pkg.price === null
-                        ? "Custom"
-                        : `KES ${pkg.price.toLocaleString()}`}
+                  <div className="mt-6">
+                    <span className="font-display text-3xl tabular-nums">
+                      KES {pkg.price.toLocaleString()}
                     </span>
                   </div>
 
-                  <ul className="mt-6 space-y-3 flex-1 px-8">
+                  <ul className="mt-6 space-y-3 flex-1">
                     {pkg.includes.map((text) => (
                       <li key={text} className="flex items-start gap-3 text-sm">
                         <CheckCircle
@@ -603,16 +523,14 @@ const EventsPage = () => {
                     ))}
                   </ul>
 
-                  <div className="p-8 pt-8">
-                    <Button
-                      className="w-full"
-                      variant={featured ? "default" : "outline"}
-                      onClick={() => handlePackageSelect(key)}
-                    >
-                      Select {pkg.title}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Button
+                    className="mt-8 w-full"
+                    variant="outline"
+                    onClick={() => handlePackageSelect(key)}
+                  >
+                    Select {pkg.title}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
               );
             })}
@@ -620,10 +538,8 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <SectionDivider />
-
       {/* FAQ */}
-      <section id="faq" className="py-20">
+      <section id="faq" className="pb-20">
         <div className="container-pro max-w-4xl">
           <div className="text-center">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -642,7 +558,6 @@ const EventsPage = () => {
                   type="button"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between gap-4 p-5 text-left"
-                  aria-expanded={openFaq === i}
                 >
                   <span className="font-medium">{item.q}</span>
                   <ChevronDown
@@ -676,31 +591,33 @@ const EventsPage = () => {
 
             <div className="mt-10 grid sm:grid-cols-3 gap-5">
               <a
-                href="mailto:events@fcmetropolhp.co.ke"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
+                href="mailto:hallo@fcmetropolhp.com"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
               >
                 <Mail className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
-                  events@fcmetropolhp.co.ke
+                  hallo@fcmetropolhp.com
                 </div>
               </a>
               <a
-                href="tel:+254700000000"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
+                href="tel:+254708666576"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
               >
                 <Phone className="text-accent" size={20} />
                 <div className="text-sm text-foreground/70">
-                  +254 700 000 000
+                  +254 708 666 576
                 </div>
               </a>
               <a
-                href={WHATSAPP_URL}
+                href="https://www.fcmetropolhp.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
+                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10"
               >
-                <MessageCircle className="text-accent" size={20} />
-                <div className="text-sm text-foreground/70">WhatsApp</div>
+                <Globe className="text-accent" size={20} />
+                <div className="text-sm text-foreground/70">
+                  fcmetropolhp.com
+                </div>
               </a>
             </div>
           </div>
@@ -712,7 +629,10 @@ const EventsPage = () => {
         open={dialogOpen}
         onOpenChange={(open) => {
           setDialogOpen(open);
-          if (!open) setError("");
+          if (!open) {
+            setError("");
+            setConfirmOpen(false);
+          }
         }}
       >
         <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto p-0 gap-0">
@@ -729,18 +649,33 @@ const EventsPage = () => {
                     Event Registration
                   </DialogTitle>
                   <DialogDescription className="mt-0.5">
-                    Pick your pass, pay via Lipa na M-Pesa, then confirm.
+                    Pick your ticket, pay via Lipa na M-Pesa, then confirm.
                   </DialogDescription>
                 </div>
               </div>
             </DialogHeader>
 
+            {/* Event details, right where people are registering */}
+            <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-foreground/70">
+              <span className="flex items-center gap-1.5">
+                <Calendar size={14} className="text-accent" />9–15 Aug 2026
+              </span>
+              <span className="flex items-center gap-1.5">
+                <MapPin size={14} className="text-accent" />
+                Nairobi (Venue TBD)
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Star size={14} className="text-accent" />
+                Chief Guest: Micky Adams
+              </span>
+            </div>
+
             {/* STEP 1 — Package */}
             <div className="mt-8">
               <span className="text-[11px] font-semibold tracking-widest text-foreground/40">
-                01 · PASS
+                01 · TICKET
               </span>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
                 {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
                   const pkg = PACKAGES[key];
                   const Icon = pkg.icon;
@@ -750,7 +685,7 @@ const EventsPage = () => {
                       key={key}
                       type="button"
                       onClick={() => setTicketType(key)}
-                      className={`rounded-2xl border p-4 text-center transition-all ${
+                      className={`rounded-2xl border p-4 text-center transition-all duration-200 ease-out ${
                         active
                           ? "border-accent bg-accent/10 shadow-md scale-[1.02]"
                           : "border-white/10 bg-background hover:border-white/20"
@@ -763,10 +698,8 @@ const EventsPage = () => {
                         size={20}
                       />
                       <div className="text-xs font-medium">{pkg.title}</div>
-                      <div className="text-[11px] text-foreground/50 mt-0.5 tabular-nums">
-                        {pkg.price === null
-                          ? "Custom"
-                          : `KES ${pkg.price.toLocaleString()}`}
+                      <div className="text-[11px] text-foreground/50 mt-0.5">
+                        KES {pkg.price.toLocaleString()}
                       </div>
                     </button>
                   );
@@ -791,27 +724,10 @@ const EventsPage = () => {
                   </div>
                 </div>
 
-                {isSponsor && (
-                  <div className="mt-3">
-                    <IconField icon={Wallet}>
-                      <input
-                        type="number"
-                        min={1}
-                        name="sponsorAmount"
-                        value={form.sponsorAmount}
-                        onChange={handleChange}
-                        required
-                        className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
-                        placeholder="Agreed partnership amount (KES)"
-                      />
-                    </IconField>
-                  </div>
-                )}
-
                 <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
                   <span className="text-foreground/60">Amount to pay </span>
-                  <strong className="text-accent tabular-nums">
-                    {amount > 0 ? `KES ${amount.toLocaleString()}` : "—"}
+                  <strong className="text-accent">
+                    KES {amount.toLocaleString()}
                   </strong>
                 </div>
 
@@ -843,7 +759,7 @@ const EventsPage = () => {
                     onChange={handleChange}
                     required
                     className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
-                    placeholder="Full name"
+                    placeholder={isPlayerTicket ? "Player full name" : "Full name"}
                   />
                 </IconField>
 
@@ -885,7 +801,7 @@ const EventsPage = () => {
                   </IconField>
                 </div>
 
-                {(isCorporate || isSponsor) && (
+                {ticketType === "CorporateTable" && (
                   <IconField icon={Building2}>
                     <input
                       type="text"
@@ -894,7 +810,7 @@ const EventsPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full rounded-xl border border-white/10 bg-background pl-11 pr-4 py-3 outline-none focus:border-accent"
-                      placeholder="Company / organisation name"
+                      placeholder="Company name"
                     />
                   </IconField>
                 )}
@@ -908,6 +824,7 @@ const EventsPage = () => {
                   placeholder="Additional notes (optional)"
                 />
 
+                {/* Transaction code is the last field, deliberately */}
                 <div>
                   <IconField icon={Receipt}>
                     <input
@@ -978,12 +895,12 @@ const EventsPage = () => {
 
             <div className="mt-4 rounded-xl border border-white/10 bg-background/60 divide-y divide-white/10 text-sm">
               <div className="flex justify-between px-4 py-3">
-                <span className="text-foreground/60">Pass</span>
+                <span className="text-foreground/60">Ticket</span>
                 <strong>{selectedPackage.title}</strong>
               </div>
               <div className="flex justify-between px-4 py-3">
                 <span className="text-foreground/60">Amount</span>
-                <strong className="text-accent tabular-nums">
+                <strong className="text-accent">
                   KES {amount.toLocaleString()}
                 </strong>
               </div>
