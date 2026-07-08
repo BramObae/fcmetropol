@@ -15,6 +15,7 @@ import {
   ArrowRight,
   ArrowLeft,
   CheckCircle,
+  Check,
   User,
   Users,
   Utensils,
@@ -33,6 +34,7 @@ import {
   Timer,
   AlertTriangle,
   Flame,
+  Quote,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -59,6 +61,7 @@ const PACKAGES: Record<
     price: number;
     icon: typeof User;
     includes: string[];
+    featured?: boolean;
   }
 > = {
   Dinner: {
@@ -82,6 +85,7 @@ const PACKAGES: Record<
     venue: "Weston Hotel",
     price: getTicketAmount("CorporateTable"),
     icon: Users,
+    featured: true,
     includes: [
       "Reserved table of 10 at the Launch Dinner",
       "Sports Investment and Partnership Forum access",
@@ -137,22 +141,26 @@ const SCHEDULE = [
   {
     range: "09 Aug",
     title: "Launch Dinner and Partnership Forum",
-    desc: "Official launch, with Chief Guest Micky Adams (England). Weston Hotel.",
+    desc: "Official launch, with Chief Guest Micky Adams (England).",
+    venue: "Weston Hotel",
   },
   {
     range: "10-11 Aug",
     title: "Open Play Talent Identification",
-    desc: "Scouting and assessment for players aged 14 to 20. Jaffery Sports Club.",
+    desc: "Scouting and assessment for players aged 14 to 20.",
+    venue: "Jaffery Sports Club",
   },
   {
     range: "12-14 Aug",
     title: "Elite Player and Coach Workshops",
-    desc: "International development sessions for players and coaches. Jaffery Sports Club.",
+    desc: "International development sessions for players and coaches.",
+    venue: "Jaffery Sports Club",
   },
   {
     range: "15 Aug",
     title: "Showcase Match and Closing Ceremony",
     desc: "PWD curtain raiser, international showcase match, awards.",
+    venue: "Jaffery Sports Club",
   },
 ];
 
@@ -161,6 +169,14 @@ const STATS = [
   { value: "300+", label: "Players Assessed" },
   { value: "30+", label: "Int'l Delegates" },
   { value: "05", label: "Ticket Categories" },
+];
+
+const PARTNERS = [
+  "FC Metropol, Estonia",
+  "IFG Macclesfield, England",
+  "TMR Sports, Brazil",
+  "FC Atlético Mineira, Brazil",
+  "Football 7 Worldwide",
 ];
 
 const PAY_STEPS = [
@@ -205,8 +221,6 @@ const TicketSeam = ({ className = "" }: { className?: string }) => (
   </div>
 );
 
-/* Pitch marking divider, a shallow chevron pair, used between sections
-   instead of a plain rule so the motif carries through quietly. */
 const SectionDivider = () => (
   <div className="flex items-center justify-center gap-2 py-1" aria-hidden="true">
     <span className="h-px w-16 bg-white/10" />
@@ -264,13 +278,6 @@ function useCountdown(target: Date) {
   }, [now, target]);
 }
 
-/* Registration is a single-sheet, step-by-step flow rather than two
-   separate stacked dialogs. Stacking dialogs (a confirm popup opened on
-   top of the main modal) was the main source of mobile glitches: double
-   backdrops, confusing back behaviour, and content jumping when the
-   keyboard opened. One dialog, one step visible at a time, a fixed
-   header with a real back button, and a fixed footer with the action
-   button, fixes all three at once. */
 type Step = "ticket" | "pay" | "details" | "confirm";
 const STEP_ORDER: Step[] = ["ticket", "pay", "details", "confirm"];
 const STEP_LABELS: Record<Step, string> = {
@@ -412,6 +419,19 @@ const EventsPage = () => {
         description="Register for Metropol Open Play Kenya 2026, the Launch Dinner, Open Play talent identification and elite development workshops."
       />
 
+      {/* Faint dot-grid texture behind the whole page, a quiet layer of
+          depth rather than a flat background. Fixed so it doesn't
+          scroll away and never interferes with content above it. */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 -z-50 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, currentColor 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+
       {/* STICKY REGISTRATION BAR */}
       <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
         <div className="container-pro max-w-6xl flex items-center justify-between gap-3 py-3">
@@ -450,7 +470,11 @@ const EventsPage = () => {
 
         <div className="container-pro max-w-6xl">
           <div className="text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-xs sm:text-sm">
+            <p className="text-[11px] font-semibold tracking-[0.25em] text-foreground/40 uppercase">
+              An International Football Development Event
+            </p>
+
+            <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-xs sm:text-sm">
               <Flame size={15} className="text-accent shrink-0" />
               The countdown is on, 9 to 15 August 2026
             </span>
@@ -493,10 +517,9 @@ const EventsPage = () => {
             </p>
           </div>
 
-          {/* HERO COUNTDOWN, sized down on small screens so all four
-              units stay on one line without crowding or overflow. */}
+          {/* HERO COUNTDOWN */}
           {!countdown.done && (
-            <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-accent/20 bg-gradient-to-b from-accent/10 to-transparent px-4 sm:px-6 py-4 sm:py-5">
+            <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-accent/20 bg-gradient-to-b from-accent/10 to-transparent px-4 sm:px-6 py-4 sm:py-5 shadow-[0_20px_40px_-24px_rgba(227,167,60,0.25)]">
               <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] font-semibold tracking-widest text-accent uppercase">
                 <Timer size={13} />
                 Kicks off in
@@ -525,11 +548,30 @@ const EventsPage = () => {
               </div>
             </div>
           )}
+
+          {/* INTERNATIONAL PARTNERS STRIP, a quiet credibility signal
+              right under the fold, the kind of line a major event
+              carries without needing to explain itself. */}
+          <div className="mt-10 pt-8 border-t border-white/10">
+            <p className="text-center text-[10px] tracking-[0.2em] text-foreground/40 uppercase mb-4">
+              Scouting alongside international partners
+            </p>
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+              {PARTNERS.map((p) => (
+                <span
+                  key={p}
+                  className="text-sm text-foreground/50 font-display tracking-wide"
+                >
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* TICKET PACKAGES */}
-      <section id="tickets" className="py-14">
+      <section id="tickets" className="py-14 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -550,8 +592,29 @@ const EventsPage = () => {
               return (
                 <div
                   key={key}
-                  className="group relative rounded-3xl flex flex-col border border-white/10 glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.3),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
+                  className={`group relative rounded-3xl flex flex-col glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1.5 ${
+                    pkg.featured
+                      ? "border-2 border-accent/40 shadow-[0_0_0_1px_rgba(227,167,60,0.25),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
+                      : "border border-white/10 hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.3),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
+                  }`}
                 >
+                  {/* diagonal sheen on hover, a quiet premium cue rather
+                      than a heavy effect */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background:
+                        "linear-gradient(115deg, transparent 40%, rgba(227,167,60,0.06) 50%, transparent 60%)",
+                    }}
+                  />
+
+                  {pkg.featured && (
+                    <div className="bg-accent px-4 py-1.5 text-center text-[10px] font-bold tracking-widest text-background">
+                      MOST RESERVED FOR PARTNERS
+                    </div>
+                  )}
+
                   <div className="h-1 w-full bg-gradient-to-r from-accent/30 via-accent to-accent/30" />
 
                   <div className="flex items-center justify-between px-6 pt-5">
@@ -595,7 +658,7 @@ const EventsPage = () => {
                   <div className="px-6 pt-6">
                     <Button
                       className="w-full"
-                      variant="outline"
+                      variant={pkg.featured ? "default" : "outline"}
                       onClick={() => openRegistration(key)}
                     >
                       Select {pkg.title}
@@ -681,40 +744,78 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* SCHEDULE */}
-      <section id="highlights" className="py-14">
-        <div className="container-pro max-w-6xl">
+      {/* CHIEF GUEST SPOTLIGHT */}
+      <section className="py-14">
+        <div className="container-pro max-w-4xl">
+          <div className="glass-card rounded-3xl border border-white/10 p-8 md:p-10 relative overflow-hidden">
+            <Quote
+              className="absolute -top-2 -left-2 text-accent/10"
+              size={100}
+              aria-hidden="true"
+            />
+            <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
+              <span className="shrink-0 flex h-20 w-20 items-center justify-center rounded-full bg-accent/10 border-2 border-accent/30 font-display text-2xl text-accent">
+                MA
+              </span>
+              <div>
+                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-[10px] font-semibold tracking-widest text-accent">
+                  CHIEF GUEST
+                </span>
+                <h3 className="mt-3 font-display text-2xl">Micky Adams</h3>
+                <p className="text-foreground/60 text-sm mt-0.5">England</p>
+                <p className="mt-3 text-foreground/80 leading-relaxed">
+                  Former professional football manager and international
+                  football development expert, headlining the Launch
+                  Dinner and Sports Investment and Partnership Forum on 9
+                  August at Weston Hotel.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* SCHEDULE, an editorial timeline rather than a plain card grid,
+          since a programme that spans seven days reads better as a
+          continuous line than as disconnected tiles. */}
+      <section id="highlights" className="py-14 scroll-mt-16">
+        <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
-              SCHEDULE
+              PROGRAMME
             </span>
             <h2 className="mt-2 font-display text-3xl sm:text-4xl">
-              Four phases, one event
+              Seven days, four chapters
             </h2>
           </div>
 
-          <div className="mt-10 grid sm:grid-cols-2 gap-4">
-            {SCHEDULE.map((item) => (
-              <div
-                key={item.range}
-                className="glass rounded-2xl p-6 border border-white/10 transition-colors hover:border-accent/30"
-              >
-                <span className="inline-block rounded-full bg-accent/10 border border-accent/30 px-3 py-1 text-xs font-semibold text-accent tabular-nums">
-                  {item.range}
-                </span>
-                <h4 className="font-semibold text-lg mt-3">{item.title}</h4>
-                <p className="text-foreground/70 mt-1 text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-5 glass rounded-2xl p-5 border border-white/10 flex items-center gap-3">
-            <Star className="text-accent shrink-0" size={20} />
-            <p className="text-sm text-foreground/80">
-              <strong>Chief Guest:</strong> Micky Adams (England), former
-              professional football manager and international football
-              development expert.
-            </p>
+          <div className="mt-12 relative">
+            <div className="absolute left-[27px] sm:left-[35px] top-2 bottom-2 w-px bg-gradient-to-b from-accent/40 via-white/10 to-transparent" />
+            <div className="space-y-8">
+              {SCHEDULE.map((item, i) => (
+                <div key={item.range} className="relative flex gap-5 sm:gap-7">
+                  <div className="shrink-0 flex flex-col items-center">
+                    <span className="flex h-14 w-14 sm:h-[70px] sm:w-[70px] items-center justify-center rounded-2xl bg-accent/10 border border-accent/30 font-display text-sm text-accent tabular-nums text-center leading-tight px-1">
+                      {item.range}
+                    </span>
+                  </div>
+                  <div className="glass rounded-2xl p-5 sm:p-6 border border-white/10 flex-1 transition-colors hover:border-accent/30">
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      <h4 className="font-semibold text-lg">{item.title}</h4>
+                      <span className="text-[10px] tracking-widest text-foreground/50 uppercase whitespace-nowrap flex items-center gap-1">
+                        <MapPin size={11} className="text-accent/70" />
+                        {item.venue}
+                      </span>
+                    </div>
+                    <p className="text-foreground/70 mt-1.5 text-sm">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -722,7 +823,7 @@ const EventsPage = () => {
       <SectionDivider />
 
       {/* FAQ */}
-      <section id="faq" className="py-14">
+      <section id="faq" className="py-14 scroll-mt-16">
         <div className="container-pro max-w-4xl">
           <div className="text-center">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -745,7 +846,12 @@ const EventsPage = () => {
                   className="w-full flex items-center justify-between gap-4 p-5 text-left"
                   aria-expanded={openFaq === i}
                 >
-                  <span className="font-medium">{item.q}</span>
+                  <span className="flex items-center gap-3 font-medium">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent/10 text-[11px] font-semibold text-accent tabular-nums">
+                      {i + 1}
+                    </span>
+                    {item.q}
+                  </span>
                   <ChevronDown
                     className={`shrink-0 text-accent transition-transform ${
                       openFaq === i ? "rotate-180" : ""
@@ -754,7 +860,7 @@ const EventsPage = () => {
                   />
                 </button>
                 {openFaq === i && (
-                  <div className="px-5 pb-5 text-foreground/70 leading-relaxed">
+                  <div className="px-5 pb-5 pl-14 text-foreground/70 leading-relaxed">
                     {item.a}
                   </div>
                 )}
@@ -767,16 +873,25 @@ const EventsPage = () => {
       {/* CONTACT / SUPPORT */}
       <section id="contact" className="pb-20">
         <div className="container-pro max-w-6xl">
-          <div className="glass-card rounded-3xl p-6 sm:p-8 md:p-10">
+          <div className="glass-card rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 relative overflow-hidden">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 -z-10"
+              style={{
+                background:
+                  "radial-gradient(500px 220px at 50% 0%, rgba(227,167,60,0.06), transparent 70%)",
+              }}
+            />
             <div className="text-center max-w-xl mx-auto">
               <span className="text-sm text-accent font-semibold tracking-wide">
-                SUPPORT
+                SUPPORT AND PARTNERSHIPS
               </span>
               <h2 className="mt-2 font-display text-2xl sm:text-3xl">
-                Need a hand?
+                Talk to the team
               </h2>
               <p className="mt-1.5 text-sm text-foreground/60">
-                We're quick to respond, reach out any way that suits you.
+                Registrations, sponsorship enquiries or press, we respond
+                quickly.
               </p>
             </div>
 
@@ -815,11 +930,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* REGISTRATION SHEET, one dialog, one step visible at a time.
-          Header (back + progress) and footer (action button) are fixed;
-          only the middle content scrolls. This is what keeps things from
-          overlapping or jumping around on mobile, especially once the
-          keyboard opens over the details step. */}
+      {/* REGISTRATION SHEET */}
       <Dialog
         open={dialogOpen}
         onOpenChange={(open) => {
@@ -827,7 +938,6 @@ const EventsPage = () => {
           if (!open) {
             setError("");
             if (!success) {
-              // Only fully reset if they backed out without finishing.
               setTimeout(() => {
                 setStep("ticket");
                 setConfirmChecked(false);
@@ -837,18 +947,13 @@ const EventsPage = () => {
         }}
       >
         <DialogContent className="w-full h-[100dvh] sm:h-auto sm:max-w-lg sm:max-h-[85vh] rounded-none sm:rounded-3xl p-0 gap-0 overflow-hidden flex flex-col [&>button]:z-20 [&>button]:top-5 [&>button]:right-5">
-          {/* Radix requires a real DialogTitle for accessibility even
-              though the visible heading below is a styled h2. */}
           <DialogTitle className="sr-only">
             Event Registration, {STEP_LABELS[step]}
           </DialogTitle>
 
-          {/* FIXED HEADER. The library's own close X renders top-right via
-              DialogContent itself (see the [&>button] overrides above,
-              which just reposition it slightly to line up with this
-              header rather than adding a second one), so only a back
-              arrow is added here, on the opposite side, with room
-              reserved (pr-12) so the two never collide. */}
+          {/* FIXED HEADER, the library's own close X renders top-right
+              via the [&>button] overrides above, repositioned to line
+              up with this header rather than duplicated. */}
           <div className="shrink-0 border-b border-white/10 bg-background">
             <div className="h-1 w-full bg-gradient-to-r from-accent/40 via-accent to-accent/40" />
             <div className="flex items-center justify-between pl-4 sm:pl-6 pr-12 py-3.5">
@@ -865,14 +970,21 @@ const EventsPage = () => {
                 {STEP_ORDER.map((s, i) => (
                   <span
                     key={s}
-                    className={`h-1.5 rounded-full transition-all ${
+                    className={`flex items-center justify-center rounded-full transition-all ${
                       i === stepIndex
-                        ? "w-6 bg-accent"
+                        ? "h-5 w-5 bg-accent/20 border border-accent"
                         : i < stepIndex
-                        ? "w-1.5 bg-accent/50"
-                        : "w-1.5 bg-white/15"
+                        ? "h-5 w-5 bg-accent border border-accent"
+                        : "h-1.5 w-1.5 bg-white/15"
                     }`}
-                  />
+                  >
+                    {i < stepIndex && (
+                      <Check size={11} className="text-background" strokeWidth={3} />
+                    )}
+                    {i === stepIndex && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                    )}
+                  </span>
                 ))}
               </div>
 
@@ -890,9 +1002,6 @@ const EventsPage = () => {
 
           {/* SCROLLABLE MIDDLE */}
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5">
-            {/* STEP: TICKET, a vertical list of rows instead of a cramped
-                grid, so nothing overlaps or wraps awkwardly on narrow
-                screens and every tap target is full-width. */}
             {step === "ticket" && (
               <div className="space-y-2.5">
                 {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
@@ -953,7 +1062,6 @@ const EventsPage = () => {
               </div>
             )}
 
-            {/* STEP: PAY */}
             {step === "pay" && (
               <div className="space-y-4">
                 <div className="rounded-2xl border border-accent/30 bg-accent/10 p-5">
@@ -967,6 +1075,11 @@ const EventsPage = () => {
                       <strong>{TILL_NUMBER}</strong>
                     </div>
                   </div>
+
+                  <p className="mt-2 text-[11px] text-foreground/50">
+                    Paid directly through Safaricom M-Pesa, no third party
+                    handles your payment.
+                  </p>
 
                   <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
                     <span className="text-foreground/60">Amount to pay </span>
@@ -1001,7 +1114,6 @@ const EventsPage = () => {
               </div>
             )}
 
-            {/* STEP: DETAILS */}
             {step === "details" && (
               <div className="space-y-4">
                 <div>
@@ -1108,7 +1220,6 @@ const EventsPage = () => {
               </div>
             )}
 
-            {/* STEP: CONFIRM */}
             {step === "confirm" && (
               <div className="space-y-4">
                 {!success && (
