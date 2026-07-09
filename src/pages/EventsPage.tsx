@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { SEO } from "@/components/SEO";
 import {
   registerAttendee,
@@ -41,8 +41,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const featuredImage = "/event1.jpeg";
-const TILL_NUMBER = "000000";
+const TILL_NUMBER = "000000"; // TODO: replace with the real Till Number before launch
 const KICKOFF = new Date("2026-08-09T00:00:00+03:00");
+// Showcase Match and Closing Ceremony is 15 Aug, so the event runs through
+// the end of that day. Used below so the hero and sticky bar switch to a
+// "happening now" / "wrapped up" state instead of quietly showing nothing
+// once the countdown reaches zero, which would otherwise look broken to
+// anyone visiting during or after the event week.
+const EVENT_ENDS = new Date("2026-08-15T23:59:59+03:00");
 
 /* ------------------------------------------------------------------ */
 /* Package configuration                                              */
@@ -274,8 +280,15 @@ function useCountdown(target: Date) {
     const hours = Math.floor((diff % 86_400_000) / 3_600_000);
     const minutes = Math.floor((diff % 3_600_000) / 60_000);
     const seconds = Math.floor((diff % 60_000) / 1000);
-    return { days, hours, minutes, seconds, done: diff === 0 };
+    return { days, hours, minutes, seconds, done: diff === 0, now };
   }, [now, target]);
+}
+
+type EventPhase = "upcoming" | "live" | "ended";
+function getEventPhase(now: number, start: Date, end: Date): EventPhase {
+  if (now < start.getTime()) return "upcoming";
+  if (now <= end.getTime()) return "live";
+  return "ended";
 }
 
 type Step = "ticket" | "pay" | "details" | "confirm";
@@ -296,6 +309,23 @@ const EventsPage = () => {
 
   const [ticketType, setTicketType] = useState<TicketType>("Dinner");
   const countdown = useCountdown(KICKOFF);
+  const eventPhase = getEventPhase(countdown.now, KICKOFF, EVENT_ENDS);
+
+  // Guards async state updates (submitRegistration's fetch, and the
+  // delayed dialog-reset below) against firing after the component has
+  // unmounted, e.g. if the person navigates away mid-submit. Without
+  // this, React logs "Can't perform a state update on an unmounted
+  // component" and, worse, can occasionally throw in strict/dev mode.
+  const mountedRef = useRef(true);
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+    };
+  }, []);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -309,6 +339,7 @@ const EventsPage = () => {
 
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [posterImageFailed, setPosterImageFailed] = useState(false);
 
   const selectedPackage = PACKAGES[ticketType];
   const amount = selectedPackage.price;
@@ -322,7 +353,7 @@ const EventsPage = () => {
   const detailsValid =
     form.fullName.trim().length > 1 &&
     /\S+@\S+\.\S+/.test(form.email) &&
-    form.phone.trim().length >= 9 &&
+    form.phone.replace(/\D/g, "").length >= 9 &&
     form.country.trim().length > 0 &&
     form.transactionCode.trim().length >= 6 &&
     (ticketType !== "CorporateTable" || form.companyName.trim().length > 0);
@@ -397,19 +428,32 @@ const EventsPage = () => {
       notes: composedNotes,
     };
 
-    const result = await registerAttendee(payload);
+    // registerAttendee already catches its own network errors and
+    // resolves to a safe { success: false, error } object rather than
+    // throwing, but this outer try/catch is a second, cheap safety net
+    // in case anything above it (payload construction, a future change)
+    // ever throws unexpectedly, so the button never gets stuck showing
+    // "Submitting..." forever.
+    try {
+      const result = await registerAttendee(payload);
 
-    if (result.success) {
-      const firstName = form.fullName.trim().split(" ")[0] || "there";
-      setSuccess(
-        `Thank you for registering, ${firstName}. Your registration number is ${result.registration}. ` +
-          `We'll send your confirmation to ${form.email} once your payment is verified.`
-      );
-    } else {
-      setError(result.error || "Registration failed.");
+      if (!mountedRef.current) return;
+
+      if (result.success) {
+        const firstName = form.fullName.trim().split(" ")[0] || "there";
+        setSuccess(
+          `Thank you for registering, ${firstName}. Your registration number is ${result.registration}. ` +
+            `We'll send your confirmation to ${form.email} once your payment is verified.`
+        );
+      } else {
+        setError(result.error || "Registration failed.");
+      }
+    } catch (err) {
+      if (!mountedRef.current) return;
+      setError("Something went wrong submitting your registration. Please try again.");
+    } finally {
+      if (mountedRef.current) setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -440,13 +484,19 @@ const EventsPage = () => {
           </span>
 
           <div className="flex items-center gap-3">
-            {!countdown.done && (
+            {eventPhase === "upcoming" && (
               <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs tabular-nums">
                 <Timer size={13} className="text-accent" />
                 <span>
                   {countdown.days}d {String(countdown.hours).padStart(2, "0")}h{" "}
                   {String(countdown.minutes).padStart(2, "0")}m to kickoff
                 </span>
+              </div>
+            )}
+            {eventPhase === "live" && (
+              <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+                <span className="font-semibold text-accent">Happening now</span>
               </div>
             )}
             <Button onClick={() => openRegistration()}>
@@ -475,8 +525,22 @@ const EventsPage = () => {
             </p>
 
             <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-xs sm:text-sm">
-              <Flame size={15} className="text-accent shrink-0" />
-              The countdown is on, 9 to 15 August 2026
+              {eventPhase === "live" ? (
+                <>
+                  <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                  Live now, 9 to 15 August 2026
+                </>
+              ) : eventPhase === "ended" ? (
+                <>
+                  <CheckCircle size={15} className="text-accent shrink-0" />
+                  9 to 15 August 2026, thank you for being part of it
+                </>
+              ) : (
+                <>
+                  <Flame size={15} className="text-accent shrink-0" />
+                  The countdown is on, 9 to 15 August 2026
+                </>
+              )}
             </span>
 
             <h1 className="mt-6 font-display text-4xl sm:text-5xl md:text-7xl">
@@ -517,8 +581,10 @@ const EventsPage = () => {
             </p>
           </div>
 
-          {/* HERO COUNTDOWN */}
-          {!countdown.done && (
+          {/* HERO COUNTDOWN, upcoming phase only. During the event itself
+              the countdown is meaningless, so it's replaced with a live
+              status card rather than just vanishing and leaving a gap. */}
+          {eventPhase === "upcoming" && (
             <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-accent/20 bg-gradient-to-b from-accent/10 to-transparent px-4 sm:px-6 py-4 sm:py-5 shadow-[0_20px_40px_-24px_rgba(227,167,60,0.25)]">
               <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] font-semibold tracking-widest text-accent uppercase">
                 <Timer size={13} />
@@ -546,6 +612,20 @@ const EventsPage = () => {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {eventPhase === "live" && (
+            <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-accent/30 bg-gradient-to-b from-accent/10 to-transparent px-6 py-5 text-center">
+              <div className="flex items-center justify-center gap-2 text-[11px] font-semibold tracking-widest text-accent uppercase">
+                <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                Event in progress
+              </div>
+              <p className="mt-2 text-sm text-foreground/70">
+                Metropol Open Play Kenya 2026 is live, 9 to 15 August. Some
+                ticket categories may have closed, contact us below to
+                check availability.
+              </p>
             </div>
           )}
 
@@ -691,12 +771,24 @@ const EventsPage = () => {
               </span>
 
               <div className="glass-card rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
-                <img
-                  src={featuredImage}
-                  alt="Metropol Open Play Kenya 2026"
-                  className="w-full max-h-[520px] object-contain bg-black/10"
-                />
-
+                {posterImageFailed ? (
+                  <div className="w-full h-[320px] flex flex-col items-center justify-center gap-3 bg-black/20 text-center px-6">
+                    <Ticket className="text-accent/60" size={36} />
+                    <p className="font-display text-xl">
+                      Metropol Open Play Kenya 2026
+                    </p>
+                    <p className="text-sm text-foreground/50">
+                      9 to 15 August, Weston Hotel and Jaffery Sports Club
+                    </p>
+                  </div>
+                ) : (
+                  <img
+                    src={featuredImage}
+                    alt="Metropol Open Play Kenya 2026"
+                    className="w-full max-h-[520px] object-contain bg-black/10"
+                    onError={() => setPosterImageFailed(true)}
+                  />
+                )}
                 <TicketSeam className="mx-6" />
 
                 <div className="grid grid-cols-3 divide-x divide-white/10 text-center py-4">
@@ -937,12 +1029,20 @@ const EventsPage = () => {
           setDialogOpen(open);
           if (!open) {
             setError("");
+            if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
             if (!success) {
-              setTimeout(() => {
+              resetTimeoutRef.current = setTimeout(() => {
+                if (!mountedRef.current) return;
                 setStep("ticket");
                 setConfirmChecked(false);
               }, 200);
             }
+          } else if (resetTimeoutRef.current) {
+            // Reopening cancels any pending reset from a very recent
+            // close, so it can't fire mid-session and stomp on whatever
+            // step the person has already moved to.
+            clearTimeout(resetTimeoutRef.current);
+            resetTimeoutRef.current = null;
           }
         }}
       >
@@ -1266,7 +1366,10 @@ const EventsPage = () => {
                     </label>
 
                     {error && (
-                      <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-400 flex items-start gap-2">
+                      <div
+                        role="alert"
+                        className="rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-red-400 flex items-start gap-2"
+                      >
                         <X size={18} className="shrink-0 mt-0.5" />
                         <span className="text-sm">{error}</span>
                       </div>
