@@ -136,9 +136,9 @@ const leadership = [
   },
   {
     name: "Eduardo Raupp Guimarães",
-    role: "International Technical Director",
+    role: "Director of International Relations",
     image: eduardo,
-    desc: "Global technical strategy and football systems design.",
+    desc: "Global commercial strategy and football system design.",
   },
   {
     name: "Jorge Fuster Molla",
