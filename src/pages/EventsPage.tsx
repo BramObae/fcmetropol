@@ -35,6 +35,13 @@ import {
   AlertTriangle,
   Flame,
   Quote,
+  MessageCircle,
+  LifeBuoy,
+  Heart,
+  Search,
+  Handshake,
+  ShieldCheck,
+  ClipboardCheck,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -84,21 +91,6 @@ const PACKAGES: Record<
       "Meet Chief Guest Micky Adams (England)",
     ],
   },
-  CorporateTable: {
-    title: "Corporate Table",
-    tag: "10 PAX",
-    subtitle: "100,000 per table, 9 Aug",
-    venue: "Weston Hotel",
-    price: getTicketAmount("CorporateTable"),
-    icon: Users,
-    featured: true,
-    includes: [
-      "Reserved table of 10 at the Launch Dinner",
-      "Sports Investment and Partnership Forum access",
-      "Corporate recognition on the night",
-      "Priority networking access",
-    ],
-  },
   OpenPlay: {
     title: "Metropol Open Play",
     tag: "SCOUTING",
@@ -139,6 +131,21 @@ const PACKAGES: Record<
       "Open Play talent assessment",
       "Elite player development workshops",
       "Best for players serious about scouting",
+    ],
+  },
+  CorporateTable: {
+    title: "Corporate Table",
+    tag: "10 PAX",
+    subtitle: "100,000 per table, 9 Aug",
+    venue: "Weston Hotel",
+    price: getTicketAmount("CorporateTable"),
+    icon: Users,
+    featured: true,
+    includes: [
+      "Reserved table of 10 at the Launch Dinner",
+      "Sports Investment and Partnership Forum access",
+      "Corporate recognition on the night",
+      "Priority networking access",
     ],
   },
 };
@@ -185,6 +192,18 @@ const PARTNERS = [
   "Football 7 Worldwide",
 ];
 
+// Two distinct support lines, kept as one source of truth since they
+// appear both in the page's Contact section and inside the
+// registration flow itself, for anyone who gets stuck mid-registration.
+const CONTACTS = {
+  ticketPhone: "0720496076",
+  ticketWhatsapp: "https://wa.me/254720496076",
+  eventPhone: "+254 708 666576",
+  eventTel: "+254708666576",
+  eventWhatsapp: "https://wa.me/254708666576",
+  email: "hallo@fcmetropolhp.com",
+};
+
 const PAY_STEPS = [
   "Go to M-Pesa on your phone",
   "Select Lipa na M-Pesa",
@@ -192,6 +211,21 @@ const PAY_STEPS = [
   `Enter Till Number: ${TILL_NUMBER}`,
   "Enter the amount shown above",
   "Enter your M-Pesa PIN and confirm",
+];
+
+const PARTNER_TIERS = [
+  { name: "Strategic Title Partner", amount: "KES 7,500,000+", note: "Official naming rights, category exclusivity" },
+  { name: "Platinum Partner", amount: "KES 3,000,000 - 7,499,999", note: "Premium branding, launch dinner recognition" },
+  { name: "Gold Partner", amount: "KES 1,500,000 - 2,999,999", note: "High level branding, hospitality" },
+  { name: "Silver Partner", amount: "KES 750,000 - 1,499,999", note: "Branding and event access" },
+  { name: "Bronze Partner", amount: "KES 250,000 - 749,999", note: "Partner recognition, logo placement" },
+];
+
+const REGISTRATION_JOURNEY = [
+  { title: "Register and pay", desc: "Pick a ticket, pay via Lipa na M-Pesa, and submit your details." },
+  { title: "We verify your payment", desc: "Your M-Pesa transaction is checked against your registration." },
+  { title: "Your ticket is confirmed", desc: "You receive a confirmation email with your ticket and QR code." },
+  { title: "Arrive and check in", desc: "Show your ticket at the gate, that's all you need." },
 ];
 
 const FAQS = [
@@ -210,6 +244,14 @@ const FAQS = [
   {
     q: "Why does my name need to match the M-Pesa payment?",
     a: "We verify each registration against the M-Pesa payment used to pay for it. If the name on your registration doesn't match the name on the M-Pesa line that made the payment, we may not be able to confirm your ticket without contacting you directly, which can cause delays.",
+  },
+  {
+    q: "Is this event suitable for players under 18?",
+    a: "Yes. Open Play and Workshop are open to players aged 14 to 20. A parent or guardian can register on a player's behalf, and our team is reachable throughout for any welfare or safeguarding questions before, during or after the event.",
+  },
+  {
+    q: "How can coaches, academies, scouts or sponsors get involved?",
+    a: "Use the audience section near the top of this page to submit team or academy interest, express scouting interest, or request a partnership brief. You can also reach us directly using the contact details below.",
   },
   {
     q: "Can I get a refund?",
@@ -376,6 +418,61 @@ const EventsPage = () => {
     setSuccess("");
     setDialogOpen(true);
   };
+
+  // Each audience gets its own pitch and its own next step, since a
+  // player, a sponsor and a scout are each looking for something
+  // different. Players and parents go straight into the real
+  // registration flow; coaches, scouts and sponsors go to a pre-filled
+  // email, since those relationships need a conversation, not a form.
+  const AUDIENCES = [
+    {
+      title: "Players",
+      icon: Target,
+      desc: "A chance to be seen, learn, develop and open pathway conversations with international scouts and clubs.",
+      cta: "Register as a Player",
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        openRegistration("OpenPlay");
+      },
+    },
+    {
+      title: "Parents",
+      icon: Heart,
+      desc: "A structured, supervised football development experience for your child, with safety and welfare at the centre.",
+      cta: "Register My Child",
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        openRegistration("OpenPlay");
+      },
+    },
+    {
+      title: "Coaches and Academies",
+      icon: GraduationCap,
+      desc: "Expose your players and staff to international technical standards, workshops and pathway opportunities.",
+      cta: "Submit Team or Academy Interest",
+      href: `mailto:${CONTACTS.email}?subject=${encodeURIComponent(
+        "Team / Academy Interest, Metropol Open Play Kenya 2026"
+      )}`,
+    },
+    {
+      title: "Scouts and Clubs",
+      icon: Search,
+      desc: "A structured, week long window to engage and assess Kenyan youth talent alongside international peers.",
+      cta: "Express Scouting Interest",
+      href: `mailto:${CONTACTS.email}?subject=${encodeURIComponent(
+        "Scouting Interest, Metropol Open Play Kenya 2026"
+      )}`,
+    },
+    {
+      title: "Sponsors and Partners",
+      icon: Handshake,
+      desc: "A platform for youth development, inclusion, community engagement and sports economy visibility.",
+      cta: "Request Partner Brief",
+      href: `mailto:${CONTACTS.email}?subject=${encodeURIComponent(
+        "Partnership Brief Request, Metropol Open Play Kenya 2026"
+      )}`,
+    },
+  ];
 
   const goNext = () => {
     const idx = STEP_ORDER.indexOf(step);
@@ -549,10 +646,11 @@ const EventsPage = () => {
             </h1>
 
             <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-foreground/70 leading-relaxed">
-              Seven days where scouts, coaches and clubs from around the
-              world come looking for the next generation. Elite football
-              development and international pathways for players aged 14
-              to 20, featuring Chief Guest Micky Adams (England).
+              Not just trials. A structured pathway platform bringing
+              international football expertise to Nairobi, connecting
+              Kenya's next generation to talent identification, coaching,
+              education and long term opportunity, featuring Chief Guest
+              Micky Adams (England).
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center items-center gap-3 sm:gap-4">
@@ -578,6 +676,27 @@ const EventsPage = () => {
                 KES {getTicketAmount("Dinner").toLocaleString()}
               </strong>{" "}
               , pay instantly with Lipa na M-Pesa
+            </p>
+
+            {/* Audience quick nav, since a parent, a scout and a sponsor
+                are each here for a different reason. */}
+            <p className="mt-4 text-xs text-foreground/50">
+              Here for someone specific?{" "}
+              <a href="#audience" className="text-accent hover:underline">
+                Players & Parents
+              </a>
+              {" · "}
+              <a href="#audience" className="text-accent hover:underline">
+                Coaches & Academies
+              </a>
+              {" · "}
+              <a href="#audience" className="text-accent hover:underline">
+                Scouts & Clubs
+              </a>
+              {" · "}
+              <a href="#audience" className="text-accent hover:underline">
+                Sponsors & Partners
+              </a>
             </p>
           </div>
 
@@ -646,6 +765,115 @@ const EventsPage = () => {
                 </span>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* WHY THIS MATTERS, the value proposition, stated plainly, before
+          anyone is asked to look at a price. */}
+      <section className="py-14">
+        <div className="container-pro max-w-5xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              WHY THIS MATTERS
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
+              Not just trials, a pathway platform
+            </h2>
+            <p className="mt-3 text-foreground/70 leading-relaxed">
+              International clubs, coaches and scouts from Europe and
+              South America are coming directly to Nairobi, so talent
+              identification, coach education, academic pathways and real
+              football opportunity happen here, not somewhere players
+              have to travel to find them.
+            </p>
+          </div>
+
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              {
+                icon: Target,
+                title: "Talent Identification",
+                desc: "Direct exposure to international scouts, clubs and academies.",
+              },
+              {
+                icon: GraduationCap,
+                title: "Coach Education",
+                desc: "Development workshops for coaches and administrators.",
+              },
+              {
+                icon: Layers,
+                title: "Football & Academic Pathways",
+                desc: "Links to scholarship and education opportunities abroad.",
+              },
+              {
+                icon: Handshake,
+                title: "Sports Commercialisation",
+                desc: "Investment, tourism and partnership opportunity for Kenya.",
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="glass rounded-2xl p-5 border border-white/10 text-center"
+                >
+                  <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 border border-accent/20 mb-3">
+                    <Icon className="text-accent" size={20} />
+                  </span>
+                  <h4 className="font-semibold text-sm">{item.title}</h4>
+                  <p className="mt-1.5 text-xs text-foreground/60 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* AUDIENCE CTA, since a parent, a scout and a sponsor are each
+          looking for something different, one generic message can't
+          serve all of them, so each gets its own pitch and next step. */}
+      <section id="audience" className="py-14 scroll-mt-16">
+        <div className="container-pro max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              WHO THIS IS FOR
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
+              Built for everyone around the game
+            </h2>
+          </div>
+
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {AUDIENCES.map((aud) => {
+              const Icon = aud.icon;
+              return (
+                <div
+                  key={aud.title}
+                  className="glass rounded-2xl p-6 border border-white/10 flex flex-col"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 border border-accent/20 mb-4">
+                    <Icon className="text-accent" size={18} />
+                  </span>
+                  <h3 className="font-semibold text-lg">{aud.title}</h3>
+                  <p className="mt-2 text-sm text-foreground/70 leading-relaxed flex-1">
+                    {aud.desc}
+                  </p>
+                  <a
+                    href={aud.href || "#"}
+                    onClick={aud.onClick}
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline"
+                  >
+                    {aud.cta}
+                    <ArrowRight size={14} />
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -836,10 +1064,22 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* CHIEF GUEST SPOTLIGHT */}
+      {/* INTERNATIONAL LEADERSHIP, Micky Adams featured as lead, with the
+          other confirmed international facilitators as supporting
+          cards. Real, named people rather than a generic "world class
+          coaching" claim is what actually builds credibility here. */}
       <section className="py-14">
-        <div className="container-pro max-w-4xl">
-          <div className="glass-card rounded-3xl border border-white/10 p-8 md:p-10 relative overflow-hidden">
+        <div className="container-pro max-w-5xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              INTERNATIONAL LEADERSHIP
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
+              The team behind the opportunity
+            </h2>
+          </div>
+
+          <div className="mt-10 glass-card rounded-3xl border border-white/10 p-8 md:p-10 relative overflow-hidden">
             <Quote
               className="absolute -top-2 -left-2 text-accent/10"
               size={100}
@@ -863,6 +1103,41 @@ const EventsPage = () => {
                 </p>
               </div>
             </div>
+          </div>
+
+          <div className="mt-6 grid sm:grid-cols-2 gap-5">
+            {[
+              {
+                initials: "OS",
+                name: "Oliver Schlegl",
+                country: "Latvia",
+                role: "International Football Development Specialist, leading elite workshop sessions.",
+              },
+              {
+                initials: "ER",
+                name: "Eduardo Raupp",
+                country: "Brazil",
+                role: "Football Development and International Player Placement Specialist.",
+              },
+            ].map((person) => (
+              <div
+                key={person.name}
+                className="glass rounded-2xl p-6 border border-white/10 flex items-start gap-4"
+              >
+                <span className="shrink-0 flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 border border-accent/30 font-display text-lg text-accent">
+                  {person.initials}
+                </span>
+                <div>
+                  <h4 className="font-semibold">{person.name}</h4>
+                  <p className="text-foreground/50 text-xs mt-0.5">
+                    {person.country}
+                  </p>
+                  <p className="mt-2 text-sm text-foreground/70 leading-relaxed">
+                    {person.role}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -908,6 +1183,163 @@ const EventsPage = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* PARENT & PLAYER ASSURANCE, since parent confidence is critical
+          for a youth event, this states plainly what's in place rather
+          than leaving it implied. */}
+      <section className="py-14">
+        <div className="container-pro max-w-5xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              PLAYER WELFARE
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
+              Built with safety at the centre
+            </h2>
+            <p className="mt-3 text-foreground/70 leading-relaxed">
+              For a youth event covering ages 14 to 20, parent and
+              guardian confidence matters as much as talent
+              identification does.
+            </p>
+          </div>
+
+          <div className="mt-10 grid sm:grid-cols-2 gap-4">
+            {[
+              {
+                icon: ShieldCheck,
+                title: "Clear age categories",
+                desc: "Open Play and Workshop are structured for players aged 14 to 20, assessed by qualified international staff.",
+              },
+              {
+                icon: Heart,
+                title: "Medical support on site",
+                desc: "First aid and medical readiness are part of the event's planning, alongside insurance for participants.",
+              },
+              {
+                icon: Users,
+                title: "Guardian registration",
+                desc: "A parent or guardian can register a player under 18 directly, using their own contact details.",
+              },
+              {
+                icon: LifeBuoy,
+                title: "A direct line to us",
+                desc: "Parents can reach our team before, during or after the event with any welfare or safeguarding question, see the contacts below.",
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="glass rounded-2xl p-5 border border-white/10 flex items-start gap-4"
+                >
+                  <span className="shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 border border-accent/20">
+                    <Icon className="text-accent" size={18} />
+                  </span>
+                  <div>
+                    <h4 className="font-semibold text-sm">{item.title}</h4>
+                    <p className="mt-1 text-sm text-foreground/70 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* PARTNER OPPORTUNITY, a concise brief on the page itself, with
+          the full detail handled over email rather than reproducing an
+          entire proposal document inline. */}
+      <section id="partners" className="py-14 scroll-mt-16">
+        <div className="container-pro max-w-5xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              PARTNER WITH US
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
+              Support youth development and sport
+            </h2>
+            <p className="mt-3 text-foreground/70 leading-relaxed">
+              Organisations can back Metropol Open Play Kenya 2026
+              financially, in kind, technically, strategically or
+              through media, at a level that fits their goals.
+            </p>
+          </div>
+
+          <div className="mt-10 rounded-2xl border border-white/10 overflow-hidden">
+            {PARTNER_TIERS.map((tier, i) => (
+              <div
+                key={tier.name}
+                className={`flex items-center justify-between gap-4 px-5 py-4 flex-wrap ${
+                  i % 2 === 0 ? "bg-white/[0.02]" : ""
+                } ${i > 0 ? "border-t border-white/10" : ""}`}
+              >
+                <div>
+                  <p className="font-semibold text-sm">{tier.name}</p>
+                  <p className="text-xs text-foreground/50 mt-0.5">
+                    {tier.note}
+                  </p>
+                </div>
+                <span className="text-sm font-semibold text-accent tabular-nums whitespace-nowrap">
+                  {tier.amount}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 text-center">
+            <a
+              href={`mailto:${CONTACTS.email}?subject=${encodeURIComponent(
+                "Partnership Brief Request, Metropol Open Play Kenya 2026"
+              )}`}
+            >
+              <Button size="lg">
+                Request Partner Brief
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* REGISTRATION JOURNEY, answering "what happens after I click
+          register" before anyone has to click it. */}
+      <section className="py-14">
+        <div className="container-pro max-w-4xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              HOW IT WORKS
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
+              What happens after you register
+            </h2>
+          </div>
+
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {REGISTRATION_JOURNEY.map((step, i) => (
+              <div
+                key={step.title}
+                className="glass rounded-2xl p-5 border border-white/10 text-center"
+              >
+                <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 border border-accent/20 mb-3 font-display text-sm text-accent">
+                  {i + 1}
+                </span>
+                <h4 className="font-semibold text-sm">{step.title}</h4>
+                <p className="mt-1.5 text-xs text-foreground/60 leading-relaxed">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -962,6 +1394,43 @@ const EventsPage = () => {
         </div>
       </section>
 
+      {/* FINAL CTA, closing the page on the core message rather than
+          trailing off into the contact section. */}
+      <section className="py-14">
+        <div className="container-pro max-w-4xl">
+          <div className="glass-card rounded-3xl border border-accent/20 p-8 sm:p-12 text-center relative overflow-hidden">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 -z-10"
+              style={{
+                background:
+                  "radial-gradient(500px 250px at 50% 0%, rgba(227,167,60,0.10), transparent 70%)",
+              }}
+            />
+            <h2 className="font-display text-3xl sm:text-4xl">
+              Kenya's next generation is waiting to be seen
+            </h2>
+            <p className="mt-4 max-w-xl mx-auto text-foreground/70 leading-relaxed">
+              Metropol Open Play Kenya 2026 is a structured pathway
+              platform bringing international football expertise to
+              Nairobi, for talent identification, player development,
+              coaching exposure, inclusion and opportunity.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Button size="lg" onClick={() => openRegistration()}>
+                Register Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <a href="#tickets">
+                <Button size="lg" variant="outline">
+                  View Ticket Packages
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CONTACT / SUPPORT */}
       <section id="contact" className="pb-20">
         <div className="container-pro max-w-6xl">
@@ -979,7 +1448,7 @@ const EventsPage = () => {
                 SUPPORT AND PARTNERSHIPS
               </span>
               <h2 className="mt-2 font-display text-2xl sm:text-3xl">
-                Talk to the team
+                Stuck? We're here to help
               </h2>
               <p className="mt-1.5 text-sm text-foreground/60">
                 Registrations, sponsorship enquiries or press, we respond
@@ -987,35 +1456,89 @@ const EventsPage = () => {
               </p>
             </div>
 
-            <div className="mt-8 grid sm:grid-cols-3 gap-4">
+            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="glass rounded-2xl p-5 border border-white/10">
+                <p className="text-[10px] font-semibold tracking-widest text-accent uppercase">
+                  Ticket Inquiries
+                </p>
+                <p className="mt-1.5 text-sm text-foreground/70">
+                  {CONTACTS.ticketPhone}
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <a
+                    href={`tel:${CONTACTS.ticketPhone}`}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-background/60 py-2 text-xs font-medium transition-colors hover:border-accent/30"
+                  >
+                    <Phone size={13} className="text-accent" />
+                    Call
+                  </a>
+                  <a
+                    href={CONTACTS.ticketWhatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-background/60 py-2 text-xs font-medium transition-colors hover:border-accent/30"
+                  >
+                    <MessageCircle size={13} className="text-accent" />
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
+
+              <div className="glass rounded-2xl p-5 border border-white/10">
+                <p className="text-[10px] font-semibold tracking-widest text-accent uppercase">
+                  Event Information
+                </p>
+                <p className="mt-1.5 text-sm text-foreground/70">
+                  {CONTACTS.eventPhone}
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <a
+                    href={`tel:${CONTACTS.eventTel}`}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-background/60 py-2 text-xs font-medium transition-colors hover:border-accent/30"
+                  >
+                    <Phone size={13} className="text-accent" />
+                    Call
+                  </a>
+                  <a
+                    href={CONTACTS.eventWhatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-background/60 py-2 text-xs font-medium transition-colors hover:border-accent/30"
+                  >
+                    <MessageCircle size={13} className="text-accent" />
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
+
               <a
-                href="mailto:hallo@fcmetropolhp.com"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
+                href={`mailto:${CONTACTS.email}`}
+                className="glass rounded-2xl p-5 flex flex-col justify-between border border-white/10 transition-colors hover:border-accent/30"
               >
-                <Mail className="text-accent shrink-0" size={20} />
-                <div className="text-sm text-foreground/70 break-all">
-                  hallo@fcmetropolhp.com
+                <div>
+                  <p className="text-[10px] font-semibold tracking-widest text-accent uppercase">
+                    Email
+                  </p>
+                  <p className="mt-1.5 text-sm text-foreground/70 break-all">
+                    {CONTACTS.email}
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center gap-1.5 text-xs font-medium text-accent">
+                  <Mail size={13} />
+                  Send an email
                 </div>
               </a>
-              <a
-                href="tel:+254708666576"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
-              >
-                <Phone className="text-accent shrink-0" size={20} />
-                <div className="text-sm text-foreground/70">
-                  +254 708 666 576
-                </div>
-              </a>
+            </div>
+
+            <div className="mt-4 text-center">
               <a
                 href="https://www.fcmetropolhp.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass rounded-2xl p-5 flex items-center gap-3 border border-white/10 transition-colors hover:border-accent/30"
+                className="inline-flex items-center gap-1.5 text-xs text-foreground/50 hover:text-accent transition-colors"
               >
-                <Globe className="text-accent shrink-0" size={20} />
-                <div className="text-sm text-foreground/70">
-                  fcmetropolhp.com
-                </div>
+                <Globe size={12} />
+                fcmetropolhp.com
               </a>
             </div>
           </div>
@@ -1431,6 +1954,28 @@ const EventsPage = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             )}
+
+            {/* Persistent help line, visible on every step, since this is
+                exactly where someone who's stuck actually needs it, not
+                just on the main page's Contact section further down. */}
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-foreground/50">
+              <LifeBuoy size={12} className="text-accent/70 shrink-0" />
+              Stuck? Call or WhatsApp{" "}
+              <a
+                href={`tel:${CONTACTS.ticketPhone}`}
+                className="font-semibold text-accent hover:underline"
+              >
+                {CONTACTS.ticketPhone}
+              </a>{" "}
+              for tickets, or{" "}
+              <a
+                href={`mailto:${CONTACTS.email}`}
+                className="font-semibold text-accent hover:underline"
+              >
+                email us
+              </a>
+              .
+            </p>
           </div>
         </DialogContent>
       </Dialog>
