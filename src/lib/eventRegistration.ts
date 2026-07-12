@@ -1,9 +1,19 @@
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwQuY20HTQfE9i28Hjoh0a5qTyZn5d5ysp4po1NbiKK38q-tDI79QZ4-Lthz8U3oFQUEw/exec";
 
-// Matches the five real ticket categories for Metropol Open Play Kenya
-// 2026: Launch Dinner, Corporate Table (10-seat table), Open Play,
-// Workshop, and the Open Play + Workshop combo.
+// Must match API_KEY exactly in the Apps Script backend (Code.gs).
+// This is a deterrent, not real secrecy — anyone can view this file's
+// bundled JS and read it. It stops bots and stray URL-scanning from
+// hitting the endpoint directly, not a determined attacker who inspects
+// the frontend. If this value ever needs to change, update it here AND
+// in Code.gs's API_KEY at the same time, or every registration will
+// fail with "Unauthorized" the moment one side is updated without the
+// other.
+const APP_SECRET = "fcm2026-8k2j9dq4";
+
+// Matches the five real ticket categories from the event proposal:
+// Launch Dinner, Corporate Table (10 seats, fixed package price),
+// Open Play, Workshop, and the Open Play + Workshop combo.
 export type TicketType =
   | "Dinner"
   | "CorporateTable"
@@ -20,6 +30,9 @@ export interface RegistrationData {
   transactionCode: string;
   mpesaMessage?: string;
   companyName?: string;
+  // Total amount actually charged. All current packages are fixed
+  // price via getTicketAmount(), but the page always passes it
+  // explicitly so a future custom-amount package needs no changes here.
   amount?: number;
   notes?: string;
 }
@@ -30,7 +43,7 @@ export interface RegistrationResponse {
   error?: string;
 }
 
-// Fixed prices per package.
+// Fixed prices for every package.
 export function getTicketAmount(ticket: TicketType) {
   switch (ticket) {
     case "Dinner":
@@ -48,9 +61,7 @@ export function getTicketAmount(ticket: TicketType) {
   }
 }
 
-// Backend (Apps Script / Sheet) expects these exact snake_case codes,
-// see TICKET_PACKAGES in the Apps Script file. Keep this mapping in
-// sync with that file if either side's keys ever change.
+// Backend (Apps Script / Sheet) expects lowercase, snake_case ticket codes.
 const BACKEND_TICKET_CODE: Record<TicketType, string> = {
   Dinner: "dinner",
   CorporateTable: "corporate_table",
@@ -66,6 +77,7 @@ export async function registerAttendee(
     const amount = data.amount ?? getTicketAmount(data.ticketType);
 
     const formData = new URLSearchParams();
+    formData.append("apiKey", APP_SECRET);
     formData.append("fullName", data.fullName);
     formData.append("email", data.email);
     formData.append("phone", data.phone);
