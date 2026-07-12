@@ -11,15 +11,21 @@ const API_URL =
 // other.
 const APP_SECRET = "fcm2026-8k2j9dq4";
 
-// Matches the five real ticket categories from the event proposal:
-// Launch Dinner, Corporate Table (10 seats, fixed package price),
-// Open Play, Workshop, and the Open Play + Workshop combo.
+// Matches the ten real categories for Metropol Open Play Kenya 2026:
+// the five attendee ticket types (Launch Dinner, Corporate Table, Open
+// Play, Workshop, and the Open Play + Workshop combo), plus the five
+// sponsorship partnership tiers.
 export type TicketType =
   | "Dinner"
   | "CorporateTable"
   | "OpenPlay"
   | "Workshop"
-  | "OpenPlayWorkshop";
+  | "OpenPlayWorkshop"
+  | "StrategicTitle"
+  | "Platinum"
+  | "Gold"
+  | "Silver"
+  | "Bronze";
 
 export interface RegistrationData {
   fullName: string;
@@ -30,9 +36,12 @@ export interface RegistrationData {
   transactionCode: string;
   mpesaMessage?: string;
   companyName?: string;
-  // Total amount actually charged. All current packages are fixed
-  // price via getTicketAmount(), but the page always passes it
-  // explicitly so a future custom-amount package needs no changes here.
+  // Total amount actually charged. Fixed-price tickets pass
+  // getTicketAmount() automatically; sponsorship tiers require the
+  // caller to supply a specific amount within that tier's range (see
+  // SPONSOR_TIERS and validateSponsorAmount below) — the backend
+  // independently re-validates whatever is sent either way, so this
+  // is never trusted blindly on its own.
   amount?: number;
   notes?: string;
 }
@@ -43,7 +52,7 @@ export interface RegistrationResponse {
   error?: string;
 }
 
-// Fixed prices for every package.
+// Fixed prices for the five attendee ticket types.
 export function getTicketAmount(ticket: TicketType) {
   switch (ticket) {
     case "Dinner":
@@ -56,51 +65,212 @@ export function getTicketAmount(ticket: TicketType) {
       return 10000;
     case "OpenPlayWorkshop":
       return 15000;
+    // Sponsorship tiers don't have one fixed price — this returns the
+    // tier's minimum, useful as a "starting from" display figure. The
+    // actual amount a sponsor pays is a specific number within the
+    // tier's range, supplied separately (see SPONSOR_TIERS).
+    case "StrategicTitle":
+      return SPONSOR_TIERS.StrategicTitle.min;
+    case "Platinum":
+      return SPONSOR_TIERS.Platinum.min;
+    case "Gold":
+      return SPONSOR_TIERS.Gold.min;
+    case "Silver":
+      return SPONSOR_TIERS.Silver.min;
+    case "Bronze":
+      return SPONSOR_TIERS.Bronze.min;
     default:
       return 0;
   }
 }
 
-// Backend (Apps Script / Sheet) expects lowercase, snake_case ticket codes.
+// Sponsorship partnership tiers. `max: null` means no upper bound
+// (Strategic Title Partner is "KES 7,500,000+"). Kept in sync with
+// SPONSOR_TIER_RANGES in the Apps Script backend — if either side's
+// numbers change, update both.
+export interface SponsorTier {
+  label: string;
+  description: string;
+  min: number;
+  max: number | null;
+}
+
+export const SPONSOR_TIERS: Record<
+  "StrategicTitle" | "Platinum" | "Gold" | "Silver" | "Bronze",
+  SponsorTier
+> = {
+  StrategicTitle: {
+    label: "Strategic Title Partner",
+    description: "Official naming rights, category exclusivity",
+    min: 7500000,
+    max: null,
+  },
+  Platinum: {
+    label: "Platinum Partner",
+    description: "Premium branding, launch dinner recognition",
+    min: 3000000,
+    max: 7499999,
+  },
+  Gold: {
+    label: "Gold Partner",
+    description: "High level branding, hospitality",
+    min: 1500000,
+    max: 2999999,
+  },
+  Silver: {
+    label: "Silver Partner",
+    description: "Branding and event access",
+    min: 750000,
+    max: 1499999,
+  },
+  Bronze: {
+    label: "Bronze Partner",
+    description: "Partner recognition, logo placement",
+    min: 250000,
+    max: 749999,
+  },
+};
+
+export function isSponsorTier(ticket: TicketType): boolean {
+  return ticket in SPONSOR_TIERS;
+}
+
+// Checks a proposed sponsorship amount against its tier's range.
+// Returns null if valid, or a human-readable error otherwise. The
+// backend independently re-checks this too — this is for immediate
+// client-side feedback, not the actual enforcement.
+export function validateSponsorAmount(
+  ticket: TicketType,
+  amount: number
+): string | null {
+  const tier = (SPONSOR_TIERS as Record<string, SponsorTier>)[ticket];
+  if (!tier) return "Not a sponsorship tier.";
+  if (!Number.isFinite(amount) || amount < tier.min) {
+    return `Amount must be at least KES ${tier.min.toLocaleString()} for ${tier.label}.`;
+  }
+  if (tier.max !== null && amount > tier.max) {
+    return `Amount must be at most KES ${tier.max.toLocaleString()} for ${tier.label}.`;
+  }
+  return null;
+}
+
+// Backend (Apps Script / Sheet) expects these exact snake_case codes,
+// see TICKET_PACKAGES in the Apps Script file. Keep this mapping in
+// sync with that file if either side's keys ever change.
 const BACKEND_TICKET_CODE: Record<TicketType, string> = {
   Dinner: "dinner",
   CorporateTable: "corporate_table",
   OpenPlay: "open_play",
   Workshop: "workshop",
   OpenPlayWorkshop: "open_play_workshop",
+  StrategicTitle: "strategic_title",
+  Platinum: "platinum",
+  Gold: "gold",
+  Silver: "silver",
+  Bronze: "bronze",
 };
+
+// ---------------------------------------------------------------------
+// Basic client-side validation, mirroring (not replacing) the same
+// checks the backend makes. Catching an obvious problem here means the
+// person sees a clear message immediately instead of waiting on a
+// round trip only to get the same rejection back from the server.
+// ---------------------------------------------------------------------
+
+const MAX_NAME_LENGTH = 150;
+const MAX_NOTES_LENGTH = 1000;
+
+function isValidEmailFormat(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+function validateRegistrationData(data: RegistrationData): string | null {
+  if (!data.fullName.trim()) return "Full name is required.";
+  if (!isValidEmailFormat(data.email)) return "Enter a valid email address.";
+  if (!data.phone.trim()) return "Phone number is required.";
+  if (!data.country.trim()) return "Country is required.";
+
+  if (isSponsorTier(data.ticketType)) {
+    const amount = data.amount ?? 0;
+    const sponsorError = validateSponsorAmount(data.ticketType, amount);
+    if (sponsorError) return sponsorError;
+  } else if (!data.transactionCode.trim()) {
+    return "M-Pesa transaction code is required.";
+  }
+
+  return null;
+}
 
 export async function registerAttendee(
   data: RegistrationData
 ): Promise<RegistrationResponse> {
+  const validationError = validateRegistrationData(data);
+  if (validationError) {
+    return { success: false, error: validationError };
+  }
+
   try {
     const amount = data.amount ?? getTicketAmount(data.ticketType);
 
     const formData = new URLSearchParams();
     formData.append("apiKey", APP_SECRET);
-    formData.append("fullName", data.fullName);
-    formData.append("email", data.email);
-    formData.append("phone", data.phone);
-    formData.append("country", data.country);
+    formData.append("fullName", data.fullName.trim().slice(0, MAX_NAME_LENGTH));
+    formData.append("email", data.email.trim());
+    formData.append("phone", data.phone.trim());
+    formData.append("country", data.country.trim());
     formData.append("ticketType", BACKEND_TICKET_CODE[data.ticketType]);
     formData.append("amount", amount.toString());
-    formData.append("transactionCode", data.transactionCode);
+    formData.append("transactionCode", data.transactionCode.trim());
     formData.append("mpesaMessage", data.mpesaMessage || "");
-    formData.append("companyName", data.companyName || "");
-    formData.append("notes", data.notes || "");
+    formData.append(
+      "companyName",
+      (data.companyName || "").trim().slice(0, MAX_NAME_LENGTH)
+    );
+    formData.append("notes", (data.notes || "").trim().slice(0, MAX_NOTES_LENGTH));
 
-    const response = await fetch(API_URL, {
-      method: "POST",
-      body: formData,
-    });
+    // A stalled request would otherwise hang indefinitely with no
+    // feedback to the person filling in the form. 15 seconds is
+    // generous for a simple POST but still bounded.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-    const result = await response.json();
+    let response: Response;
+    try {
+      response = await fetch(API_URL, {
+        method: "POST",
+        body: formData,
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: "The registration server returned an error. Please try again.",
+      };
+    }
+
+    let result: RegistrationResponse;
+    try {
+      result = await response.json();
+    } catch {
+      return {
+        success: false,
+        error: "Received an unexpected response from the server.",
+      };
+    }
+
     return result;
   } catch (err) {
     console.error(err);
+    const isAbort = err instanceof DOMException && err.name === "AbortError";
     return {
       success: false,
-      error: "Unable to connect to the registration server.",
+      error: isAbort
+        ? "The request timed out. Please check your connection and try again."
+        : "Unable to connect to the registration server.",
     };
   }
 }
