@@ -50,22 +50,23 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 const featuredImage = "/event1.jpeg";
 const TILL_NUMBER = "000000"; // TODO: replace with the real Till Number before launch
 const KICKOFF = new Date("2026-08-09T00:00:00+03:00");
-// Showcase Match and Closing Ceremony is 15 Aug, so the event runs through
-// the end of that day. Used below so the hero and sticky bar switch to a
-// "happening now" / "wrapped up" state instead of quietly showing nothing
-// once the countdown reaches zero, which would otherwise look broken to
-// anyone visiting during or after the event week.
 const EVENT_ENDS = new Date("2026-08-15T23:59:59+03:00");
 
-/* ------------------------------------------------------------------ */
-/* Package configuration                                              */
-/* Five fixed-price ticket categories: Dinner Launch (9 Aug), Corporate */
-/* Table (9 Aug, table of 10), Metropol Open Play (10-11 Aug), Metropol */
-/* Workshop (12-14 Aug), and Open Play & Workshop (10-14 Aug).          */
-/* ------------------------------------------------------------------ */
+// This page's self-serve registration dialog only ever handles the
+// five real attendee/corporate ticket types. Sponsorship tiers exist
+// in the shared TicketType union (see eventRegistration.ts) but are
+// deliberately excluded here — a sponsorship is a conversation, not a
+// form (see the AUDIENCES config below, and the "Request Partner
+// Brief" flow), so they're routed to a pre-filled email instead of
+// this dialog rather than appearing as a sixth-through-tenth ticket
+// card here.
+type AttendeeTicketType = Exclude<
+  TicketType,
+  "StrategicTitle" | "Platinum" | "Gold" | "Silver" | "Bronze"
+>;
 
 const PACKAGES: Record<
-  TicketType,
+  AttendeeTicketType,
   {
     title: string;
     tag: string;
@@ -192,9 +193,6 @@ const PARTNERS = [
   "Football 7 Worldwide",
 ];
 
-// Two distinct support lines, kept as one source of truth since they
-// appear both in the page's Contact section and inside the
-// registration flow itself, for anyone who gets stuck mid-registration.
 const CONTACTS = {
   ticketPhone: "0720496076",
   ticketWhatsapp: "https://wa.me/254720496076",
@@ -259,8 +257,6 @@ const FAQS = [
   },
 ];
 
-/* Small reusable "tear line" seam, the perforated edge of a ticket
-   stub, complete with the two punched notches at either end. */
 const TicketSeam = ({ className = "" }: { className?: string }) => (
   <div className={`relative ${className}`}>
     <div className="border-t-2 border-dashed border-white/20" />
@@ -349,15 +345,10 @@ const EventsPage = () => {
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const [ticketType, setTicketType] = useState<TicketType>("Dinner");
+  const [ticketType, setTicketType] = useState<AttendeeTicketType>("Dinner");
   const countdown = useCountdown(KICKOFF);
   const eventPhase = getEventPhase(countdown.now, KICKOFF, EVENT_ENDS);
 
-  // Guards async state updates (submitRegistration's fetch, and the
-  // delayed dialog-reset below) against firing after the component has
-  // unmounted, e.g. if the person navigates away mid-submit. Without
-  // this, React logs "Can't perform a state update on an unmounted
-  // component" and, worse, can occasionally throw in strict/dev mode.
   const mountedRef = useRef(true);
   const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -411,7 +402,7 @@ const EventsPage = () => {
     });
   };
 
-  const openRegistration = (key?: TicketType) => {
+  const openRegistration = (key?: AttendeeTicketType) => {
     if (key) setTicketType(key);
     setStep("ticket");
     setError("");
@@ -419,11 +410,6 @@ const EventsPage = () => {
     setDialogOpen(true);
   };
 
-  // Each audience gets its own pitch and its own next step, since a
-  // player, a sponsor and a scout are each looking for something
-  // different. Players and parents go straight into the real
-  // registration flow; coaches, scouts and sponsors go to a pre-filled
-  // email, since those relationships need a conversation, not a form.
   const AUDIENCES = [
     {
       title: "Players",
@@ -525,12 +511,6 @@ const EventsPage = () => {
       notes: composedNotes,
     };
 
-    // registerAttendee already catches its own network errors and
-    // resolves to a safe { success: false, error } object rather than
-    // throwing, but this outer try/catch is a second, cheap safety net
-    // in case anything above it (payload construction, a future change)
-    // ever throws unexpectedly, so the button never gets stuck showing
-    // "Submitting..." forever.
     try {
       const result = await registerAttendee(payload);
 
@@ -560,9 +540,6 @@ const EventsPage = () => {
         description="Register for Metropol Open Play Kenya 2026, the Launch Dinner, Open Play talent identification and elite development workshops."
       />
 
-      {/* Faint dot-grid texture behind the whole page, a quiet layer of
-          depth rather than a flat background. Fixed so it doesn't
-          scroll away and never interferes with content above it. */}
       <div
         aria-hidden="true"
         className="fixed inset-0 -z-50 opacity-[0.03] pointer-events-none"
@@ -573,7 +550,6 @@ const EventsPage = () => {
         }}
       />
 
-      {/* STICKY REGISTRATION BAR */}
       <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
         <div className="container-pro max-w-6xl flex items-center justify-between gap-3 py-3">
           <span className="font-display text-sm md:text-base truncate">
@@ -604,7 +580,6 @@ const EventsPage = () => {
         </div>
       </div>
 
-      {/* HERO */}
       <section className="relative pt-12 pb-10 overflow-hidden">
         <div
           aria-hidden="true"
@@ -678,8 +653,6 @@ const EventsPage = () => {
               , pay instantly with Lipa na M-Pesa
             </p>
 
-            {/* Audience quick nav, since a parent, a scout and a sponsor
-                are each here for a different reason. */}
             <p className="mt-4 text-xs text-foreground/50">
               Here for someone specific?{" "}
               <a href="#audience" className="text-accent hover:underline">
@@ -700,9 +673,6 @@ const EventsPage = () => {
             </p>
           </div>
 
-          {/* HERO COUNTDOWN, upcoming phase only. During the event itself
-              the countdown is meaningless, so it's replaced with a live
-              status card rather than just vanishing and leaving a gap. */}
           {eventPhase === "upcoming" && (
             <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-accent/20 bg-gradient-to-b from-accent/10 to-transparent px-4 sm:px-6 py-4 sm:py-5 shadow-[0_20px_40px_-24px_rgba(227,167,60,0.25)]">
               <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] font-semibold tracking-widest text-accent uppercase">
@@ -748,9 +718,6 @@ const EventsPage = () => {
             </div>
           )}
 
-          {/* INTERNATIONAL PARTNERS STRIP, a quiet credibility signal
-              right under the fold, the kind of line a major event
-              carries without needing to explain itself. */}
           <div className="mt-10 pt-8 border-t border-white/10">
             <p className="text-center text-[10px] tracking-[0.2em] text-foreground/40 uppercase mb-4">
               Scouting alongside international partners
@@ -769,8 +736,6 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* WHY THIS MATTERS, the value proposition, stated plainly, before
-          anyone is asked to look at a price. */}
       <section className="py-14">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -834,9 +799,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* AUDIENCE CTA, since a parent, a scout and a sponsor are each
-          looking for something different, one generic message can't
-          serve all of them, so each gets its own pitch and next step. */}
       <section id="audience" className="py-14 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -878,7 +840,6 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* TICKET PACKAGES */}
       <section id="tickets" className="py-14 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -894,7 +855,7 @@ const EventsPage = () => {
           </div>
 
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
+            {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
               const pkg = PACKAGES[key];
               const Icon = pkg.icon;
               return (
@@ -906,8 +867,6 @@ const EventsPage = () => {
                       : "border border-white/10 hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.3),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
                   }`}
                 >
-                  {/* diagonal sheen on hover, a quiet premium cue rather
-                      than a heavy effect */}
                   <div
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -989,7 +948,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* EVENT POSTER */}
       <section className="py-14">
         <div className="container-pro max-w-6xl">
           <div className="flex justify-center">
@@ -1064,10 +1022,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* INTERNATIONAL LEADERSHIP, Micky Adams featured as lead, with the
-          other confirmed international facilitators as supporting
-          cards. Real, named people rather than a generic "world class
-          coaching" claim is what actually builds credibility here. */}
       <section className="py-14">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -1144,9 +1098,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* SCHEDULE, an editorial timeline rather than a plain card grid,
-          since a programme that spans seven days reads better as a
-          continuous line than as disconnected tiles. */}
       <section id="highlights" className="py-14 scroll-mt-16">
         <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -1189,9 +1140,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* PARENT & PLAYER ASSURANCE, since parent confidence is critical
-          for a youth event, this states plainly what's in place rather
-          than leaving it implied. */}
       <section className="py-14">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -1255,9 +1203,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* PARTNER OPPORTUNITY, a concise brief on the page itself, with
-          the full detail handled over email rather than reproducing an
-          entire proposal document inline. */}
       <section id="partners" className="py-14 scroll-mt-16">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -1312,8 +1257,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* REGISTRATION JOURNEY, answering "what happens after I click
-          register" before anyone has to click it. */}
       <section className="py-14">
         <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -1346,7 +1289,6 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      {/* FAQ */}
       <section id="faq" className="py-14 scroll-mt-16">
         <div className="container-pro max-w-4xl">
           <div className="text-center">
@@ -1394,8 +1336,6 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* FINAL CTA, closing the page on the core message rather than
-          trailing off into the contact section. */}
       <section className="py-14">
         <div className="container-pro max-w-4xl">
           <div className="glass-card rounded-3xl border border-accent/20 p-8 sm:p-12 text-center relative overflow-hidden">
@@ -1431,7 +1371,6 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* CONTACT / SUPPORT */}
       <section id="contact" className="pb-20">
         <div className="container-pro max-w-6xl">
           <div className="glass-card rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 relative overflow-hidden">
@@ -1545,7 +1484,6 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* REGISTRATION SHEET */}
       <Dialog
         open={dialogOpen}
         onOpenChange={(open) => {
@@ -1561,9 +1499,6 @@ const EventsPage = () => {
               }, 200);
             }
           } else if (resetTimeoutRef.current) {
-            // Reopening cancels any pending reset from a very recent
-            // close, so it can't fire mid-session and stomp on whatever
-            // step the person has already moved to.
             clearTimeout(resetTimeoutRef.current);
             resetTimeoutRef.current = null;
           }
@@ -1574,9 +1509,6 @@ const EventsPage = () => {
             Event Registration, {STEP_LABELS[step]}
           </DialogTitle>
 
-          {/* FIXED HEADER, the library's own close X renders top-right
-              via the [&>button] overrides above, repositioned to line
-              up with this header rather than duplicated. */}
           <div className="shrink-0 border-b border-white/10 bg-background">
             <div className="h-1 w-full bg-gradient-to-r from-accent/40 via-accent to-accent/40" />
             <div className="flex items-center justify-between pl-4 sm:pl-6 pr-12 py-3.5">
@@ -1623,11 +1555,10 @@ const EventsPage = () => {
             </div>
           </div>
 
-          {/* SCROLLABLE MIDDLE */}
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5">
             {step === "ticket" && (
               <div className="space-y-2.5">
-                {(Object.keys(PACKAGES) as TicketType[]).map((key) => {
+                {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
                   const pkg = PACKAGES[key];
                   const Icon = pkg.icon;
                   const active = ticketType === key;
@@ -1915,7 +1846,6 @@ const EventsPage = () => {
             )}
           </div>
 
-          {/* FIXED FOOTER */}
           <div className="shrink-0 border-t border-white/10 bg-background px-4 sm:px-6 py-4">
             {step === "confirm" && success ? (
               <Button
@@ -1955,9 +1885,6 @@ const EventsPage = () => {
               </Button>
             )}
 
-            {/* Persistent help line, visible on every step, since this is
-                exactly where someone who's stuck actually needs it, not
-                just on the main page's Contact section further down. */}
             <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-foreground/50">
               <LifeBuoy size={12} className="text-accent/70 shrink-0" />
               Stuck? Call or WhatsApp{" "}
