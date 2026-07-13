@@ -367,8 +367,16 @@ const EventsPage = () => {
     country: "",
     transactionCode: "",
     companyName: "",
+    childName: "",
     notes: "",
   });
+
+  // True when someone arrived via the "Register My Child" audience CTA.
+  // Drives the extra "Child's Full Name" field and gets folded into the
+  // submitted notes automatically, so this is always captured
+  // consistently rather than relying on the parent to remember to
+  // mention it themselves.
+  const [parentRegistration, setParentRegistration] = useState(false);
 
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -389,7 +397,8 @@ const EventsPage = () => {
     form.phone.replace(/\D/g, "").length >= 9 &&
     form.country.trim().length > 0 &&
     form.transactionCode.trim().length >= 6 &&
-    (ticketType !== "CorporateTable" || form.companyName.trim().length > 0);
+    (ticketType !== "CorporateTable" || form.companyName.trim().length > 0) &&
+    (!parentRegistration || form.childName.trim().length > 1);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -428,6 +437,7 @@ const EventsPage = () => {
       cta: "Register My Child",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
+        setParentRegistration(true);
         openRegistration("OpenPlay");
       },
     },
@@ -435,28 +445,29 @@ const EventsPage = () => {
       title: "Coaches and Academies",
       icon: GraduationCap,
       desc: "Expose your players and staff to international technical standards, workshops and pathway opportunities.",
-      cta: "Submit Team or Academy Interest",
-      href: `mailto:${CONTACTS.email}?subject=${encodeURIComponent(
-        "Team / Academy Interest, Metropol Open Play Kenya 2026"
-      )}`,
+      cta: "Register for the Workshop",
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        openRegistration("Workshop");
+      },
     },
     {
       title: "Scouts and Clubs",
       icon: Search,
       desc: "A structured, week long window to engage and assess Kenyan youth talent alongside international peers.",
-      cta: "Express Scouting Interest",
-      href: `mailto:${CONTACTS.email}?subject=${encodeURIComponent(
-        "Scouting Interest, Metropol Open Play Kenya 2026"
-      )}`,
+      cta: "Register for Open Play",
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        openRegistration("OpenPlay");
+      },
     },
     {
       title: "Sponsors and Partners",
       icon: Handshake,
       desc: "A platform for youth development, inclusion, community engagement and sports economy visibility.",
-      cta: "Request Partner Brief",
-      href: `mailto:${CONTACTS.email}?subject=${encodeURIComponent(
-        "Partnership Brief Request, Metropol Open Play Kenya 2026"
-      )}`,
+      cta: "Chat With Us on WhatsApp",
+      href: CONTACTS.eventWhatsapp,
+      target: "_blank" as const,
     },
   ];
 
@@ -478,10 +489,12 @@ const EventsPage = () => {
       country: "",
       transactionCode: "",
       companyName: "",
+      childName: "",
       notes: "",
     });
     setTicketType("Dinner");
     setConfirmChecked(false);
+    setParentRegistration(false);
     setStep("ticket");
   };
 
@@ -491,8 +504,13 @@ const EventsPage = () => {
     setSuccess("");
 
     let composedNotes = "";
+    if (parentRegistration) {
+      composedNotes += `Parent registration for child: ${form.childName.trim()}`;
+    }
     if (ticketType === "CorporateTable" && form.companyName) {
-      composedNotes += `Company: ${form.companyName}`;
+      composedNotes += composedNotes
+        ? ` | Company: ${form.companyName}`
+        : `Company: ${form.companyName}`;
     }
     if (form.notes) {
       composedNotes += composedNotes
@@ -718,7 +736,7 @@ const EventsPage = () => {
             </div>
           )}
 
-          <div className="mt-10 pt-8 border-t border-white/10">
+          <div className="mt-8 pt-6 border-t border-white/10">
             <p className="text-center text-[10px] tracking-[0.2em] text-foreground/40 uppercase mb-4">
               Scouting alongside international partners
             </p>
@@ -736,7 +754,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <section className="py-14">
+      <section className="py-10 sm:py-12">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -754,7 +772,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 icon: Target,
@@ -799,7 +817,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="audience" className="py-14 scroll-mt-16">
+      <section id="audience" className="py-10 sm:py-12 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -810,7 +828,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {AUDIENCES.map((aud) => {
               const Icon = aud.icon;
               return (
@@ -828,6 +846,8 @@ const EventsPage = () => {
                   <a
                     href={aud.href || "#"}
                     onClick={aud.onClick}
+                    target={aud.target}
+                    rel={aud.target ? "noopener noreferrer" : undefined}
                     className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline"
                   >
                     {aud.cta}
@@ -840,7 +860,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <section id="tickets" className="py-14 scroll-mt-16">
+      <section id="tickets" className="py-10 sm:py-12 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -854,7 +874,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
               const pkg = PACKAGES[key];
               const Icon = pkg.icon;
@@ -948,7 +968,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-14">
+      <section className="py-10 sm:py-12">
         <div className="container-pro max-w-6xl">
           <div className="flex justify-center">
             <div className="relative w-full max-w-3xl">
@@ -1022,7 +1042,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-14">
+      <section className="py-10 sm:py-12">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1098,7 +1118,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="highlights" className="py-14 scroll-mt-16">
+      <section id="highlights" className="py-10 sm:py-12 scroll-mt-16">
         <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1109,7 +1129,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-12 relative">
+          <div className="mt-10 relative">
             <div className="absolute left-[27px] sm:left-[35px] top-2 bottom-2 w-px bg-gradient-to-b from-accent/40 via-white/10 to-transparent" />
             <div className="space-y-8">
               {SCHEDULE.map((item, i) => (
@@ -1140,7 +1160,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-14">
+      <section className="py-10 sm:py-12">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1156,7 +1176,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-10 grid sm:grid-cols-2 gap-4">
+          <div className="mt-8 grid sm:grid-cols-2 gap-4">
             {[
               {
                 icon: ShieldCheck,
@@ -1203,7 +1223,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="partners" className="py-14 scroll-mt-16">
+      <section id="partners" className="py-10 sm:py-12 scroll-mt-16">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1219,7 +1239,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-white/10 overflow-hidden">
+          <div className="mt-8 rounded-2xl border border-white/10 overflow-hidden">
             {PARTNER_TIERS.map((tier, i) => (
               <div
                 key={tier.name}
@@ -1257,7 +1277,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-14">
+      <section className="py-10 sm:py-12">
         <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1268,7 +1288,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {REGISTRATION_JOURNEY.map((step, i) => (
               <div
                 key={step.title}
@@ -1289,7 +1309,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="faq" className="py-14 scroll-mt-16">
+      <section id="faq" className="py-10 sm:py-12 scroll-mt-16">
         <div className="container-pro max-w-4xl">
           <div className="text-center">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1336,7 +1356,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <section className="py-14">
+      <section className="py-10 sm:py-12">
         <div className="container-pro max-w-4xl">
           <div className="glass-card rounded-3xl border border-accent/20 p-8 sm:p-12 text-center relative overflow-hidden">
             <div
@@ -1670,6 +1690,18 @@ const EventsPage = () => {
 
             {step === "details" && (
               <div className="space-y-4">
+                {parentRegistration && (
+                  <div className="rounded-xl border border-accent/30 bg-accent/10 p-4 flex items-start gap-3">
+                    <Heart className="text-accent shrink-0 mt-0.5" size={18} />
+                    <p className="text-xs text-foreground/80 leading-relaxed">
+                      <strong className="text-accent">Registering as a parent: </strong>
+                      use your own contact details below, and add your
+                      child's name so we know who's actually attending.
+                      We'll note this as a parent registration.
+                    </p>
+                  </div>
+                )}
+
                 <div>
                   <IconField icon={User}>
                     <input
@@ -1679,7 +1711,13 @@ const EventsPage = () => {
                       onChange={handleChange}
                       autoComplete="name"
                       className={fieldClass}
-                      placeholder={isPlayerTicket ? "Player full name" : "Full name"}
+                      placeholder={
+                        parentRegistration
+                          ? "Parent or guardian full name"
+                          : isPlayerTicket
+                          ? "Player full name"
+                          : "Full name"
+                      }
                     />
                   </IconField>
                   <p className="mt-1.5 text-xs text-foreground/50">
@@ -1687,6 +1725,20 @@ const EventsPage = () => {
                     pay.
                   </p>
                 </div>
+
+                {parentRegistration && (
+                  <IconField icon={Users}>
+                    <input
+                      type="text"
+                      name="childName"
+                      value={form.childName}
+                      onChange={handleChange}
+                      autoComplete="off"
+                      className={fieldClass}
+                      placeholder="Child's full name"
+                    />
+                  </IconField>
+                )}
 
                 <IconField icon={Mail}>
                   <input
@@ -1788,11 +1840,21 @@ const EventsPage = () => {
                         <strong>{selectedPackage.venue}</strong>
                       </div>
                       <div className="flex justify-between px-4 py-3">
-                        <span className="text-foreground/60">Name</span>
+                        <span className="text-foreground/60">
+                          {parentRegistration ? "Parent / Guardian" : "Name"}
+                        </span>
                         <strong className="truncate max-w-[60%] text-right">
                           {form.fullName || "-"}
                         </strong>
                       </div>
+                      {parentRegistration && (
+                        <div className="flex justify-between px-4 py-3">
+                          <span className="text-foreground/60">Child</span>
+                          <strong className="truncate max-w-[60%] text-right">
+                            {form.childName || "-"}
+                          </strong>
+                        </div>
+                      )}
                       <div className="flex justify-between px-4 py-3">
                         <span className="text-foreground/60">Amount</span>
                         <strong className="text-accent tabular-nums">
