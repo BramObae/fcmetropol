@@ -48,7 +48,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const featuredImage = "/event1.jpeg";
-const TILL_NUMBER = "000000"; // TODO: replace with the real Till Number before launch
+const PAYBILL_NUMBER = "533522";
+const ACC_NUMBER = "7921970"; 
 const KICKOFF = new Date("2026-08-09T00:00:00+03:00");
 const EVENT_ENDS = new Date("2026-08-15T23:59:59+03:00");
 
@@ -205,8 +206,9 @@ const CONTACTS = {
 const PAY_STEPS = [
   "Go to M-Pesa on your phone",
   "Select Lipa na M-Pesa",
-  "Select Buy Goods and Services",
-  `Enter Till Number: ${TILL_NUMBER}`,
+  "Select Pay Bill",
+  `Enter Business Number: ${PAYBILL_NUMBER}`,
+  `Enter Account Number: ${ACC_NUMBER}`,
   "Enter the amount shown above",
   "Enter your M-Pesa PIN and confirm",
 ];
@@ -229,7 +231,7 @@ const REGISTRATION_JOURNEY = [
 const FAQS = [
   {
     q: "How do I pay?",
-    a: `Lipa na M-Pesa, Buy Goods, Till Number ${TILL_NUMBER}. Full steps are shown in the registration form. Enter the exact M-Pesa confirmation code from your payment message when you register.`,
+    a: `Lipa na M-Pesa → Pay Bill. Business Number: ${PAYBILL_NUMBER}, Account Number: ${ACC_NUMBER}. Full steps are shown in the registration form. Enter the exact M-Pesa confirmation code from your payment message when you register.`,
   },
   {
     q: "What's the difference between Open Play, Workshop and the combo?",
