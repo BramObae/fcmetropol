@@ -1647,8 +1647,15 @@ const EventsPage = () => {
                       <strong className="text-sm">Lipa na M-Pesa</strong>
                     </div>
                     <div className="text-sm">
-                      <span className="text-foreground/60">Till Number </span>
-                      <strong>{TILL_NUMBER}</strong>
+                     <div>
+                     <span className="text-foreground/60">Business Number </span>
+                      <strong>{PAYBILL_NUMBER}</strong>
+                     </div>
+
+                    <div>
+                    <span className="text-foreground/60">Account Number </span>
+                    <strong>{ACC_NUMBER}</strong>
+                    </div>
                     </div>
                   </div>
 
