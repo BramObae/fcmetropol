@@ -16,6 +16,7 @@ import {
   ArrowLeft,
   CheckCircle,
   Check,
+  Copy,
   User,
   Users,
   Utensils,
@@ -49,7 +50,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const featuredImage = "/event1.jpeg";
 const PAYBILL_NUMBER = "533522";
-const ACC_NUMBER = "7921970"; 
+const ACCOUNT_NUMBER = "7921970";
 const KICKOFF = new Date("2026-08-09T00:00:00+03:00");
 const EVENT_ENDS = new Date("2026-08-15T23:59:59+03:00");
 
@@ -82,7 +83,7 @@ const PACKAGES: Record<
   Dinner: {
     title: "Dinner Launch",
     tag: "GALA",
-    subtitle: "5,000 per person, 9 Aug",
+    subtitle: "5,000 per person, 9 Aug · 6PM–10PM",
     venue: "Weston Hotel",
     price: getTicketAmount("Dinner"),
     icon: Utensils,
@@ -96,8 +97,8 @@ const PACKAGES: Record<
   OpenPlay: {
     title: "Metropol Open Play",
     tag: "SCOUTING",
-    subtitle: "5,000 per pax, 10 to 11 Aug",
-    venue: "Jaffery Sports Club",
+    subtitle: "5,000 per pax, 10 to 11 Aug · 8AM–5PM",
+    venue: "Ulinzi Sports Complex, Nairobi",
     price: getTicketAmount("OpenPlay"),
     icon: Target,
     includes: [
@@ -125,7 +126,7 @@ const PACKAGES: Record<
     title: "Open Play & Workshop",
     tag: "FULL PROGRAMME",
     subtitle: "15,000 per pax, 10 to 14 Aug",
-    venue: "Jaffery Sports Club",
+    venue: "Ulinzi Sports Complex & Jaffery Sports Club",
     price: getTicketAmount("OpenPlayWorkshop"),
     icon: Layers,
     includes: [
@@ -138,7 +139,7 @@ const PACKAGES: Record<
   CorporateTable: {
     title: "Corporate Table",
     tag: "10 PAX",
-    subtitle: "100,000 per table, 9 Aug",
+    subtitle: "100,000 per table, 9 Aug · 6PM–10PM",
     venue: "Weston Hotel",
     price: getTicketAmount("CorporateTable"),
     icon: Users,
@@ -156,14 +157,14 @@ const SCHEDULE = [
   {
     range: "09 Aug",
     title: "Launch Dinner and Partnership Forum",
-    desc: "Official launch, with Chief Guest Micky Adams (England).",
+    desc: "Official launch, with Chief Guest Micky Adams (England), 6PM to 10PM.",
     venue: "Weston Hotel",
   },
   {
     range: "10-11 Aug",
     title: "Open Play Talent Identification",
-    desc: "Scouting and assessment for players aged 14 to 20.",
-    venue: "Jaffery Sports Club",
+    desc: "Scouting and assessment for players aged 14 to 20, 8AM to 5PM.",
+    venue: "Ulinzi Sports Complex",
   },
   {
     range: "12-14 Aug",
@@ -208,7 +209,7 @@ const PAY_STEPS = [
   "Select Lipa na M-Pesa",
   "Select Pay Bill",
   `Enter Business Number: ${PAYBILL_NUMBER}`,
-  `Enter Account Number: ${ACC_NUMBER}`,
+  `Enter Account Number: ${ACCOUNT_NUMBER}`,
   "Enter the amount shown above",
   "Enter your M-Pesa PIN and confirm",
 ];
@@ -231,11 +232,11 @@ const REGISTRATION_JOURNEY = [
 const FAQS = [
   {
     q: "How do I pay?",
-    a: `Lipa na M-Pesa → Pay Bill. Business Number: ${PAYBILL_NUMBER}, Account Number: ${ACC_NUMBER}. Full steps are shown in the registration form. Enter the exact M-Pesa confirmation code from your payment message when you register.`,
+    a: `Lipa na M-Pesa, Pay Bill, Business Number ${PAYBILL_NUMBER}, Account Number ${ACCOUNT_NUMBER}. Full steps are shown in the registration form. Enter the exact M-Pesa confirmation code from your payment message when you register.`,
   },
   {
     q: "What's the difference between Open Play, Workshop and the combo?",
-    a: "Open Play (10 to 11 Aug) is the scouting and talent assessment. Workshop (12 to 14 Aug) is the elite player and coach development sessions. The combo covers both, 10 to 14 Aug. Both run at Jaffery Sports Club.",
+    a: "Open Play (10 to 11 Aug, 8AM to 5PM) is the scouting and talent assessment, at Ulinzi Sports Complex. Workshop (12 to 14 Aug) is the elite player and coach development sessions, at Jaffery Sports Club. The combo covers both, 10 to 14 Aug.",
   },
   {
     q: "How does the Corporate Table work?",
@@ -383,6 +384,28 @@ const EventsPage = () => {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [posterImageFailed, setPosterImageFailed] = useState(false);
+
+  // Tracks which payment field (paybill or account) was just copied, so
+  // the button can briefly show "Copied" before reverting. Cleared
+  // automatically after a couple of seconds.
+  const [copiedField, setCopiedField] = useState<"paybill" | "account" | null>(
+    null
+  );
+
+  const copyToClipboard = (value: string, field: "paybill" | "account") => {
+    navigator.clipboard
+      .writeText(value)
+      .then(() => {
+        setCopiedField(field);
+        setTimeout(() => setCopiedField((current) => (current === field ? null : current)), 2000);
+      })
+      .catch(() => {
+        // Clipboard access can fail (older browsers, permissions, etc.) —
+        // the numbers are still visible and selectable by hand, so this
+        // is a silent no-op rather than surfacing an error for something
+        // this minor.
+      });
+  };
 
   const selectedPackage = PACKAGES[ticketType];
   const amount = selectedPackage.price;
@@ -986,7 +1009,8 @@ const EventsPage = () => {
                       Metropol Open Play Kenya 2026
                     </p>
                     <p className="text-sm text-foreground/50">
-                      9 to 15 August, Weston Hotel and Jaffery Sports Club
+                      9 to 15 August, Weston Hotel, Ulinzi Sports Complex and
+                      Jaffery Sports Club
                     </p>
                   </div>
                 ) : (
@@ -1011,7 +1035,7 @@ const EventsPage = () => {
                       VENUE
                     </div>
                     <div className="mt-1 font-display text-base">
-                      Jaffery Sports Club
+                      Nairobi
                     </div>
                   </div>
                   <div>
@@ -1646,22 +1670,63 @@ const EventsPage = () => {
                       <Smartphone className="text-accent" size={18} />
                       <strong className="text-sm">Lipa na M-Pesa</strong>
                     </div>
-                    <div className="text-sm">
-                     <div>
-                     <span className="text-foreground/60">Business Number </span>
-                      <strong>{PAYBILL_NUMBER}</strong>
-                     </div>
-
-                    <div>
-                    <span className="text-foreground/60">Account Number </span>
-                    <strong>{ACC_NUMBER}</strong>
-                    </div>
-                    </div>
+                    <span className="text-[10px] font-semibold tracking-widest text-accent uppercase">
+                      Pay Bill
+                    </span>
                   </div>
 
                   <p className="mt-2 text-[11px] text-foreground/50">
                     Paid directly through Safaricom M-Pesa, no third party
                     handles your payment.
+                  </p>
+
+                  {/* Business Number / Account Number, made deliberately
+                      unmissable: large tabular figures, a strong border,
+                      a soft glow, and tap-to-copy so nothing needs to be
+                      retyped by hand into M-Pesa. */}
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard(PAYBILL_NUMBER, "paybill")}
+                      className="rounded-xl border-2 border-accent bg-background/80 px-3 py-3 text-left transition-transform active:scale-[0.97] shadow-[0_0_24px_-6px_rgba(227,167,60,0.35)]"
+                    >
+                      <span className="text-[10px] font-semibold tracking-widest text-accent uppercase">
+                        Business No.
+                      </span>
+                      <span className="mt-1 flex items-center justify-between gap-2">
+                        <span className="font-display text-2xl tabular-nums text-accent">
+                          {PAYBILL_NUMBER}
+                        </span>
+                        {copiedField === "paybill" ? (
+                          <Check className="text-accent shrink-0" size={16} />
+                        ) : (
+                          <Copy className="text-accent/50 shrink-0" size={16} />
+                        )}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard(ACCOUNT_NUMBER, "account")}
+                      className="rounded-xl border-2 border-accent bg-background/80 px-3 py-3 text-left transition-transform active:scale-[0.97] shadow-[0_0_24px_-6px_rgba(227,167,60,0.35)]"
+                    >
+                      <span className="text-[10px] font-semibold tracking-widest text-accent uppercase">
+                        Account No.
+                      </span>
+                      <span className="mt-1 flex items-center justify-between gap-2">
+                        <span className="font-display text-2xl tabular-nums text-accent">
+                          {ACCOUNT_NUMBER}
+                        </span>
+                        {copiedField === "account" ? (
+                          <Check className="text-accent shrink-0" size={16} />
+                        ) : (
+                          <Copy className="text-accent/50 shrink-0" size={16} />
+                        )}
+                      </span>
+                    </button>
+                  </div>
+                  <p className="mt-1.5 text-[10px] text-foreground/40 text-center">
+                    Tap either number to copy it
                   </p>
 
                   <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
