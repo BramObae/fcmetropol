@@ -77,6 +77,7 @@ const PACKAGES: Record<
     price: number;
     icon: typeof User;
     includes: string[];
+    audience: string;
     featured?: boolean;
   }
 > = {
@@ -87,6 +88,7 @@ const PACKAGES: Record<
     venue: "Weston Hotel",
     price: getTicketAmount("Dinner"),
     icon: Utensils,
+    audience: "For adults & business professionals",
     includes: [
       "Official Launch Dinner, 9 Aug",
       "Sports Investment and Partnership Forum",
@@ -101,6 +103,7 @@ const PACKAGES: Record<
     venue: "Ulinzi Sports Complex, Nairobi",
     price: getTicketAmount("OpenPlay"),
     icon: Target,
+    audience: "For players, aged 14 to 20",
     includes: [
       "Two days of talent assessment, 10 to 11 Aug",
       "Assessed by international scouts and academies",
@@ -115,11 +118,27 @@ const PACKAGES: Record<
     venue: "Jaffery Sports Club",
     price: getTicketAmount("Workshop"),
     icon: GraduationCap,
+    audience: "For players",
     includes: [
       "Three days of elite development, 12 to 14 Aug",
       "Led by international facilitators",
       "High performance training and sports science",
       "One on one feedback from a lead facilitator",
+    ],
+  },
+  CoachesWorkshop: {
+    title: "Coaches Workshop",
+    tag: "COACH ED",
+    subtitle: "10,000 per pax, 12 to 14 Aug",
+    venue: "Jaffery Sports Club",
+    price: getTicketAmount("CoachesWorkshop"),
+    icon: ClipboardCheck,
+    audience: "For coaches",
+    includes: [
+      "Three days of coach education, 12 to 14 Aug",
+      "Coaching methodology and sports science",
+      "Led by international facilitators",
+      "Certificate of participation",
     ],
   },
   OpenPlayWorkshop: {
@@ -129,6 +148,7 @@ const PACKAGES: Record<
     venue: "Ulinzi Sports Complex & Jaffery Sports Club",
     price: getTicketAmount("OpenPlayWorkshop"),
     icon: Layers,
+    audience: "For players",
     includes: [
       "Full player programme, 10 to 14 Aug",
       "Open Play talent assessment",
@@ -143,6 +163,7 @@ const PACKAGES: Record<
     venue: "Weston Hotel",
     price: getTicketAmount("CorporateTable"),
     icon: Users,
+    audience: "For organisations",
     featured: true,
     includes: [
       "Reserved table of 10 at the Launch Dinner",
@@ -470,10 +491,10 @@ const EventsPage = () => {
       title: "Coaches and Academies",
       icon: GraduationCap,
       desc: "Expose your players and staff to international technical standards, workshops and pathway opportunities.",
-      cta: "Register for the Workshop",
+      cta: "Register for Coaches Workshop",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        openRegistration("Workshop");
+        openRegistration("CoachesWorkshop");
       },
     },
     {
@@ -895,7 +916,7 @@ const EventsPage = () => {
               Pick your way in
             </h2>
             <p className="mt-2 text-foreground/60 text-sm">
-              Five ways to be part of Metropol Open Play Kenya 2026.
+              Six ways to be part of Metropol Open Play Kenya 2026.
             </p>
           </div>
 
@@ -944,6 +965,9 @@ const EventsPage = () => {
                       <MapPin size={12} className="text-accent/70" />
                       {pkg.venue}
                     </p>
+                    <span className="mt-2 inline-block rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-[10px] font-medium text-foreground/60">
+                      {pkg.audience}
+                    </span>
                   </div>
 
                   <div className="mx-6 mt-4 rounded-xl border border-accent/20 bg-gradient-to-br from-accent/15 to-accent/5 px-5 py-3.5">
@@ -1636,7 +1660,7 @@ const EventsPage = () => {
                           {pkg.title}
                         </span>
                         <span className="block text-xs text-foreground/50 mt-0.5 truncate">
-                          {pkg.subtitle} · {pkg.venue}
+                          {pkg.audience} · {pkg.subtitle}
                         </span>
                       </span>
                       <span className="shrink-0 text-right">
