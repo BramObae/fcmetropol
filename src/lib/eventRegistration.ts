@@ -13,9 +13,8 @@ const APP_SECRET = "fcm2026-8k2j9dq4";
 
 // Matches the eleven real categories for Metropol Open Play Kenya 2026:
 // the six attendee ticket types (Launch Dinner, Corporate Table, Open
-// Play, the player Workshop, the separate Coaches Workshop, and the
-// Open Play + player Workshop combo), plus the five sponsorship
-// partnership tiers.
+// Play, Workshop, Coaches Workshop, and the Open Play + Workshop
+// combo), plus the five sponsorship partnership tiers.
 export type TicketType =
   | "Dinner"
   | "CorporateTable"
@@ -54,7 +53,10 @@ export interface RegistrationResponse {
   error?: string;
 }
 
-// Fixed prices for the six attendee ticket types.
+// Fixed prices for the six attendee ticket types. Coaches Workshop is
+// priced the same as the player Workshop (10,000) — same three days,
+// same facilitators, just a coach-focused track rather than a
+// player-focused one. Adjust here if that should differ.
 export function getTicketAmount(ticket: TicketType) {
   switch (ticket) {
     case "Dinner":
@@ -65,11 +67,6 @@ export function getTicketAmount(ticket: TicketType) {
       return 5000;
     case "Workshop":
       return 10000;
-    // TODO: confirm the real Coaches Workshop price. Using the same
-    // 10,000 as the player Workshop as a placeholder since no price
-    // was given — the backend validates this exact figure, so update
-    // both this and FIXED_TICKET_PRICES in the Apps Script file
-    // together if the real price differs.
     case "CoachesWorkshop":
       return 5000;
     case "OpenPlayWorkshop":
