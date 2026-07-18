@@ -4,6 +4,7 @@ import {
   registerAttendee,
   getTicketAmount,
   TicketType,
+  MAX_QUANTITY,
 } from "@/lib/eventRegistration";
 
 import {
@@ -43,6 +44,8 @@ import {
   Handshake,
   ShieldCheck,
   ClipboardCheck,
+  Minus,
+  Plus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -78,6 +81,7 @@ const PACKAGES: Record<
     icon: typeof User;
     includes: string[];
     audience: string;
+    unitLabel: string;
     featured?: boolean;
   }
 > = {
@@ -89,6 +93,7 @@ const PACKAGES: Record<
     price: getTicketAmount("Dinner"),
     icon: Utensils,
     audience: "For adults & business professionals",
+    unitLabel: "ticket",
     includes: [
       "Official Launch Dinner, 9 Aug",
       "Sports Investment and Partnership Forum",
@@ -104,6 +109,7 @@ const PACKAGES: Record<
     price: getTicketAmount("OpenPlay"),
     icon: Target,
     audience: "For players, aged 14 to 20",
+    unitLabel: "ticket",
     includes: [
       "Two days of talent assessment, 10 to 11 Aug",
       "Assessed by international scouts and academies",
@@ -119,6 +125,7 @@ const PACKAGES: Record<
     price: getTicketAmount("Workshop"),
     icon: GraduationCap,
     audience: "For players",
+    unitLabel: "ticket",
     includes: [
       "Three days of elite development, 12 to 14 Aug",
       "Led by international facilitators",
@@ -129,11 +136,12 @@ const PACKAGES: Record<
   CoachesWorkshop: {
     title: "Coaches Workshop",
     tag: "COACH ED",
-    subtitle: "10,000 per pax, 12 to 14 Aug",
+    subtitle: "5,000 per pax, 12 to 14 Aug",
     venue: "Jaffery Sports Club",
     price: getTicketAmount("CoachesWorkshop"),
     icon: ClipboardCheck,
     audience: "For coaches",
+    unitLabel: "ticket",
     includes: [
       "Three days of coach education, 12 to 14 Aug",
       "Coaching methodology and sports science",
@@ -149,6 +157,7 @@ const PACKAGES: Record<
     price: getTicketAmount("OpenPlayWorkshop"),
     icon: Layers,
     audience: "For players",
+    unitLabel: "ticket",
     includes: [
       "Full player programme, 10 to 14 Aug",
       "Open Play talent assessment",
@@ -164,6 +173,7 @@ const PACKAGES: Record<
     price: getTicketAmount("CorporateTable"),
     icon: Users,
     audience: "For organisations",
+    unitLabel: "table",
     featured: true,
     includes: [
       "Reserved table of 10 at the Launch Dinner",
@@ -290,7 +300,7 @@ const TicketSeam = ({ className = "" }: { className?: string }) => (
 );
 
 const SectionDivider = () => (
-  <div className="flex items-center justify-center gap-2 py-1" aria-hidden="true">
+  <div className="flex items-center justify-center gap-2" aria-hidden="true">
     <span className="h-px w-16 bg-white/10" />
     <svg width="20" height="12" viewBox="0 0 22 14" className="text-accent/60">
       <path
@@ -370,6 +380,7 @@ const EventsPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const [ticketType, setTicketType] = useState<AttendeeTicketType>("Dinner");
+  const [quantity, setQuantity] = useState(1);
   const countdown = useCountdown(KICKOFF);
   const eventPhase = getEventPhase(countdown.now, KICKOFF, EVENT_ENDS);
 
@@ -429,7 +440,7 @@ const EventsPage = () => {
   };
 
   const selectedPackage = PACKAGES[ticketType];
-  const amount = selectedPackage.price;
+  const amount = selectedPackage.price * quantity;
   const isPlayerTicket =
     ticketType === "OpenPlay" ||
     ticketType === "Workshop" ||
@@ -459,6 +470,7 @@ const EventsPage = () => {
 
   const openRegistration = (key?: AttendeeTicketType) => {
     if (key) setTicketType(key);
+    setQuantity(1);
     setStep("ticket");
     setError("");
     setSuccess("");
@@ -539,6 +551,7 @@ const EventsPage = () => {
       notes: "",
     });
     setTicketType("Dinner");
+    setQuantity(1);
     setConfirmChecked(false);
     setParentRegistration(false);
     setStep("ticket");
@@ -572,6 +585,7 @@ const EventsPage = () => {
       ticketType,
       transactionCode: form.transactionCode,
       amount,
+      quantity,
       notes: composedNotes,
     };
 
@@ -644,7 +658,7 @@ const EventsPage = () => {
         </div>
       </div>
 
-      <section className="relative pt-12 pb-10 overflow-hidden">
+      <section className="relative pt-10 pb-8 overflow-hidden">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10"
@@ -782,7 +796,7 @@ const EventsPage = () => {
             </div>
           )}
 
-          <div className="mt-8 pt-6 border-t border-white/10">
+          <div className="mt-6 pt-6 border-t border-white/10">
             <p className="text-center text-[10px] tracking-[0.2em] text-foreground/40 uppercase mb-4">
               Scouting alongside international partners
             </p>
@@ -800,7 +814,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <section className="py-10 sm:py-12">
+      <section className="py-8 sm:py-10">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -818,7 +832,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 icon: Target,
@@ -863,7 +877,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="audience" className="py-10 sm:py-12 scroll-mt-16">
+      <section id="audience" className="py-8 sm:py-10 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -874,7 +888,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {AUDIENCES.map((aud) => {
               const Icon = aud.icon;
               return (
@@ -906,7 +920,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <section id="tickets" className="py-10 sm:py-12 scroll-mt-16">
+      <section id="tickets" className="py-8 sm:py-10 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -920,7 +934,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
               const pkg = PACKAGES[key];
               const Icon = pkg.icon;
@@ -1017,7 +1031,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-10 sm:py-12">
+      <section className="py-8 sm:py-10">
         <div className="container-pro max-w-6xl">
           <div className="flex justify-center">
             <div className="relative w-full max-w-3xl">
@@ -1073,7 +1087,7 @@ const EventsPage = () => {
             </div>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-white/10 bg-black/20 px-6 py-6">
+          <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 px-6 py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
               {STATS.map((s) => (
                 <div key={s.label} className="text-center px-2">
@@ -1092,7 +1106,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-10 sm:py-12">
+      <section className="py-8 sm:py-10">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1103,7 +1117,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-10 glass-card rounded-3xl border border-white/10 p-8 md:p-10 relative overflow-hidden">
+          <div className="mt-8 glass-card rounded-3xl border border-white/10 p-8 md:p-10 relative overflow-hidden">
             <Quote
               className="absolute -top-2 -left-2 text-accent/10"
               size={100}
@@ -1168,7 +1182,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="highlights" className="py-10 sm:py-12 scroll-mt-16">
+      <section id="highlights" className="py-8 sm:py-10 scroll-mt-16">
         <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1179,7 +1193,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-10 relative">
+          <div className="mt-8 relative">
             <div className="absolute left-[27px] sm:left-[35px] top-2 bottom-2 w-px bg-gradient-to-b from-accent/40 via-white/10 to-transparent" />
             <div className="space-y-8">
               {SCHEDULE.map((item, i) => (
@@ -1210,7 +1224,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-10 sm:py-12">
+      <section className="py-8 sm:py-10">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1226,7 +1240,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-8 grid sm:grid-cols-2 gap-4">
+          <div className="mt-6 grid sm:grid-cols-2 gap-4">
             {[
               {
                 icon: ShieldCheck,
@@ -1273,7 +1287,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="partners" className="py-10 sm:py-12 scroll-mt-16">
+      <section id="partners" className="py-8 sm:py-10 scroll-mt-16">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1289,7 +1303,7 @@ const EventsPage = () => {
             </p>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-white/10 overflow-hidden">
+          <div className="mt-6 rounded-2xl border border-white/10 overflow-hidden">
             {PARTNER_TIERS.map((tier, i) => (
               <div
                 key={tier.name}
@@ -1327,7 +1341,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section className="py-10 sm:py-12">
+      <section className="py-8 sm:py-10">
         <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1338,7 +1352,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {REGISTRATION_JOURNEY.map((step, i) => (
               <div
                 key={step.title}
@@ -1359,7 +1373,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
-      <section id="faq" className="py-10 sm:py-12 scroll-mt-16">
+      <section id="faq" className="py-8 sm:py-10 scroll-mt-16">
         <div className="container-pro max-w-4xl">
           <div className="text-center">
             <span className="text-sm text-accent font-semibold tracking-wide">
@@ -1370,7 +1384,7 @@ const EventsPage = () => {
             </h2>
           </div>
 
-          <div className="mt-8 space-y-2.5">
+          <div className="mt-6 space-y-2.5">
             {FAQS.map((item, i) => (
               <div
                 key={item.q}
@@ -1406,7 +1420,7 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <section className="py-10 sm:py-12">
+      <section className="py-8 sm:py-10">
         <div className="container-pro max-w-4xl">
           <div className="glass-card rounded-3xl border border-accent/20 p-8 sm:p-12 text-center relative overflow-hidden">
             <div
@@ -1465,7 +1479,7 @@ const EventsPage = () => {
               </p>
             </div>
 
-            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="glass rounded-2xl p-5 border border-white/10">
                 <p className="text-[10px] font-semibold tracking-widest text-accent uppercase">
                   Ticket Inquiries
@@ -1627,8 +1641,9 @@ const EventsPage = () => {
 
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5">
             {step === "ticket" && (
-              <div className="space-y-2.5">
-                {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
+              <>
+                <div className="space-y-2.5">
+                  {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
                   const pkg = PACKAGES[key];
                   const Icon = pkg.icon;
                   const active = ticketType === key;
@@ -1636,7 +1651,10 @@ const EventsPage = () => {
                     <button
                       key={key}
                       type="button"
-                      onClick={() => setTicketType(key)}
+                      onClick={() => {
+                        setTicketType(key);
+                        setQuantity(1);
+                      }}
                       className={`w-full flex items-center gap-3 rounded-2xl border p-3.5 text-left transition-all duration-200 ${
                         active
                           ? "border-accent bg-accent/10 shadow-sm"
@@ -1684,6 +1702,58 @@ const EventsPage = () => {
                   );
                 })}
               </div>
+
+              <div className="mt-4 space-y-3">
+                <div className="rounded-2xl border border-white/10 bg-background/60 p-4 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold">
+                      Number of {selectedPackage.unitLabel}
+                      {quantity === 1 ? "" : "s"}
+                    </p>
+                    <p className="text-xs text-foreground/50 mt-0.5">
+                      Buying for others too? Get up to {MAX_QUANTITY} in one
+                      go, no need to register separately.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      disabled={quantity <= 1}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-background disabled:opacity-30 transition-colors hover:border-accent/40"
+                      aria-label="Decrease quantity"
+                    >
+                      <Minus size={16} />
+                    </button>
+                    <span className="w-8 text-center font-display text-xl tabular-nums">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setQuantity((q) => Math.min(MAX_QUANTITY, q + 1))
+                      }
+                      disabled={quantity >= MAX_QUANTITY}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-background disabled:opacity-30 transition-colors hover:border-accent/40"
+                      aria-label="Increase quantity"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                {quantity > 1 && (
+                  <div className="rounded-xl bg-accent/10 border border-accent/20 px-4 py-3 text-sm flex items-center justify-between">
+                    <span className="text-foreground/70">
+                      {quantity} × KES {selectedPackage.price.toLocaleString()}
+                    </span>
+                    <strong className="text-accent tabular-nums">
+                      KES {amount.toLocaleString()}
+                    </strong>
+                  </div>
+                )}
+              </div>
+              </>
             )}
 
             {step === "pay" && (
@@ -1754,10 +1824,18 @@ const EventsPage = () => {
                   </p>
 
                   <div className="mt-3 rounded-xl bg-background/50 px-4 py-3 text-sm">
-                    <span className="text-foreground/60">Amount to pay </span>
-                    <strong className="text-accent tabular-nums">
-                      KES {amount.toLocaleString()}
-                    </strong>
+                    <div className="flex items-center justify-between">
+                      <span className="text-foreground/60">Amount to pay </span>
+                      <strong className="text-accent tabular-nums">
+                        KES {amount.toLocaleString()}
+                      </strong>
+                    </div>
+                    {quantity > 1 && (
+                      <p className="mt-1 text-[11px] text-foreground/50 text-right">
+                        {quantity} {selectedPackage.unitLabel}s × KES{" "}
+                        {selectedPackage.price.toLocaleString()}
+                      </p>
+                    )}
                   </div>
 
                   <ul className="mt-4 space-y-2.5">
@@ -1937,6 +2015,14 @@ const EventsPage = () => {
                         <span className="text-foreground/60">Venue</span>
                         <strong>{selectedPackage.venue}</strong>
                       </div>
+                      {quantity > 1 && (
+                        <div className="flex justify-between px-4 py-3">
+                          <span className="text-foreground/60">Quantity</span>
+                          <strong>
+                            {quantity} {selectedPackage.unitLabel}s
+                          </strong>
+                        </div>
+                      )}
                       <div className="flex justify-between px-4 py-3">
                         <span className="text-foreground/60">
                           {parentRegistration ? "Parent / Guardian" : "Name"}
