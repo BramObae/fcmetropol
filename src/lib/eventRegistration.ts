@@ -11,6 +11,15 @@ const API_URL =
 // other.
 const APP_SECRET = "fcm2026-8k2j9dq4";
 
+// Group purchases: one buyer can register multiple tickets of the same
+// type in a single submission (e.g. a parent buying for 3 kids, or a
+// scout buying 5 Open Play passes), instead of everyone needing to
+// submit their own separate registration and payment. Capped at 10 so
+// a single registration can't silently become a bulk/corporate-scale
+// transaction — Corporate Table already exists for genuinely large
+// group bookings.
+export const MAX_QUANTITY = 10;
+
 // Matches the eleven real categories for Metropol Open Play Kenya 2026:
 // the six attendee ticket types (Launch Dinner, Corporate Table, Open
 // Play, Workshop, Coaches Workshop, and the Open Play + Workshop
@@ -37,6 +46,11 @@ export interface RegistrationData {
   transactionCode: string;
   mpesaMessage?: string;
   companyName?: string;
+  // How many tickets of this type this one registration covers, 1–10.
+  // Does not apply to sponsorship tiers (always treated as 1 there —
+  // a sponsorship is a single custom-amount commitment, not a per-unit
+  // purchase). Defaults to 1 if omitted.
+  quantity?: number;
   // Total amount actually charged. Fixed-price tickets pass
   // getTicketAmount() automatically; sponsorship tiers require the
   // caller to supply a specific amount within that tier's range (see
@@ -54,9 +68,7 @@ export interface RegistrationResponse {
 }
 
 // Fixed prices for the six attendee ticket types. Coaches Workshop is
-// priced the same as the player Workshop (10,000) — same three days,
-// same facilitators, just a coach-focused track rather than a
-// player-focused one. Adjust here if that should differ.
+// priced at 5,000 — separate from the player Workshop's 10,000.
 export function getTicketAmount(ticket: TicketType) {
   switch (ticket) {
     case "Dinner":
@@ -201,8 +213,14 @@ function validateRegistrationData(data: RegistrationData): string | null {
     const amount = data.amount ?? 0;
     const sponsorError = validateSponsorAmount(data.ticketType, amount);
     if (sponsorError) return sponsorError;
-  } else if (!data.transactionCode.trim()) {
-    return "M-Pesa transaction code is required.";
+  } else {
+    if (!data.transactionCode.trim()) {
+      return "M-Pesa transaction code is required.";
+    }
+    const quantity = data.quantity ?? 1;
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY) {
+      return `Quantity must be a whole number between 1 and ${MAX_QUANTITY}.`;
+    }
   }
 
   return null;
@@ -217,7 +235,11 @@ export async function registerAttendee(
   }
 
   try {
-    const amount = data.amount ?? getTicketAmount(data.ticketType);
+    const quantity = isSponsorTier(data.ticketType)
+      ? 1
+      : Math.max(1, Math.min(MAX_QUANTITY, Math.round(data.quantity ?? 1)));
+
+    const amount = data.amount ?? getTicketAmount(data.ticketType) * quantity;
 
     const formData = new URLSearchParams();
     formData.append("apiKey", APP_SECRET);
@@ -226,6 +248,7 @@ export async function registerAttendee(
     formData.append("phone", data.phone.trim());
     formData.append("country", data.country.trim());
     formData.append("ticketType", BACKEND_TICKET_CODE[data.ticketType]);
+    formData.append("quantity", quantity.toString());
     formData.append("amount", amount.toString());
     formData.append("transactionCode", data.transactionCode.trim());
     formData.append("mpesaMessage", data.mpesaMessage || "");
