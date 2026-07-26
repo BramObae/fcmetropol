@@ -5,6 +5,8 @@ import {
   getTicketAmount,
   TicketType,
   MAX_QUANTITY,
+  getTotalAmount,
+  hasGroupDiscount,
 } from "@/lib/eventRegistration";
 
 import {
@@ -105,7 +107,7 @@ const PACKAGES: Record<
     title: "Metropol Open Play",
     tag: "SCOUTING",
     subtitle: "5,000 per pax, 10 to 11 Aug · 8AM–5PM",
-    venue: "Ulinzi Sports Complex, Nairobi",
+    venue: "Nyayo Stadium, Nairobi",
     price: getTicketAmount("OpenPlay"),
     icon: Target,
     audience: "For players, aged 14 to 20",
@@ -121,7 +123,7 @@ const PACKAGES: Record<
     title: "Metropol Workshop",
     tag: "DEVELOPMENT",
     subtitle: "10,000 per pax, 12 to 14 Aug",
-    venue: "Jaffery Sports Club",
+    venue: "Nyayo Stadium",
     price: getTicketAmount("Workshop"),
     icon: GraduationCap,
     audience: "For players",
@@ -137,7 +139,7 @@ const PACKAGES: Record<
     title: "Coaches Workshop",
     tag: "COACH ED",
     subtitle: "5,000 per pax, 12 to 14 Aug",
-    venue: "Jaffery Sports Club",
+    venue: "Nyayo Stadium",
     price: getTicketAmount("CoachesWorkshop"),
     icon: ClipboardCheck,
     audience: "For coaches",
@@ -153,7 +155,7 @@ const PACKAGES: Record<
     title: "Open Play & Workshop",
     tag: "FULL PROGRAMME",
     subtitle: "15,000 per pax, 10 to 14 Aug",
-    venue: "Ulinzi Sports Complex & Jaffery Sports Club",
+    venue: "Nyayo Stadium",
     price: getTicketAmount("OpenPlayWorkshop"),
     icon: Layers,
     audience: "For players",
@@ -195,19 +197,19 @@ const SCHEDULE = [
     range: "10-11 Aug",
     title: "Open Play Talent Identification",
     desc: "Scouting and assessment for players aged 14 to 20, 8AM to 5PM.",
-    venue: "Ulinzi Sports Complex",
+    venue: "Nyayo Stadium",
   },
   {
     range: "12-14 Aug",
     title: "Elite Player and Coach Workshops",
     desc: "International development sessions for players and coaches.",
-    venue: "Jaffery Sports Club",
+    venue: "Nyayo Stadium",
   },
   {
     range: "15 Aug",
     title: "Showcase Match and Closing Ceremony",
     desc: "PWD curtain raiser, international showcase match, awards.",
-    venue: "Jaffery Sports Club",
+    venue: "Nyayo Stadium",
   },
 ];
 
@@ -267,7 +269,7 @@ const FAQS = [
   },
   {
     q: "What's the difference between Open Play, Workshop and the combo?",
-    a: "Open Play (10 to 11 Aug, 8AM to 5PM) is the scouting and talent assessment, at Ulinzi Sports Complex. Workshop (12 to 14 Aug) is the elite player and coach development sessions, at Jaffery Sports Club. The combo covers both, 10 to 14 Aug.",
+    a: "Open Play (10 to 11 Aug, 8AM to 5PM) is the scouting and talent assessment. Workshop (12 to 14 Aug) is the elite player and coach development sessions. Both run at Nyayo Stadium. The combo covers both, 10 to 14 Aug.",
   },
   {
     q: "How does the Corporate Table work?",
@@ -402,16 +404,8 @@ const EventsPage = () => {
     country: "",
     transactionCode: "",
     companyName: "",
-    childName: "",
     notes: "",
   });
-
-  // True when someone arrived via the "Register My Child" audience CTA.
-  // Drives the extra "Child's Full Name" field and gets folded into the
-  // submitted notes automatically, so this is always captured
-  // consistently rather than relying on the parent to remember to
-  // mention it themselves.
-  const [parentRegistration, setParentRegistration] = useState(false);
 
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -440,7 +434,9 @@ const EventsPage = () => {
   };
 
   const selectedPackage = PACKAGES[ticketType];
-  const amount = selectedPackage.price * quantity;
+  const amount = getTotalAmount(ticketType, quantity);
+  const isGroupDiscountEligible = hasGroupDiscount(ticketType);
+  const groupDiscountActive = isGroupDiscountEligible && quantity === MAX_QUANTITY;
   const isPlayerTicket =
     ticketType === "OpenPlay" ||
     ticketType === "Workshop" ||
@@ -454,8 +450,7 @@ const EventsPage = () => {
     form.phone.replace(/\D/g, "").length >= 9 &&
     form.country.trim().length > 0 &&
     form.transactionCode.trim().length >= 6 &&
-    (ticketType !== "CorporateTable" || form.companyName.trim().length > 0) &&
-    (!parentRegistration || form.childName.trim().length > 1);
+    (ticketType !== "CorporateTable" || form.companyName.trim().length > 0);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -495,7 +490,6 @@ const EventsPage = () => {
       cta: "Register My Child",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        setParentRegistration(true);
         openRegistration("OpenPlay");
       },
     },
@@ -547,13 +541,11 @@ const EventsPage = () => {
       country: "",
       transactionCode: "",
       companyName: "",
-      childName: "",
       notes: "",
     });
     setTicketType("Dinner");
     setQuantity(1);
     setConfirmChecked(false);
-    setParentRegistration(false);
     setStep("ticket");
   };
 
@@ -563,8 +555,8 @@ const EventsPage = () => {
     setSuccess("");
 
     let composedNotes = "";
-    if (parentRegistration) {
-      composedNotes += `Parent registration for child: ${form.childName.trim()}`;
+    if (groupDiscountActive) {
+      composedNotes += `Group rate applied (${MAX_QUANTITY} x ${selectedPackage.title})`;
     }
     if (ticketType === "CorporateTable" && form.companyName) {
       composedNotes += composedNotes
@@ -814,6 +806,125 @@ const EventsPage = () => {
         </div>
       </section>
 
+      <section id="tickets" className="py-8 sm:py-10 scroll-mt-16">
+        <div className="container-pro max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm text-accent font-semibold tracking-wide">
+              TICKET PACKAGES
+            </span>
+            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
+              Pick your way in
+            </h2>
+            <p className="mt-2 text-foreground/60 text-sm">
+              Six ways to be part of Metropol Open Play Kenya 2026.
+            </p>
+          </div>
+
+          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
+              const pkg = PACKAGES[key];
+              const Icon = pkg.icon;
+              return (
+                <div
+                  key={key}
+                  className={`group relative rounded-3xl flex flex-col glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1.5 ${
+                    pkg.featured
+                      ? "border-2 border-accent/40 shadow-[0_0_0_1px_rgba(227,167,60,0.25),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
+                      : "border border-white/10 hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.3),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
+                  }`}
+                >
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background:
+                        "linear-gradient(115deg, transparent 40%, rgba(227,167,60,0.06) 50%, transparent 60%)",
+                    }}
+                  />
+
+                  {pkg.featured && (
+                    <div className="bg-accent px-4 py-1.5 text-center text-[10px] font-bold tracking-widest text-background">
+                      MOST RESERVED FOR PARTNERS
+                    </div>
+                  )}
+
+                  <div className="h-1 w-full bg-gradient-to-r from-accent/30 via-accent to-accent/30" />
+
+                  <div className="flex items-center justify-between px-6 pt-5">
+                    <span className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-accent">
+                      {pkg.tag}
+                    </span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 border border-accent/20 transition-transform duration-300 group-hover:scale-110">
+                      <Icon className="text-accent" size={18} />
+                    </span>
+                  </div>
+
+                  <div className="px-6 pt-4">
+                    <h3 className="font-display text-2xl">{pkg.title}</h3>
+                    <p className="text-foreground/50 text-xs mt-1.5 flex items-center gap-1.5">
+                      <MapPin size={12} className="text-accent/70" />
+                      {pkg.venue}
+                    </p>
+                    <span className="mt-2 inline-block rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-[10px] font-medium text-foreground/60">
+                      {pkg.audience}
+                    </span>
+                  </div>
+
+                  <div className="mx-6 mt-4 rounded-xl border border-accent/20 bg-gradient-to-br from-accent/15 to-accent/5 px-5 py-3.5">
+                    <p className="text-[10px] tracking-widest text-foreground/50 uppercase">
+                      {pkg.subtitle}
+                    </p>
+                    <span className="mt-1 block font-display text-3xl tabular-nums text-gradient-gold">
+                      KES {pkg.price.toLocaleString()}
+                    </span>
+                    {hasGroupDiscount(key) && (
+                      <p className="mt-1.5 text-[11px] text-accent font-medium">
+                        Group of {MAX_QUANTITY}: KES{" "}
+                        {getTotalAmount(key, MAX_QUANTITY).toLocaleString()}{" "}
+                        total
+                      </p>
+                    )}
+                  </div>
+
+                  <ul className="mt-5 space-y-2.5 flex-1 px-6">
+                    {pkg.includes.map((text) => (
+                      <li key={text} className="flex items-start gap-2.5 text-sm">
+                        <CheckCircle
+                          className="text-accent shrink-0 mt-0.5"
+                          size={15}
+                        />
+                        <span className="text-foreground/80">{text}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="px-6 pt-6">
+                    <Button
+                      className="w-full"
+                      variant={pkg.featured ? "default" : "outline"}
+                      onClick={() => openRegistration(key)}
+                    >
+                      Select {pkg.title}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="relative mt-6 px-6">
+                    <div className="border-t-2 border-dashed border-white/15" />
+                    <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
+                    <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
+                  </div>
+                  <div className="pb-5" />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+
       <section className="py-8 sm:py-10">
         <div className="container-pro max-w-5xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -920,115 +1031,6 @@ const EventsPage = () => {
         </div>
       </section>
 
-      <section id="tickets" className="py-8 sm:py-10 scroll-mt-16">
-        <div className="container-pro max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto">
-            <span className="text-sm text-accent font-semibold tracking-wide">
-              TICKET PACKAGES
-            </span>
-            <h2 className="mt-2 font-display text-3xl sm:text-4xl">
-              Pick your way in
-            </h2>
-            <p className="mt-2 text-foreground/60 text-sm">
-              Six ways to be part of Metropol Open Play Kenya 2026.
-            </p>
-          </div>
-
-          <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {(Object.keys(PACKAGES) as AttendeeTicketType[]).map((key) => {
-              const pkg = PACKAGES[key];
-              const Icon = pkg.icon;
-              return (
-                <div
-                  key={key}
-                  className={`group relative rounded-3xl flex flex-col glass-card overflow-hidden transition-all duration-300 hover:-translate-y-1.5 ${
-                    pkg.featured
-                      ? "border-2 border-accent/40 shadow-[0_0_0_1px_rgba(227,167,60,0.25),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
-                      : "border border-white/10 hover:border-accent/50 hover:shadow-[0_0_0_1px_rgba(227,167,60,0.3),0_28px_56px_-24px_rgba(0,0,0,0.65)]"
-                  }`}
-                >
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{
-                      background:
-                        "linear-gradient(115deg, transparent 40%, rgba(227,167,60,0.06) 50%, transparent 60%)",
-                    }}
-                  />
-
-                  {pkg.featured && (
-                    <div className="bg-accent px-4 py-1.5 text-center text-[10px] font-bold tracking-widest text-background">
-                      MOST RESERVED FOR PARTNERS
-                    </div>
-                  )}
-
-                  <div className="h-1 w-full bg-gradient-to-r from-accent/30 via-accent to-accent/30" />
-
-                  <div className="flex items-center justify-between px-6 pt-5">
-                    <span className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-accent">
-                      {pkg.tag}
-                    </span>
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 border border-accent/20 transition-transform duration-300 group-hover:scale-110">
-                      <Icon className="text-accent" size={18} />
-                    </span>
-                  </div>
-
-                  <div className="px-6 pt-4">
-                    <h3 className="font-display text-2xl">{pkg.title}</h3>
-                    <p className="text-foreground/50 text-xs mt-1.5 flex items-center gap-1.5">
-                      <MapPin size={12} className="text-accent/70" />
-                      {pkg.venue}
-                    </p>
-                    <span className="mt-2 inline-block rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-[10px] font-medium text-foreground/60">
-                      {pkg.audience}
-                    </span>
-                  </div>
-
-                  <div className="mx-6 mt-4 rounded-xl border border-accent/20 bg-gradient-to-br from-accent/15 to-accent/5 px-5 py-3.5">
-                    <p className="text-[10px] tracking-widest text-foreground/50 uppercase">
-                      {pkg.subtitle}
-                    </p>
-                    <span className="mt-1 block font-display text-3xl tabular-nums text-gradient-gold">
-                      KES {pkg.price.toLocaleString()}
-                    </span>
-                  </div>
-
-                  <ul className="mt-5 space-y-2.5 flex-1 px-6">
-                    {pkg.includes.map((text) => (
-                      <li key={text} className="flex items-start gap-2.5 text-sm">
-                        <CheckCircle
-                          className="text-accent shrink-0 mt-0.5"
-                          size={15}
-                        />
-                        <span className="text-foreground/80">{text}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="px-6 pt-6">
-                    <Button
-                      className="w-full"
-                      variant={pkg.featured ? "default" : "outline"}
-                      onClick={() => openRegistration(key)}
-                    >
-                      Select {pkg.title}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  <div className="relative mt-6 px-6">
-                    <div className="border-t-2 border-dashed border-white/15" />
-                    <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-background" />
-                    <span className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-background" />
-                  </div>
-                  <div className="pb-5" />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       <SectionDivider />
 
       <section className="py-8 sm:py-10">
@@ -1047,8 +1049,7 @@ const EventsPage = () => {
                       Metropol Open Play Kenya 2026
                     </p>
                     <p className="text-sm text-foreground/50">
-                      9 to 15 August, Weston Hotel, Ulinzi Sports Complex and
-                      Jaffery Sports Club
+                      9 to 15 August, Weston Hotel and Nyayo Stadium
                     </p>
                   </div>
                 ) : (
@@ -1711,8 +1712,12 @@ const EventsPage = () => {
                       {quantity === 1 ? "" : "s"}
                     </p>
                     <p className="text-xs text-foreground/50 mt-0.5">
-                      Buying for others too? Get up to {MAX_QUANTITY} in one
-                      go, no need to register separately.
+                      {isGroupDiscountEligible
+                        ? `Bring a group of ${MAX_QUANTITY} for a flat group rate of KES ${getTotalAmount(
+                            ticketType,
+                            MAX_QUANTITY
+                          ).toLocaleString()}.`
+                        : `Buying for others too? Get up to ${MAX_QUANTITY} in one go, no need to register separately.`}
                     </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
@@ -1742,7 +1747,44 @@ const EventsPage = () => {
                   </div>
                 </div>
 
-                {quantity > 1 && (
+                {groupDiscountActive ? (
+                  <div className="rounded-xl bg-accent/10 border-2 border-accent px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent uppercase tracking-wide">
+                        <Users size={13} />
+                        Group Rate Applied
+                      </span>
+                      <strong className="text-accent tabular-nums text-lg">
+                        KES {amount.toLocaleString()}
+                      </strong>
+                    </div>
+                    <p className="mt-1 text-[11px] text-foreground/60">
+                      {MAX_QUANTITY} {selectedPackage.unitLabel}s for KES{" "}
+                      {amount.toLocaleString()}, instead of KES{" "}
+                      {(selectedPackage.price * MAX_QUANTITY).toLocaleString()}{" "}
+                      — you save KES{" "}
+                      {(
+                        selectedPackage.price * MAX_QUANTITY -
+                        amount
+                      ).toLocaleString()}
+                      .
+                    </p>
+                  </div>
+                ) : (
+                  isGroupDiscountEligible &&
+                  quantity === MAX_QUANTITY - 1 && (
+                    <div className="rounded-xl bg-accent/5 border border-accent/20 px-4 py-3 text-xs text-foreground/70">
+                      Add 1 more to unlock the group rate of KES{" "}
+                      {getTotalAmount(
+                        ticketType,
+                        MAX_QUANTITY
+                      ).toLocaleString()}{" "}
+                      for {MAX_QUANTITY}.
+                    </div>
+                  )
+                )}
+
+                {!groupDiscountActive && quantity > 1 && (
                   <div className="rounded-xl bg-accent/10 border border-accent/20 px-4 py-3 text-sm flex items-center justify-between">
                     <span className="text-foreground/70">
                       {quantity} × KES {selectedPackage.price.toLocaleString()}
@@ -1830,11 +1872,18 @@ const EventsPage = () => {
                         KES {amount.toLocaleString()}
                       </strong>
                     </div>
-                    {quantity > 1 && (
-                      <p className="mt-1 text-[11px] text-foreground/50 text-right">
-                        {quantity} {selectedPackage.unitLabel}s × KES{" "}
-                        {selectedPackage.price.toLocaleString()}
+                    {groupDiscountActive ? (
+                      <p className="mt-1 text-[11px] text-accent text-right">
+                        Group rate for {MAX_QUANTITY}{" "}
+                        {selectedPackage.unitLabel}s
                       </p>
+                    ) : (
+                      quantity > 1 && (
+                        <p className="mt-1 text-[11px] text-foreground/50 text-right">
+                          {quantity} {selectedPackage.unitLabel}s × KES{" "}
+                          {selectedPackage.price.toLocaleString()}
+                        </p>
+                      )
                     )}
                   </div>
 
@@ -1854,11 +1903,14 @@ const EventsPage = () => {
                   <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={18} />
                   <p className="text-xs text-foreground/80 leading-relaxed">
                     <strong className="text-amber-500">Important: </strong>
-                    pay using the M-Pesa line registered to the same name
-                    you'll enter next. If the payer name and the
-                    registration name don't match, we may not be able to
-                    verify your ticket without contacting you directly,
-                    which can delay it.
+                    if the M-Pesa line you pay from is registered to a
+                    different name than the person you're registering
+                    (for example, a parent paying for a player), that's
+                    fine — just mention it in Additional Notes on the
+                    next step (e.g. "Paid using parent's M-Pesa number").
+                    Otherwise, if the names don't match and we're not
+                    told why, we may need to contact you directly to
+                    verify it, which can delay your ticket.
                   </p>
                 </div>
               </div>
@@ -1866,18 +1918,6 @@ const EventsPage = () => {
 
             {step === "details" && (
               <div className="space-y-4">
-                {parentRegistration && (
-                  <div className="rounded-xl border border-accent/30 bg-accent/10 p-4 flex items-start gap-3">
-                    <Heart className="text-accent shrink-0 mt-0.5" size={18} />
-                    <p className="text-xs text-foreground/80 leading-relaxed">
-                      <strong className="text-accent">Registering as a parent: </strong>
-                      use your own contact details below, and add your
-                      child's name so we know who's actually attending.
-                      We'll note this as a parent registration.
-                    </p>
-                  </div>
-                )}
-
                 <div>
                   <IconField icon={User}>
                     <input
@@ -1887,34 +1927,15 @@ const EventsPage = () => {
                       onChange={handleChange}
                       autoComplete="name"
                       className={fieldClass}
-                      placeholder={
-                        parentRegistration
-                          ? "Parent or guardian full name"
-                          : isPlayerTicket
-                          ? "Player full name"
-                          : "Full name"
-                      }
+                      placeholder={isPlayerTicket ? "Player full name" : "Full name"}
                     />
                   </IconField>
                   <p className="mt-1.5 text-xs text-foreground/50">
-                    Use the same name registered on the M-Pesa line used to
-                    pay.
+                    {isPlayerTicket
+                      ? "Enter the player's own name, even if a parent or guardian is registering on their behalf."
+                      : "Use the same name registered on the M-Pesa line used to pay."}
                   </p>
                 </div>
-
-                {parentRegistration && (
-                  <IconField icon={Users}>
-                    <input
-                      type="text"
-                      name="childName"
-                      value={form.childName}
-                      onChange={handleChange}
-                      autoComplete="off"
-                      className={fieldClass}
-                      placeholder="Child's full name"
-                    />
-                  </IconField>
-                )}
 
                 <IconField icon={Mail}>
                   <input
@@ -1976,7 +1997,11 @@ const EventsPage = () => {
                   value={form.notes}
                   onChange={handleChange}
                   className={textareaClass}
-                  placeholder="Additional notes (optional)"
+                  placeholder={
+                    isPlayerTicket
+                      ? "Optional — e.g. 'Paid using parent's M-Pesa number'"
+                      : "Additional notes (optional)"
+                  }
                 />
 
                 <div>
@@ -2020,25 +2045,20 @@ const EventsPage = () => {
                           <span className="text-foreground/60">Quantity</span>
                           <strong>
                             {quantity} {selectedPackage.unitLabel}s
+                            {groupDiscountActive && (
+                              <span className="ml-1.5 text-accent">
+                                (Group Rate)
+                              </span>
+                            )}
                           </strong>
                         </div>
                       )}
                       <div className="flex justify-between px-4 py-3">
-                        <span className="text-foreground/60">
-                          {parentRegistration ? "Parent / Guardian" : "Name"}
-                        </span>
+                        <span className="text-foreground/60">Name</span>
                         <strong className="truncate max-w-[60%] text-right">
                           {form.fullName || "-"}
                         </strong>
                       </div>
-                      {parentRegistration && (
-                        <div className="flex justify-between px-4 py-3">
-                          <span className="text-foreground/60">Child</span>
-                          <strong className="truncate max-w-[60%] text-right">
-                            {form.childName || "-"}
-                          </strong>
-                        </div>
-                      )}
                       <div className="flex justify-between px-4 py-3">
                         <span className="text-foreground/60">Amount</span>
                         <strong className="text-accent tabular-nums">
