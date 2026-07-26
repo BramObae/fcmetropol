@@ -102,6 +102,40 @@ export function getTicketAmount(ticket: TicketType) {
   }
 }
 
+// Group-of-10 discount: buying the full maximum quantity (MAX_QUANTITY,
+// 10) of Open Play, Workshop, or the Open Play + Workshop combo gets a
+// flat discounted total instead of unit price × 10. Not available for
+// Dinner, Coaches Workshop, or Corporate Table — Corporate Table
+// already has its own fixed table-of-10 price, and Dinner/Coaches
+// Workshop simply aren't part of this offer. Mirrors GROUP_OF_10_PRICE
+// in Code.gs on the backend — keep both in sync if either changes.
+const GROUP_OF_10_PRICE: Partial<Record<TicketType, number>> = {
+  OpenPlay: 40000,
+  Workshop: 80000,
+  OpenPlayWorkshop: 120000,
+};
+
+// The single source of truth for what a registration actually costs.
+// Both the frontend display (EventsPage.tsx) and the submitted amount
+// should always go through this rather than computing unit price ×
+// quantity by hand, so the discount can never accidentally be skipped
+// in one place and applied in another.
+export function getTotalAmount(ticket: TicketType, quantity: number): number {
+  const qty = Math.max(1, Math.min(MAX_QUANTITY, Math.round(quantity)));
+  const groupPrice = GROUP_OF_10_PRICE[ticket];
+  if (qty === MAX_QUANTITY && groupPrice !== undefined) {
+    return groupPrice;
+  }
+  return getTicketAmount(ticket) * qty;
+}
+
+// Whether this ticket type has a group-of-10 discount at all — used by
+// the UI to decide whether to mention the offer while someone is still
+// below the max quantity.
+export function hasGroupDiscount(ticket: TicketType): boolean {
+  return GROUP_OF_10_PRICE[ticket] !== undefined;
+}
+
 // Sponsorship partnership tiers. `max: null` means no upper bound
 // (Strategic Title Partner is "KES 7,500,000+"). Kept in sync with
 // SPONSOR_TIER_RANGES in the Apps Script backend — if either side's
@@ -239,7 +273,7 @@ export async function registerAttendee(
       ? 1
       : Math.max(1, Math.min(MAX_QUANTITY, Math.round(data.quantity ?? 1)));
 
-    const amount = data.amount ?? getTicketAmount(data.ticketType) * quantity;
+    const amount = data.amount ?? getTotalAmount(data.ticketType, quantity);
 
     const formData = new URLSearchParams();
     formData.append("apiKey", APP_SECRET);
