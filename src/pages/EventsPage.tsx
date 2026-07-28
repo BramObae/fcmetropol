@@ -404,8 +404,14 @@ const EventsPage = () => {
     country: "",
     transactionCode: "",
     companyName: "",
+    groupOrgName: "",
     notes: "",
   });
+
+  // A simple checkbox instead of asking people to remember to type this
+  // themselves in Additional Notes — far more reliable, since it can't
+  // be forgotten or phrased inconsistently.
+  const [parentPaid, setParentPaid] = useState(false);
 
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -541,11 +547,13 @@ const EventsPage = () => {
       country: "",
       transactionCode: "",
       companyName: "",
+      groupOrgName: "",
       notes: "",
     });
     setTicketType("Dinner");
     setQuantity(1);
     setConfirmChecked(false);
+    setParentPaid(false);
     setStep("ticket");
   };
 
@@ -554,20 +562,26 @@ const EventsPage = () => {
     setError("");
     setSuccess("");
 
-    let composedNotes = "";
+    // Small helper so every piece below just says what it wants added,
+    // without each one having to re-decide whether a " | " separator
+    // is needed — that repeated logic was easy to get subtly wrong.
+    const notesParts: string[] = [];
     if (groupDiscountActive) {
-      composedNotes += `Group rate applied (${MAX_QUANTITY} x ${selectedPackage.title})`;
+      notesParts.push(`Group rate applied (${MAX_QUANTITY} x ${selectedPackage.title})`);
+    }
+    if (form.groupOrgName.trim()) {
+      notesParts.push(`Organization/Team: ${form.groupOrgName.trim()}`);
     }
     if (ticketType === "CorporateTable" && form.companyName) {
-      composedNotes += composedNotes
-        ? ` | Company: ${form.companyName}`
-        : `Company: ${form.companyName}`;
+      notesParts.push(`Company: ${form.companyName}`);
+    }
+    if (parentPaid) {
+      notesParts.push("Paid using parent's M-Pesa number");
     }
     if (form.notes) {
-      composedNotes += composedNotes
-        ? ` | Notes: ${form.notes}`
-        : `Notes: ${form.notes}`;
+      notesParts.push(`Notes: ${form.notes}`);
     }
+    const composedNotes = notesParts.join(" | ");
 
     const payload = {
       fullName: form.fullName,
@@ -1720,17 +1734,17 @@ const EventsPage = () => {
                         : `Buying for others too? Get up to ${MAX_QUANTITY} in one go, no need to register separately.`}
                     </p>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex items-center gap-2 shrink-0">
                     <button
                       type="button"
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                       disabled={quantity <= 1}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-background disabled:opacity-30 transition-colors hover:border-accent/40"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-background disabled:opacity-30 transition-colors hover:border-accent/40 shrink-0"
                       aria-label="Decrease quantity"
                     >
                       <Minus size={16} />
                     </button>
-                    <span className="w-8 text-center font-display text-xl tabular-nums">
+                    <span className="flex h-10 min-w-[2.75rem] items-center justify-center rounded-xl border-2 border-accent/40 bg-accent/10 px-2 font-display text-2xl font-bold tabular-nums text-accent">
                       {quantity}
                     </span>
                     <button
@@ -1739,7 +1753,7 @@ const EventsPage = () => {
                         setQuantity((q) => Math.min(MAX_QUANTITY, q + 1))
                       }
                       disabled={quantity >= MAX_QUANTITY}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-background disabled:opacity-30 transition-colors hover:border-accent/40"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-background disabled:opacity-30 transition-colors hover:border-accent/40 shrink-0"
                       aria-label="Increase quantity"
                     >
                       <Plus size={16} />
@@ -1903,14 +1917,9 @@ const EventsPage = () => {
                   <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={18} />
                   <p className="text-xs text-foreground/80 leading-relaxed">
                     <strong className="text-amber-500">Important: </strong>
-                    if the M-Pesa line you pay from is registered to a
-                    different name than the person you're registering
-                    (for example, a parent paying for a player), that's
-                    fine — just mention it in Additional Notes on the
-                    next step (e.g. "Paid using parent's M-Pesa number").
-                    Otherwise, if the names don't match and we're not
-                    told why, we may need to contact you directly to
-                    verify it, which can delay your ticket.
+                    if a different name paid (e.g. a parent), just tick
+                    the box for that on the next step. Otherwise, an
+                    unexplained name mismatch can delay your ticket.
                   </p>
                 </div>
               </div>
@@ -1936,6 +1945,20 @@ const EventsPage = () => {
                       : "Use the same name registered on the M-Pesa line used to pay."}
                   </p>
                 </div>
+
+                {isPlayerTicket && (
+                  <label className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-background/60 px-4 py-3 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={parentPaid}
+                      onChange={(e) => setParentPaid(e.target.checked)}
+                      className="h-4 w-4 rounded border-white/20 accent-current text-accent"
+                    />
+                    <span className="text-sm text-foreground/80">
+                      A parent or guardian paid using their own M-Pesa number
+                    </span>
+                  </label>
+                )}
 
                 <IconField icon={Mail}>
                   <input
@@ -1991,17 +2014,27 @@ const EventsPage = () => {
                   </IconField>
                 )}
 
+                {groupDiscountActive && ticketType !== "CorporateTable" && (
+                  <IconField icon={Building2}>
+                    <input
+                      type="text"
+                      name="groupOrgName"
+                      value={form.groupOrgName}
+                      onChange={handleChange}
+                      autoComplete="organization"
+                      className={fieldClass}
+                      placeholder="Organization, team or company name (optional)"
+                    />
+                  </IconField>
+                )}
+
                 <textarea
                   rows={2}
                   name="notes"
                   value={form.notes}
                   onChange={handleChange}
                   className={textareaClass}
-                  placeholder={
-                    isPlayerTicket
-                      ? "Optional — e.g. 'Paid using parent's M-Pesa number'"
-                      : "Additional notes (optional)"
-                  }
+                  placeholder="Additional notes (optional)"
                 />
 
                 <div>
@@ -2069,6 +2102,20 @@ const EventsPage = () => {
                         <span className="text-foreground/60">Transaction Code</span>
                         <strong>{form.transactionCode || "-"}</strong>
                       </div>
+                      {form.groupOrgName.trim() && (
+                        <div className="flex justify-between px-4 py-3">
+                          <span className="text-foreground/60">Organization</span>
+                          <strong className="truncate max-w-[60%] text-right">
+                            {form.groupOrgName}
+                          </strong>
+                        </div>
+                      )}
+                      {parentPaid && (
+                        <div className="flex justify-between px-4 py-3">
+                          <span className="text-foreground/60">Paid by</span>
+                          <strong>Parent/Guardian</strong>
+                        </div>
+                      )}
                     </div>
 
                     <label className="flex items-start gap-3 cursor-pointer select-none">
