@@ -17,15 +17,14 @@ import {
 } from "lucide-react";
 
 /* LEADERSHIP IMAGES */
-import rene from "/rene.jpeg";
 import elisha1 from "/elisha1.jpeg";
 import eduardo from "/Eduardo Raupp.jpeg";
-import jorge from "/Jorge Fuster Molla.jpeg";
-import hany from "/Hany Hussein.jpeg";
 import maurice from "/Maurice.jpeg";
 import mourikam from "/Mourikam junior.jpeg";
 import calum from "/CalumShuan.jpeg";
-import chima from "/Chima Nwaka.jpeg";
+import chima from "/chicha11.jpeg";
+// TODO: add the real headshot file to /public and update this path
+import simon from "/Simon Macharia.jpeg";
 
 /* TECHNICAL TEAM IMAGES */
 import gabriel from "/Gabriel Kariuki.jpeg";
@@ -123,14 +122,8 @@ const values = [
 /* LEADERSHIP */
 const leadership = [
   {
-    name: "Rene Merilo",
-    role: "President Estonia",
-    image: rene,
-    desc: "Global football development and international partnerships.",
-  },
-  {
     name: "Elisha Ruoth Winga",
-    role: "Kenya President",
+    role: "President",
     image: elisha1,
     desc: "National football structure and talent pathway leadership.",
   },
@@ -139,18 +132,6 @@ const leadership = [
     role: "Director of International Relations",
     image: eduardo,
     desc: "Global commercial strategy and football system design.",
-  },
-  {
-    name: "Jorge Fuster Molla",
-    role: "International Football Advisor",
-    image: jorge,
-    desc: "European football advisor and strategic development.",
-  },
-  {
-    name: "Hany Hussein",
-    role: "Former Sports Agent",
-    image: hany,
-    desc: "North Africa, Gulf & Asia football relations.",
   },
   {
     name: "Mourikam Vincent",
@@ -172,9 +153,15 @@ const leadership = [
   },
   {
     name: "Chima Nwaka Oti. BSN RN.",
-    role: "Finance Advisor",
+    role: "Director of Finance",
     image: chima,
     desc: "Georgia Football Association (USA.) international football investment and strategic development advisory.",
+  },
+  {
+    name: "Simon Macharia",
+    role: "Director of Operations",
+    image: simon,
+    desc: "Operational leadership across programs, logistics and club administration.",
   },
 ];
 
@@ -188,7 +175,7 @@ const technicalTeam = [
   },
   {
     name: "Nicholas Muyoti",
-    role: "Head Coach",
+    role: "Technical Director",
     image: muyoti,
     object: "object-top",
   },
