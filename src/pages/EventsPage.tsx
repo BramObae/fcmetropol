@@ -53,11 +53,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-const featuredImage = "/event1.jpeg";
+const featuredImage = "/scouting-tour-poster.jpg";
 const PAYBILL_NUMBER = "533522";
 const ACCOUNT_NUMBER = "7921970";
-const KICKOFF = new Date("2026-08-09T00:00:00+03:00");
-const EVENT_ENDS = new Date("2026-08-15T23:59:59+03:00");
+const KICKOFF = new Date("2026-11-27T00:00:00+03:00");
+const EVENT_ENDS = new Date("2026-12-07T23:59:59+03:00");
+const TRAINING_VENUE = "Dandora Stadium";
+const TOUR_TOWNS = ["Machakos", "Kisii", "Eldoret", "Nanyuki", "Mombasa"];
 
 // This page's self-serve registration dialog only ever handles the
 // five real attendee/corporate ticket types. Sponsorship tiers exist
@@ -186,46 +188,55 @@ const PACKAGES: Record<
   },
 };
 
+// NOTE: town-by-town dates below are an even split of the 10-day
+// window across the 5 towns on the poster — confirm/adjust the exact
+// per-town dates before this goes live.
 const SCHEDULE = [
   {
-    range: "09 Aug",
-    title: "Launch Dinner and Partnership Forum",
-    desc: "Official launch, with Chief Guest Micky Adams (England), 6PM to 10PM.",
-    venue: "Weston Hotel",
+    range: "27-28 Nov",
+    title: "Machakos Scouting Stop",
+    desc: "Talent assessment and scouting for players aged 14 to 20.",
+    venue: "Machakos",
   },
   {
-    range: "10-11 Aug",
-    title: "Open Play Talent Identification",
-    desc: "Scouting and assessment for players aged 14 to 20, 8AM to 5PM.",
-    venue: "Nyayo Stadium",
+    range: "29-30 Nov",
+    title: "Kisii Scouting Stop",
+    desc: "Talent assessment and scouting for players aged 14 to 20.",
+    venue: "Kisii",
   },
   {
-    range: "12-14 Aug",
-    title: "Elite Player and Coach Workshops",
-    desc: "International development sessions for players and coaches.",
-    venue: "Nyayo Stadium",
+    range: "1-2 Dec",
+    title: "Eldoret Scouting Stop",
+    desc: "Talent assessment and scouting for players aged 14 to 20.",
+    venue: "Eldoret",
   },
   {
-    range: "15 Aug",
-    title: "Showcase Match and Closing Ceremony",
-    desc: "PWD curtain raiser, international showcase match, awards.",
-    venue: "Nyayo Stadium",
+    range: "3-4 Dec",
+    title: "Nanyuki Scouting Stop",
+    desc: "Talent assessment and scouting for players aged 14 to 20.",
+    venue: "Nanyuki",
+  },
+  {
+    range: "5-7 Dec",
+    title: "Mombasa Scouting Stop and Closing",
+    desc: "Final scouting stop, showcase and closing of the tour.",
+    venue: "Mombasa",
   },
 ];
 
 const STATS = [
-  { value: "07", label: "Event Days" },
-  { value: "300+", label: "Players Assessed" },
-  { value: "30+", label: "Int'l Delegates" },
-  { value: "05", label: "Ticket Categories" },
+  { value: "10", label: "Tour Days" },
+  { value: "05", label: "Towns" },
+  { value: "14-20", label: "Player Age Range" },
+  { value: "10", label: "Clubs & Scouts" },
 ];
 
 const PARTNERS = [
-  "FC Metropol, Estonia",
-  "IFG Macclesfield, England",
-  "TMR Sports, Brazil",
-  "FC Atlético Mineira, Brazil",
-  "Football 7 Worldwide",
+  "3 European Clubs",
+  "2 South America Clubs",
+  "3 NCAA Scouts (USA)",
+  "1 England Club",
+  "1 Asian Club",
 ];
 
 const CONTACTS = {
@@ -620,8 +631,8 @@ const EventsPage = () => {
   return (
     <>
       <SEO
-        title="Metropol Open Play Kenya 2026"
-        description="Register for Metropol Open Play Kenya 2026, the Launch Dinner, Open Play talent identification and elite development workshops."
+        title="Metropol Scouting Tour Kenya 2026"
+        description="Africa Gathers in Kenya: the Metropol Scouting Tour, 27 November to 7 December 2026. 10 days, 5 towns, direct contracts and scholarships for players aged 14 to 20."
       />
 
       <div
@@ -637,7 +648,7 @@ const EventsPage = () => {
       <div className="sticky top-0 z-40 border-b border-white/10 bg-background/90 backdrop-blur shadow-sm">
         <div className="container-pro max-w-6xl flex items-center justify-between gap-3 py-3">
           <span className="font-display text-sm md:text-base truncate">
-            Metropol Open Play Kenya 2026
+            Metropol Scouting Tour Kenya 2026
           </span>
 
           <div className="flex items-center gap-3">
@@ -684,32 +695,40 @@ const EventsPage = () => {
               {eventPhase === "live" ? (
                 <>
                   <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-                  Live now, 9 to 15 August 2026
+                  Live now, 27 Nov to 7 Dec 2026
                 </>
               ) : eventPhase === "ended" ? (
                 <>
                   <CheckCircle size={15} className="text-accent shrink-0" />
-                  9 to 15 August 2026, thank you for being part of it
+                  27 Nov to 7 Dec 2026, thank you for being part of it
                 </>
               ) : (
                 <>
                   <Flame size={15} className="text-accent shrink-0" />
-                  The countdown is on, 9 to 15 August 2026
+                  The countdown is on, 27 Nov to 7 Dec 2026
                 </>
               )}
             </span>
 
             <h1 className="mt-6 font-display text-4xl sm:text-5xl md:text-7xl">
-              Metropol Open Play
-              <span className="block text-gradient-gold">Kenya 2026</span>
+              Africa Gathers in Kenya
+              <span className="block text-gradient-gold">Metropol Scouting Tour</span>
             </h1>
 
-            <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-foreground/70 leading-relaxed">
-              Not just trials. A structured pathway platform bringing
-              international football expertise to Nairobi, connecting
-              Kenya's next generation to talent identification, coaching,
-              education and long term opportunity, featuring Chief Guest
-              Micky Adams (England).
+            <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-accent font-semibold leading-relaxed">
+              November is the month we are going to re-write history.
+            </p>
+
+            <p className="mt-3 max-w-2xl mx-auto text-base sm:text-lg text-foreground/70 leading-relaxed">
+              We are hosting the biggest football scouting tour, and we
+              need all the energy and support that we can get. 10 days,
+              5 towns, international clubs and scouts, direct contracts
+              and scholarships for players aged 14 to 20, both boys and
+              girls.
+            </p>
+
+            <p className="mt-3 text-sm text-foreground/60">
+              Training venue: <strong className="text-accent">{TRAINING_VENUE}</strong>
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center items-center gap-3 sm:gap-4">
@@ -795,7 +814,7 @@ const EventsPage = () => {
                 Event in progress
               </div>
               <p className="mt-2 text-sm text-foreground/70">
-                Metropol Open Play Kenya 2026 is live, 9 to 15 August. Some
+                The Metropol Scouting Tour is live, 27 Nov to 7 Dec. Some
                 ticket categories may have closed, contact us below to
                 check availability.
               </p>
@@ -804,7 +823,7 @@ const EventsPage = () => {
 
           <div className="mt-6 pt-6 border-t border-white/10">
             <p className="text-center text-[10px] tracking-[0.2em] text-foreground/40 uppercase mb-4">
-              Scouting alongside international partners
+              International clubs and scouts on tour
             </p>
             <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
               {PARTNERS.map((p) => (
@@ -830,7 +849,7 @@ const EventsPage = () => {
               Pick your way in
             </h2>
             <p className="mt-2 text-foreground/60 text-sm">
-              Six ways to be part of Metropol Open Play Kenya 2026.
+              Six ways to be part of the Metropol Scouting Tour Kenya 2026.
             </p>
           </div>
 
@@ -949,8 +968,9 @@ const EventsPage = () => {
               Not just trials, a pathway platform
             </h2>
             <p className="mt-3 text-foreground/70 leading-relaxed">
-              International clubs, coaches and scouts from Europe and
-              South America are coming directly to Nairobi, so talent
+              International clubs and scouts from Europe, South America,
+              England, Asia and NCAA programmes in the USA are coming
+              directly to {TOUR_TOWNS.join(", ")}, so talent
               identification, coach education, academic pathways and real
               football opportunity happen here, not somewhere players
               have to travel to find them.
@@ -1060,16 +1080,16 @@ const EventsPage = () => {
                   <div className="w-full h-[320px] flex flex-col items-center justify-center gap-3 bg-black/20 text-center px-6">
                     <Ticket className="text-accent/60" size={36} />
                     <p className="font-display text-xl">
-                      Metropol Open Play Kenya 2026
+                      Metropol Scouting Tour Kenya 2026
                     </p>
                     <p className="text-sm text-foreground/50">
-                      9 to 15 August, Weston Hotel and Nyayo Stadium
+                      27 Nov to 7 Dec, Machakos, Kisii, Eldoret, Nanyuki, Mombasa
                     </p>
                   </div>
                 ) : (
                   <img
                     src={featuredImage}
-                    alt="Metropol Open Play Kenya 2026"
+                    alt="Africa Gathers in Kenya, Metropol Scouting Tour 2026 poster"
                     className="w-full max-h-[520px] object-contain bg-black/10"
                     onError={() => setPosterImageFailed(true)}
                   />
@@ -1079,23 +1099,23 @@ const EventsPage = () => {
                 <div className="grid grid-cols-3 divide-x divide-white/10 text-center py-4">
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
-                      LAUNCH
+                      STARTS
                     </div>
-                    <div className="mt-1 font-display text-lg">9 Aug</div>
+                    <div className="mt-1 font-display text-lg">27 Nov</div>
                   </div>
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
-                      VENUE
+                      TRAINING VENUE
                     </div>
                     <div className="mt-1 font-display text-base">
-                      Nairobi
+                      {TRAINING_VENUE}
                     </div>
                   </div>
                   <div>
                     <div className="text-[11px] tracking-widest text-foreground/50">
                       DURATION
                     </div>
-                    <div className="mt-1 font-display text-lg">7 Days</div>
+                    <div className="mt-1 font-display text-lg">10 Days</div>
                   </div>
                 </div>
               </div>
@@ -1204,7 +1224,7 @@ const EventsPage = () => {
               PROGRAMME
             </span>
             <h2 className="mt-2 font-display text-3xl sm:text-4xl">
-              Seven days, four chapters
+              Ten days, five towns
             </h2>
           </div>
 
@@ -1312,7 +1332,7 @@ const EventsPage = () => {
               Support youth development and sport
             </h2>
             <p className="mt-3 text-foreground/70 leading-relaxed">
-              Organisations can back Metropol Open Play Kenya 2026
+              Organisations can back the Metropol Scouting Tour Kenya 2026
               financially, in kind, technically, strategically or
               through media, at a level that fits their goals.
             </p>
@@ -1342,7 +1362,7 @@ const EventsPage = () => {
           <div className="mt-6 text-center">
             <a
               href={`mailto:${CONTACTS.email}?subject=${encodeURIComponent(
-                "Partnership Brief Request, Metropol Open Play Kenya 2026"
+                "Partnership Brief Request, Metropol Scouting Tour Kenya 2026"
               )}`}
             >
               <Button size="lg">
@@ -1450,10 +1470,10 @@ const EventsPage = () => {
               Kenya's next generation is waiting to be seen
             </h2>
             <p className="mt-4 max-w-xl mx-auto text-foreground/70 leading-relaxed">
-              Metropol Open Play Kenya 2026 is a structured pathway
-              platform bringing international football expertise to
-              Nairobi, for talent identification, player development,
-              coaching exposure, inclusion and opportunity.
+              The Metropol Scouting Tour is a structured pathway platform
+              bringing international clubs and scouts across {TOUR_TOWNS.join(", ")},
+              for talent identification, player development, coaching
+              exposure, inclusion and opportunity.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Button size="lg" onClick={() => openRegistration()}>
