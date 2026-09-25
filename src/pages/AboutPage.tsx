@@ -23,8 +23,6 @@ import maurice from "/Maurice.jpeg";
 import mourikam from "/Mourikam junior.jpeg";
 import calum from "/CalumShuan.jpeg";
 import chima from "/chicha11.jpeg";
-// TODO: add the real headshot file to /public and update this path
-import simon from "/Simon Macharia.jpeg";
 
 /* TECHNICAL TEAM IMAGES */
 import gabriel from "/Gabriel Kariuki.jpeg";
@@ -160,7 +158,7 @@ const leadership = [
   {
     name: "Simon Macharia",
     role: "Director of Operations",
-    image: simon,
+    image: null, // TODO: add his headshot to /public and set this back to an import
     desc: "Operational leadership across programs, logistics and club administration.",
   },
 ];
@@ -364,11 +362,24 @@ const AboutPage = () => {
                 className="glass-card rounded-2xl overflow-hidden border border-white/10"
               >
 
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  className="h-[420px] w-full object-cover object-top"
-                />
+                {p.image ? (
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="h-[420px] w-full object-cover object-top"
+                  />
+                ) : (
+                  <div className="h-[420px] w-full flex items-center justify-center bg-gradient-to-br from-primary/40 to-accent/20">
+                    <span className="font-display text-6xl text-gradient-gold">
+                      {p.name
+                        .split(" ")
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map((n) => n[0])
+                        .join("")}
+                    </span>
+                  </div>
+                )}
 
                 <div className="p-6">
 
