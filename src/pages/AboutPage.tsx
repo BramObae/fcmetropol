@@ -22,7 +22,7 @@ import eduardo from "/Eduardo Raupp.jpeg";
 import maurice from "/Maurice.jpeg";
 import mourikam from "/Mourikam junior.jpeg";
 import calum from "/CalumShuan.jpeg";
-import chima from "/chicha11.jpeg";
+import chima from "@/assets/chicha11.jpeg";
 
 /* TECHNICAL TEAM IMAGES */
 import gabriel from "/Gabriel Kariuki.jpeg";
