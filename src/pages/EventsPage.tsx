@@ -52,14 +52,22 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import scoutingTourPoster from "@/assets/scouting-tour-poster.jpg";
 
-const featuredImage = "/scouting-tour-poster.jpg";
+const featuredImage = scoutingTourPoster;
 const PAYBILL_NUMBER = "533522";
 const ACCOUNT_NUMBER = "7921970";
 const KICKOFF = new Date("2026-11-27T00:00:00+03:00");
 const EVENT_ENDS = new Date("2026-12-07T23:59:59+03:00");
 const TRAINING_VENUE = "Dandora Stadium";
 const TOUR_TOWNS = ["Machakos", "Kisii", "Eldoret", "Nanyuki", "Mombasa"];
+
+// The ticket packages, pricing and M-Pesa registration flow below still
+// reflect the old August event and haven't been updated for the
+// November tour yet. Rather than delete that code, it's gated behind
+// this flag so it's easy to bring back once real pricing/venue details
+// for November are ready — flip this to true when that happens.
+const REGISTRATION_OPEN = false;
 
 // This page's self-serve registration dialog only ever handles the
 // five real attendee/corporate ticket types. Sponsorship tiers exist
@@ -494,41 +502,57 @@ const EventsPage = () => {
       title: "Players",
       icon: Target,
       desc: "A chance to be seen, learn, develop and open pathway conversations with international scouts and clubs.",
-      cta: "Register as a Player",
-      onClick: (e: React.MouseEvent) => {
-        e.preventDefault();
-        openRegistration("OpenPlay");
-      },
+      cta: REGISTRATION_OPEN ? "Register as a Player" : "Chat With Us on WhatsApp",
+      href: REGISTRATION_OPEN ? undefined : CONTACTS.eventWhatsapp,
+      target: REGISTRATION_OPEN ? undefined : ("_blank" as const),
+      onClick: REGISTRATION_OPEN
+        ? (e: React.MouseEvent) => {
+            e.preventDefault();
+            openRegistration("OpenPlay");
+          }
+        : undefined,
     },
     {
       title: "Parents",
       icon: Heart,
       desc: "A structured, supervised football development experience for your child, with safety and welfare at the centre.",
-      cta: "Register My Child",
-      onClick: (e: React.MouseEvent) => {
-        e.preventDefault();
-        openRegistration("OpenPlay");
-      },
+      cta: REGISTRATION_OPEN ? "Register My Child" : "Chat With Us on WhatsApp",
+      href: REGISTRATION_OPEN ? undefined : CONTACTS.eventWhatsapp,
+      target: REGISTRATION_OPEN ? undefined : ("_blank" as const),
+      onClick: REGISTRATION_OPEN
+        ? (e: React.MouseEvent) => {
+            e.preventDefault();
+            openRegistration("OpenPlay");
+          }
+        : undefined,
     },
     {
       title: "Coaches and Academies",
       icon: GraduationCap,
       desc: "Expose your players and staff to international technical standards, workshops and pathway opportunities.",
-      cta: "Register for Coaches Workshop",
-      onClick: (e: React.MouseEvent) => {
-        e.preventDefault();
-        openRegistration("CoachesWorkshop");
-      },
+      cta: REGISTRATION_OPEN ? "Register for Coaches Workshop" : "Chat With Us on WhatsApp",
+      href: REGISTRATION_OPEN ? undefined : CONTACTS.eventWhatsapp,
+      target: REGISTRATION_OPEN ? undefined : ("_blank" as const),
+      onClick: REGISTRATION_OPEN
+        ? (e: React.MouseEvent) => {
+            e.preventDefault();
+            openRegistration("CoachesWorkshop");
+          }
+        : undefined,
     },
     {
       title: "Scouts and Clubs",
       icon: Search,
       desc: "A structured, week long window to engage and assess Kenyan youth talent alongside international peers.",
-      cta: "Register for Open Play",
-      onClick: (e: React.MouseEvent) => {
-        e.preventDefault();
-        openRegistration("OpenPlay");
-      },
+      cta: REGISTRATION_OPEN ? "Register for Open Play" : "Chat With Us on WhatsApp",
+      href: REGISTRATION_OPEN ? undefined : CONTACTS.eventWhatsapp,
+      target: REGISTRATION_OPEN ? undefined : ("_blank" as const),
+      onClick: REGISTRATION_OPEN
+        ? (e: React.MouseEvent) => {
+            e.preventDefault();
+            openRegistration("OpenPlay");
+          }
+        : undefined,
     },
     {
       title: "Sponsors and Partners",
@@ -667,10 +691,19 @@ const EventsPage = () => {
                 <span className="font-semibold text-accent">Happening now</span>
               </div>
             )}
-            <Button onClick={() => openRegistration()}>
-              Register Now
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            {REGISTRATION_OPEN ? (
+              <Button onClick={() => openRegistration()}>
+                Register Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            ) : (
+              <a href={CONTACTS.eventWhatsapp} target="_blank" rel="noopener noreferrer">
+                <Button>
+                  Chat on WhatsApp
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -732,29 +765,47 @@ const EventsPage = () => {
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center items-center gap-3 sm:gap-4">
-              <a href="#tickets" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto">
-                  View Ticket Packages
-                  <ArrowDown className="ml-2 h-5 w-5" />
-                </Button>
-              </a>
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto"
-                onClick={() => openRegistration()}
-              >
-                Register Now
-              </Button>
+              {REGISTRATION_OPEN ? (
+                <>
+                  <a href="#tickets" className="w-full sm:w-auto">
+                    <Button size="lg" className="w-full sm:w-auto">
+                      View Ticket Packages
+                      <ArrowDown className="ml-2 h-5 w-5" />
+                    </Button>
+                  </a>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                    onClick={() => openRegistration()}
+                  >
+                    Register Now
+                  </Button>
+                </>
+              ) : (
+                <a
+                  href={CONTACTS.eventWhatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto"
+                >
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Chat With Us on WhatsApp
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </a>
+              )}
             </div>
 
-            <p className="mt-3 text-sm text-foreground/60">
-              Tickets from{" "}
-              <strong className="text-accent">
-                KES {getTicketAmount("Dinner").toLocaleString()}
-              </strong>{" "}
-              , pay instantly with Lipa na M-Pesa
-            </p>
+            {REGISTRATION_OPEN && (
+              <p className="mt-3 text-sm text-foreground/60">
+                Tickets from{" "}
+                <strong className="text-accent">
+                  KES {getTicketAmount("Dinner").toLocaleString()}
+                </strong>{" "}
+                , pay instantly with Lipa na M-Pesa
+              </p>
+            )}
 
             <p className="mt-4 text-xs text-foreground/50">
               Here for someone specific?{" "}
@@ -839,6 +890,7 @@ const EventsPage = () => {
         </div>
       </section>
 
+      {REGISTRATION_OPEN && (
       <section id="tickets" className="py-8 sm:py-10 scroll-mt-16">
         <div className="container-pro max-w-6xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -954,6 +1006,7 @@ const EventsPage = () => {
           </div>
         </div>
       </section>
+      )}
 
       <SectionDivider />
 
@@ -1376,6 +1429,7 @@ const EventsPage = () => {
 
       <SectionDivider />
 
+      {REGISTRATION_OPEN && (
       <section className="py-8 sm:py-10">
         <div className="container-pro max-w-4xl">
           <div className="text-center max-w-2xl mx-auto">
@@ -1405,6 +1459,7 @@ const EventsPage = () => {
           </div>
         </div>
       </section>
+      )}
 
       <SectionDivider />
 
@@ -1476,15 +1531,26 @@ const EventsPage = () => {
               exposure, inclusion and opportunity.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button size="lg" onClick={() => openRegistration()}>
-                Register Now
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <a href="#tickets">
-                <Button size="lg" variant="outline">
-                  View Ticket Packages
-                </Button>
-              </a>
+              {REGISTRATION_OPEN ? (
+                <>
+                  <Button size="lg" onClick={() => openRegistration()}>
+                    Register Now
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  <a href="#tickets">
+                    <Button size="lg" variant="outline">
+                      View Ticket Packages
+                    </Button>
+                  </a>
+                </>
+              ) : (
+                <a href={CONTACTS.eventWhatsapp} target="_blank" rel="noopener noreferrer">
+                  <Button size="lg">
+                    Chat With Us on WhatsApp
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </a>
+              )}
             </div>
           </div>
         </div>
